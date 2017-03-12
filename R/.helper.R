@@ -156,9 +156,10 @@
 
 .ProportionalRepresentation <-
   function (sample,
+            formula,
             threshold = 0,
-            threshold_country = 0,
-            formula) {
+            threshold_country = 0
+           ) {
     ne <- sample$Params[1]
     nd <- sample$Params[2]
     np <- sample$Params[3]
