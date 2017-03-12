@@ -9,12 +9,4 @@ License: GNU General Public License v3.0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Imports: lattice,
-ggplot2,
-ggthemes,
-viridis,
-dplyr,
-tidyr,
-gtools,
-truncdist,
-psych
+Imports: lattice, ggplot2, ggthemes, viridis, dplyr, tidyr, gtools, truncdist, psych
