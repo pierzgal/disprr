@@ -120,7 +120,6 @@
 
 }
 
-
 #' Country-level Election Outcomes under Proportional Representation
 #'
 #' The function allocates seats to parties using a variaty of divisor methods at a district-level, then it combines results over all district and returns a data frame of country-level election outcomes.
@@ -148,8 +147,7 @@
   function (sample,
             formula,
             threshold = 0,
-            threshold_country = 0
-           ) {
+            threshold_country = 0) {
     ne <- sample$Params[1]
     nd <- sample$Params[2]
     np <- sample$Params[3]
