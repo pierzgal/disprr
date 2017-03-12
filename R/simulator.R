@@ -190,10 +190,9 @@ sampleElectionData <-
         Votes_Share_Party = votes_share,
         Votes_Total_Dist = csum,
         Votes_Total_Party = rsum,
-        Votes_Total = tsum
+        Votes_Total = tsum,
+        Params = c(ne, nd, np, TS)
       )
-
-
 
     out <- sample
 
