@@ -2,7 +2,7 @@ Package: dispam
 Type: Package
 Title: Simulate Election Results and Compute Disproportionality Measures
 Version: 0.1.0
-Author: Michał Pierzgalski
+Author: Michal Pierzgalski
 Maintainer: The package maintainer <pierzgal@gmail.com>
 Description: (...)
 License: GNU General Public License v3.0
