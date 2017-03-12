@@ -1,6 +1,9 @@
 #' Divisor Methods
 #'
 #' Allocate seats to parties using a variaty of divisor methods.
+#'
+#' Acknowledgments: This functions uses the modified code for divisor (or highest averages) methods from the R package 'SciencesPo' developed by Daniel Marcelino.
+#'
 #' @param parties A character vector for party labels in the same order as in the numerical vector of votes for parties. If NULL, 3-letter identifiers (e.g. 'XYZ') will be assigned.
 #' @param votes A numeric vector of votes received by each party.
 #' @param seats The number of seats to be apportioned.
