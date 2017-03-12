@@ -1,4 +1,4 @@
-# dispam: Disproportionality of Apportionment Methods
+# dispam: Examine _Disproportionality of Apportionment Methods_
 
 Election results simulator (built as an R package) that uses uniform, exponential or log-normal probability distributions to generate pseudorandom samples of votes casted for political parties. The package contains functions that eneble a user to e.g.:
 * employ a variaty of apportionment methods to distribute seats among parties;
