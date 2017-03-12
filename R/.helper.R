@@ -1,13 +1,3 @@
-#' @import lattice
-#' @import ggplot2
-#' @import ggthemes
-#' @import viridis
-#' @import dplyr
-#' @import tidyr
-#' @import gtools
-#' @import truncdist
-#' @import psych
-
 #' If Parties NULL
 #'
 #' Create 3-letter identifiers for parties if 'parties' parameter in 'divisorMethods' or 'LR.Hamilton' functions is NULL.
