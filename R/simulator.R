@@ -241,7 +241,7 @@ simulate_E <-
     # Return list (Party Seats SeatShare Votes VoteShare id elec dist distTS)
 
     apportionment <-
-      .ProportionalRepresentation(sample, threshold, threshold_country, formula)
+      .ProportionalRepresentation(sample, formula, threshold, threshold_country)
 
 
     # Determine number of votes by election
