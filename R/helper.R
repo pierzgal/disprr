@@ -120,6 +120,7 @@
 
 }
 
+
 #' Country-level Election Outcomes under Proportional Representation
 #'
 #' The function allocates seats to parties using a variaty of divisor methods at a district-level, then it combines results over all district and returns a data frame of country-level election outcomes.
@@ -151,34 +152,34 @@
     ne <- sample$Params[1]
     nd <- sample$Params[2]
     np <- sample$Params[3]
-    
+
     out <- vector("list", ne)
     x <- vector("list", ne)
     e <- vector("list", ne)
-    
-    
+
+
     ############ TRY-CATCH
-    
+
     # (...)
-    
+
     ############
-    
+
     {
       no_seats_dist <- unlist(sample$Seats_Dist)
-      
+
       if (0 %in% no_seats_dist)  {
         stop("There are districts with 0 seats.")
       }
-      
+
       else {
         ### .countryThreshold at a country level enabled
-        
+
         if ((threshold_country > 0) & (threshold == 0))  {
           sample_mod <-
             .countryThreshold(np, ne, nd, threshold_country, sample) # apply a threshold at a country level - mod sample
-          
+
           if (formula == "hamilton")
-            
+
           {
             for (j in seq(1, ne, by = 1)) {
               for (i in seq(1, nd, by = 1)) {
@@ -192,9 +193,9 @@
                   )
               }
             }
-            
+
             out
-            
+
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
                 x[[i]][[j]] <- mutate(
@@ -214,12 +215,12 @@
                                       elec,
                                       dist,
                                       distTS)
-                
+
               }
             }
-            
+
           }
-          
+
           else {
             for (j in seq(1, ne, by = 1)) {
               for (i in seq(1, nd, by = 1)) {
@@ -234,9 +235,9 @@
                   )
               }
             }
-            
+
             out
-            
+
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
                 x[[i]][[j]] <- mutate(
@@ -256,22 +257,22 @@
                                       elec,
                                       dist,
                                       distTS)
-                
+
               }
             }
-            
+
           }
-          
-          
+
+
           out <- bind_rows(lapply(e,  FUN = bind_rows))
           out
-          
+
         }
-        
+
         ### .countryThreshold at a country level disabled
         else {
           if (formula == "hamilton")
-            
+
           {
             for (j in seq(1, ne, by = 1)) {
               for (i in seq(1, nd, by = 1)) {
@@ -285,9 +286,9 @@
                   )
               }
             }
-            
+
             out
-            
+
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
                 x[[i]][[j]] <- mutate(
@@ -307,12 +308,12 @@
                                       elec,
                                       dist,
                                       distTS)
-                
+
               }
             }
-            
+
           }
-          
+
           else {
             for (j in seq(1, ne, by = 1)) {
               for (i in seq(1, nd, by = 1)) {
@@ -327,9 +328,9 @@
                   )
               }
             }
-            
+
             out
-            
+
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
                 x[[i]][[j]] <- mutate(
@@ -349,21 +350,21 @@
                                       elec,
                                       dist,
                                       distTS)
-                
+
               }
             }
-            
+
           }
-          
-          
+
+
           ### Result
           out <- bind_rows(lapply(e,  FUN = bind_rows))
           out
-          
+
         }
-        
+
       }
-      
+
     } # Stop
-    
+
   }

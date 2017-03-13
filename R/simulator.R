@@ -415,12 +415,12 @@ simulate_Disp <-
     # Declare vars
     sb_bw <- list()
     sim <- list()
-    
+
     # Data
     if (nd >= minTS) {
       stop("The total number of districts ('nd') needs to be less than the minimal total number of seats ('minTS').")
     }
-    
+
     else {
       for (i in seq(1, steps, by = 1)) {
         sim[[i]] <-
@@ -440,7 +440,7 @@ simulate_Disp <-
             threshold,
             threshold_country
           )
-        
+
         sb_bw[[i]] <-
           mutate(
             sim[[i]][[2]],
@@ -450,17 +450,17 @@ simulate_Disp <-
             SE2 = Seats - VoteShare / 100 * distTS,
             TSB = (3 * VoteShare / 100 - 1) / 2
           )
-        
+
       }
       sb_bw <- bind_rows(sb_bw) # return data frame
-      
-      
+
+
       ese <- group_by(sb_bw, TS, Party)
       ese <-
         summarise(ese,
                   SB_i = mean(Seats - VoteShare / 100 * distTS),
                   V = sum(Votes))
-      
+
       ese2 <- group_by(sb_bw, TS, Party)
       ese2 <-
         summarise(ese2,
@@ -473,20 +473,20 @@ simulate_Disp <-
                   V = sum(Votes))
       ese_mean <- group_by(ese_mean, Party)
       ese_mean <- summarise(ese_mean, ESB = mean(SB_i), TV = sum(V))
-      
+
       # Return list
-      
+
       bias_data <-
         list(sb_bw = sb_bw,
              ese = ese,
              ese2 = ese2,
              ese_mean = ese_mean
         )
-      
+
       return(bias_data)
-      
+
     }
-    
+
   }
 
 # ----
@@ -499,7 +499,7 @@ simulate_Disp <-
 plot_Disp <-
   function(bias_data, tse = c(0, 5 / 12, -1 / 12, -4 / 12), ...)
   {
-    
+
     # Plots
     sb_bw_plot1 <-
       ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
@@ -509,8 +509,8 @@ plot_Disp <-
       )) + ylab("Seat Excess") + scale_color_viridis(discrete = TRUE,
                                                      name = "DM",
                                                      option = "D") + geom_hline(yintercept = tse) + theme_classic()
-    
-    
+
+
     sb_bw_plot2 <-
       ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
         x = Party,
@@ -519,7 +519,7 @@ plot_Disp <-
       )) + ylab("SE_i1(M)") + scale_color_viridis(discrete = TRUE,
                                                   name = "M",
                                                   option = "D") + geom_hline(yintercept = tse) + theme_classic()
-    
+
     sb_bw_plot3 <-
       ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
         x = Party,
@@ -528,7 +528,7 @@ plot_Disp <-
       )) + ylab("SE_i2(M)") + scale_color_viridis(discrete = TRUE,
                                                   name = "M",
                                                   option = "D") + geom_hline(yintercept = c(0)) + theme_classic()
-    
+
     ese_plot <-
       ggplot(data = bias_data$ese) + geom_point(aes(
         x = Party,
@@ -538,7 +538,7 @@ plot_Disp <-
       size = 4,
       alpha = 1 / 2) + ylab("B_i1(M)") + facet_grid( ~ V) + scale_color_viridis(name =
                                                                                   "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = tse)
-    
+
     ese_plot2 <-
       ggplot(data = bias_data$ese2) + geom_point(aes(
         x = Party,
@@ -548,7 +548,7 @@ plot_Disp <-
       size = 4,
       alpha = 1 / 2) + ylab("B_i2(M)") + facet_grid( ~ V) + scale_color_viridis(name =
                                                                                   "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = c(0))
-    
+
     ese_mean_plot <-
       ggplot(data = bias_data$ese_mean) + geom_point(aes(
         x = Party,
@@ -559,13 +559,13 @@ plot_Disp <-
       alpha = 1 / 2) + ylab("B_i1(M)") + theme_classic() + geom_hline(yintercept = tse) + scale_color_viridis(name =
                                                                                                                 "TV", discrete = TRUE)
     # Return list
-    
+
     sb <-
       list(sb_bw_plot2,
            sb_bw_plot3,
            ese_plot,
            ese_plot2,
            ese_mean_plot)
-    
+
     return(sb)
   }
