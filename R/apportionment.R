@@ -183,7 +183,7 @@ divisorMethods <-
           VoteShare = 100 * votes / sum(votes)
         )
 
-      output <- left_join(output, result, by = "Party")
+      output <- dplyr::left_join(output, result, by = "Party")
       return(output)
 
     }
@@ -196,7 +196,7 @@ divisorMethods <-
           VoteShare = 100 * votes / sum(votes)
         )
 
-      output <- left_join(result, output, by = "Party")
+      output <- dplyr::left_join(result, output, by = "Party")
 
       # Reorder by column name
       output <-
@@ -257,7 +257,7 @@ LR_Hamilton <- function(parties = NULL,
 
 
   if (order_name == TRUE) {
-    output <- arrange(output, Party)
+    output <- dplyr::arrange(output, Party)
 
     result <-
       data.frame(
@@ -266,7 +266,7 @@ LR_Hamilton <- function(parties = NULL,
         VoteShare = 100 * votes / sum(votes)
       )
 
-    output <- left_join(output, result, by = "Party")
+    output <- dplyr::left_join(output, result, by = "Party")
     return(output)
 
   }
@@ -279,7 +279,7 @@ LR_Hamilton <- function(parties = NULL,
         VoteShare = 100 * votes / sum(votes)
       )
 
-    output <- left_join(result, output, by = "Party")
+    output <- dplyr::left_join(result, output, by = "Party")
 
     # Reorder by column name
     output <-
