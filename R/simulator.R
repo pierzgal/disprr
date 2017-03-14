@@ -78,7 +78,7 @@ sampleElectionData <-
                 for (i in seq(1, nd, by = 1)) {
                   x[, i, j] <-
                     sort(floor(
-                      rtrunc(
+                      truncdist::rtrunc(
                         np,
                         spec = "lnorm",
                         a = 0,
@@ -96,7 +96,7 @@ sampleElectionData <-
               for (j in seq(1, ne, by = 1)) {
                 for (i in seq(1, nd, by = 1)) {
                   x[, i, j] <-
-                    sort(floor(rtrunc(
+                    sort(floor(truncdist::rtrunc(
                       np,
                       spec = "exp",
                       a = 0,
