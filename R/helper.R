@@ -1,18 +1,3 @@
-#' If Parties NULL
-#'
-#' Create 3-letter identifiers for parties if 'parties' parameter in 'divisorMethods' or 'LR.Hamilton' functions is NULL.
-#' @return 3-letter identifiers for parties.
-#' @keywords internal
-
-.if.parties.null <- function(x) {
-  set.seed(1)
-  parties <- replicate(x,
-                       paste(sample(LETTERS, 3,
-                                    replace = TRUE), collapse = ""))
-  parties
-}
-
-
 #' Threshold at a Country Level
 #'
 #' A helper function that allows to apply an electoral threshold at a country level.
