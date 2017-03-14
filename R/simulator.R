@@ -134,7 +134,7 @@ sampleElectionData <-
         for (i in seq(1, ne, by = 1)) {
           seats_dist[[i]] <-
             Hamilton3(
-              parties = .if.parties.null(nd),
+              parties = if.parties.null(nd),
               votes = 1 * csum[[i]],
               seats = TS,
               order_name = F
@@ -145,7 +145,7 @@ sampleElectionData <-
         for (i in seq(1, ne, by = 1)) {
           seats_dist[[i]] <-
             divisorMethods(
-              parties = .if.parties.null(nd),
+              parties = if.parties.null(nd),
               votes = 1 * csum[[i]],
               seats = TS,
               method = "ad",
@@ -157,7 +157,7 @@ sampleElectionData <-
         for (i in seq(1, ne, by = 1)) {
           seats_dist[[i]] <-
             divisorMethods(
-              parties = .if.parties.null(nd),
+              parties = if.parties.null(nd),
               votes = 1 * csum[[i]],
               seats = TS,
               method = "dh",
@@ -169,7 +169,7 @@ sampleElectionData <-
         for (i in seq(1, ne, by = 1)) {
           seats_dist[[i]] <-
             divisorMethods(
-              parties = .if.parties.null(nd),
+              parties = if.parties.null(nd),
               votes = 1 * csum[[i]],
               seats = TS,
               method = "hh",
@@ -261,7 +261,7 @@ simulate_E <-
       out
 
       for (i in seq(1, ne, by = 1)) {
-        out[[i]] <- mutate(out[[i]], Party = .if.parties.null(np))
+        out[[i]] <- mutate(out[[i]], Party = if.parties.null(np))
         out[[i]] <- arrange(out[[i]], desc(VoteShareTotalParty))
       }
 
