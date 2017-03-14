@@ -275,20 +275,20 @@ simulate_E <-
       out
 
       for (i in seq(1, ne, by = 1)) {
-        out[[i]] <- mutate(out[[i]], Party = if.parties.null(np))
-        out[[i]] <- arrange(out[[i]], desc(VoteShareTotalParty))
+        out[[i]] <- dplyr::mutate(out[[i]], Party = if.parties.null(np))
+        out[[i]] <- dplyr::arrange(out[[i]], desc(VoteShareTotalParty))
       }
 
-      vote_share <- bind_rows(out)
+      vote_share <- dplyr::bind_rows(out)
       }
 
     apportionment <-
-      left_join(apportionment, vote_share, by = c("Party", "elec"))
+      dplyr::left_join(apportionment, vote_share, by = c("Party", "elec"))
 
 
     ## Group districts in elections
 
-    apportionment_sum1 <- group_by(apportionment, elec, Party)
+    apportionment_sum1 <- dplyr::group_by(apportionment, elec, Party)
     apportionment_sum2 <-
       dplyr::summarise(
         apportionment_sum1,
@@ -298,7 +298,7 @@ simulate_E <-
       )
 
     apportionment_sum <-
-      left_join(apportionment_sum2, vote_share, by = c("Party", "elec"))
+      dplyr::left_join(apportionment_sum2, vote_share, by = c("Party", "elec"))
 
 
     ## Compute 'ideal' shares of seats
@@ -306,12 +306,12 @@ simulate_E <-
 
     ## Merge
     merged <-
-      left_join(apportionment_sum, seats_ideal, by = c("Party", "elec"))
+      dplyr::left_join(apportionment_sum, seats_ideal, by = c("Party", "elec"))
 
 
     ## Seat excesses
     seat_excess <-
-      mutate(
+      dplyr::mutate(
         merged,
         Party = as.factor(Party),
         excess = round(seat_perc / 100 - SeatShareIdeal / 100, 6),
@@ -324,7 +324,7 @@ simulate_E <-
     # Remark :  RSE_i = DEV0
 
     seat_excess <-
-      select(
+      dplyr::select(
         seat_excess,
         PartyID = Party,
         ElectionID = elec,
@@ -336,11 +336,11 @@ simulate_E <-
         SE2_i = excess,
         RSE2_i
       )
-    seat_excess <- mutate(seat_excess, Seats = as.integer(Seats))
+    seat_excess <- dplyr::mutate(seat_excess, Seats = as.integer(Seats))
 
 
     ### Disproportionality indexes ###
-    disp <- group_by(seat_excess, ElectionID)
+    disp <- dplyr::group_by(seat_excess, ElectionID)
     disp <-
       dplyr::summarise(
         disp,
@@ -364,14 +364,14 @@ simulate_E <-
 
     ## Seat biases - by Party
 
-    apportionment_sum3 <- group_by(apportionment, distTS, Party)
+    apportionment_sum3 <- dplyr::group_by(apportionment, distTS, Party)
     esb <-
       dplyr::summarise(apportionment_sum3,
                        E = mean((SeatShare / 100 - VoteShare / 100)),
                        VotesParty_DM = sum(Votes))
 
     apportionment_sum3.2 <-
-      group_by(apportionment, elec, distTS, Party)
+      dplyr::group_by(apportionment, elec, distTS, Party)
     esb.2 <-
       dplyr::summarise(apportionment_sum3.2,
                        E = mean((SeatShare / 100 - VoteShare / 100)),
@@ -380,7 +380,7 @@ simulate_E <-
 
     # Only for country-wide districts
     if (nd == 1) {
-      apportionment_sum3.3 <- group_by(apportionment, Party)
+      apportionment_sum3.3 <- dplyr::group_by(apportionment, Party)
       esb.3 <-
         dplyr::summarise(apportionment_sum3.3,
                          E = mean((SeatShare / 100 - VoteShare / 100)),
@@ -456,7 +456,7 @@ simulate_Disp <-
           )
 
         sb_bw[[i]] <-
-          mutate(
+          dplyr::mutate(
             sim[[i]][[2]],
             method = "dh",
             TS = minTS + i * 6 - 6,
@@ -466,27 +466,27 @@ simulate_Disp <-
           )
 
       }
-      sb_bw <- bind_rows(sb_bw) # return data frame
+      sb_bw <- dplyr::bind_rows(sb_bw) # return data frame
 
 
-      ese <- group_by(sb_bw, TS, Party)
+      ese <- dplyr::group_by(sb_bw, TS, Party)
       ese <-
-        summarise(ese,
+        dplyr::summarise(ese,
                   SB_i = mean(Seats - VoteShare / 100 * distTS),
                   V = sum(Votes))
 
-      ese2 <- group_by(sb_bw, TS, Party)
+      ese2 <- dplyr::group_by(sb_bw, TS, Party)
       ese2 <-
-        summarise(ese2,
+        dplyr::summarise(ese2,
                   SB2_i = mean(SeatShare / 100 - VoteShare / 100),
                   V = sum(Votes))
-      ese_mean <- group_by(sb_bw, TS, Party)
+      ese_mean <- dplyr::group_by(sb_bw, TS, Party)
       ese_mean <-
-        summarise(ese_mean,
+        dplyr::summarise(ese_mean,
                   SB_i = mean(Seats - VoteShare / 100 * distTS),
                   V = sum(Votes))
-      ese_mean <- group_by(ese_mean, Party)
-      ese_mean <- summarise(ese_mean, ESB = mean(SB_i), TV = sum(V))
+      ese_mean <- dplyr::group_by(ese_mean, Party)
+      ese_mean <- dplyr::summarise(ese_mean, ESB = mean(SB_i), TV = sum(V))
 
       # Return list
 
@@ -516,7 +516,7 @@ plot_Disp <-
 
     # Plots
     sb_bw_plot1 <-
-      ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
+      ggplot2::ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         colour = factor(TS)
@@ -526,7 +526,7 @@ plot_Disp <-
 
 
     sb_bw_plot2 <-
-      ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
+      ggplot2::ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
         colour = factor(TS)
@@ -535,7 +535,7 @@ plot_Disp <-
                                                   option = "D") + geom_hline(yintercept = tse) + theme_classic()
 
     sb_bw_plot3 <-
-      ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
+      ggplot2::ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
         colour = factor(TS)
@@ -544,7 +544,7 @@ plot_Disp <-
                                                   option = "D") + geom_hline(yintercept = c(0)) + theme_classic()
 
     ese_plot <-
-      ggplot(data = bias_data$ese) + geom_point(aes(
+      ggplot2::ggplot(data = bias_data$ese) + geom_point(aes(
         x = Party,
         y = SB_i,
         colour = factor(TS)
@@ -554,7 +554,7 @@ plot_Disp <-
                                                                                   "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = tse)
 
     ese_plot2 <-
-      ggplot(data = bias_data$ese2) + geom_point(aes(
+      ggplot2::ggplot(data = bias_data$ese2) + geom_point(aes(
         x = Party,
         y = SB2_i,
         colour = factor(TS)
@@ -564,7 +564,7 @@ plot_Disp <-
                                                                                   "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
-      ggplot(data = bias_data$ese_mean) + geom_point(aes(
+      ggplot2::ggplot(data = bias_data$ese_mean) + geom_point(aes(
         x = Party,
         y = ESB,
         colour = factor(TV)
