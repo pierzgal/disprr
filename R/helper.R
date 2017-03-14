@@ -93,12 +93,12 @@
 
 
   for (i in seq(1, ne, by = 1)) {
-    result2[[i]] <- mutate(result2[[i]], Party = .if.parties.null(np))
-    result2[[i]] <- arrange(result2[[i]], desc(SeatShareIdeal))
+    result2[[i]] <- dplyr::mutate(result2[[i]], Party = .if.parties.null(np))
+    result2[[i]] <- dplyr::arrange(result2[[i]], desc(SeatShareIdeal))
   }
 
   result2
-  result2 <- bind_rows(result2)
+  result2 <- dplyr::bind_rows(result2)
   out <- result2
 
   return(out)
@@ -183,14 +183,14 @@
 
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
-                x[[i]][[j]] <- mutate(
+                x[[i]][[j]] <- dplyr::mutate(
                   out[[i]][[j]],
                   id = paste("e", i, "d", j, sep = ""),
                   elec = paste("e", i, sep = ""),
                   dist = paste("d", j, sep = ""),
                   distTS = sample[[2]][[i]][j]
                 )
-                e[[i]][[j]] <- select(x[[i]][[j]],
+                e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
                                       Party,
                                       Seats,
                                       SeatShare,
@@ -225,14 +225,14 @@
 
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
-                x[[i]][[j]] <- mutate(
+                x[[i]][[j]] <- dplyr::mutate(
                   out[[i]][[j]],
                   id = paste("e", i, "d", j, sep = ""),
                   elec = paste("e", i, sep = ""),
                   dist = paste("d", j, sep = ""),
                   distTS = sample[[2]][[i]][j]
                 )
-                e[[i]][[j]] <- select(x[[i]][[j]],
+                e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
                                       Party,
                                       Seats,
                                       SeatShare,
@@ -249,7 +249,7 @@
           }
 
 
-          out <- bind_rows(lapply(e,  FUN = bind_rows))
+          out <- dplyr::bind_rows(lapply(e,  FUN = bind_rows))
           out
 
         }
@@ -276,7 +276,7 @@
 
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
-                x[[i]][[j]] <- mutate(
+                x[[i]][[j]] <- dplyr::mutate(
                   out[[i]][[j]],
                   id = paste("e", i, "d", j, sep = ""),
                   elec = paste("e", i, sep = ""),
@@ -318,7 +318,7 @@
 
             for (i in seq(1, ne, by = 1)) {
               for (j in  seq(1, nd, by = 1)) {
-                x[[i]][[j]] <- mutate(
+                x[[i]][[j]] <- dplyr::mutate(
                   out[[i]][[j]],
                   id = paste("e", i, "d", j, sep = ""),
                   elec = paste("e", i, sep = ""),
@@ -343,7 +343,7 @@
 
 
           ### Result
-          out <- bind_rows(lapply(e,  FUN = bind_rows))
+          out <- dplyr::bind_rows(lapply(e,  FUN = dplyr::bind_rows))
           out
 
         }
