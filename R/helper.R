@@ -93,7 +93,7 @@
 
 
   for (i in seq(1, ne, by = 1)) {
-    result2[[i]] <- dplyr::mutate(result2[[i]], Party = .if.parties.null(np))
+    result2[[i]] <- dplyr::mutate(result2[[i]], Party = if.parties.null(np))
     result2[[i]] <- dplyr::arrange(result2[[i]], desc(SeatShareIdeal))
   }
 
@@ -170,7 +170,7 @@
               for (i in seq(1, nd, by = 1)) {
                 out[[j]][[i]] <-
                   LR_Hamilton(
-                    parties = .if.parties.null(np),
+                    parties = if.parties.null(np),
                     votes = sample_mod[[1]][, i, j],
                     seats = sample_mod[[2]][[j]][i],
                     threshold = 0,
@@ -211,7 +211,7 @@
               for (i in seq(1, nd, by = 1)) {
                 out[[j]][[i]] <-
                   divisorMethods(
-                    parties = .if.parties.null(np),
+                    parties = if.parties.null(np),
                     votes = sample_mod[[1]][, i, j],
                     seats = sample_mod[[2]][[j]][i],
                     method = formula,
@@ -263,7 +263,7 @@
               for (i in seq(1, nd, by = 1)) {
                 out[[j]][[i]] <-
                   LR_Hamilton(
-                    parties = .if.parties.null(np),
+                    parties = if.parties.null(np),
                     votes = sample[[1]][, i, j],
                     seats = sample[[2]][[j]][i],
                     threshold = threshold,
@@ -304,7 +304,7 @@
               for (i in seq(1, nd, by = 1)) {
                 out[[j]][[i]] <-
                   divisorMethods(
-                    parties = .if.parties.null(np),
+                    parties = if.parties.null(np),
                     votes = sample[[1]][, i, j],
                     seats = sample[[2]][[j]][i],
                     method = formula,
