@@ -98,13 +98,15 @@ sampleElectionData <-
               for (j in seq(1, ne, by = 1)) {
                 for (i in seq(1, nd, by = 1)) {
                   x[, i, j] <-
-                    sort(floor(truncdist::rtrunc(
-                      np,
-                      spec = "exp",
-                      a = 0,
-                      b = max,
-                      rate = rate
-                    )))
+                    sort(floor(
+                      truncdist::rtrunc(
+                        np,
+                        spec = "exp",
+                        a = 0,
+                        b = max,
+                        rate = rate
+                      )
+                    ))
                 }
 
               }
@@ -220,7 +222,7 @@ sampleElectionData <-
 
 #' Simulate Elections under Proportional Representation
 #'
-#' The function simulate election results and compute a variaty of disproportionality measures.
+#' The function simulates election results and computes a variaty of disproportionality measures.
 #'
 #' @return A list containg the following data objects:
 #' seat_excess,
@@ -258,6 +260,7 @@ simulate_E <-
     apportionment <-
       .ProportionalRepresentation(sample, formula, threshold, threshold_country)
 
+    apportionment$Party <- as.character(apportionment$Party)
 
     # Determine number of votes by election
     # Return df (VoteShareTotalParty VotesTotalParty elec Party)
@@ -276,13 +279,15 @@ simulate_E <-
       out <- vote_share
       out
 
+
       for (i in seq(1, ne, by = 1)) {
         out[[i]] <- dplyr::mutate(out[[i]], Party = if.parties.null(np))
-        out[[i]] <- dplyr::arrange(out[[i]], desc(VoteShareTotalParty))
+        out[[i]] <-
+          dplyr::arrange(out[[i]], desc(VoteShareTotalParty))
       }
 
-      vote_share <- dplyr::bind_rows(out)
-      }
+      vote_share <- data.table::rbindlist(out)
+    }
 
     apportionment <-
       dplyr::left_join(apportionment, vote_share, by = c("Party", "elec"))
@@ -290,7 +295,8 @@ simulate_E <-
 
     ## Group districts in elections
 
-    apportionment_sum1 <- dplyr::group_by(apportionment, elec, Party)
+    apportionment_sum1 <-
+      dplyr::group_by(apportionment, elec, Party)
     apportionment_sum2 <-
       dplyr::summarise(
         apportionment_sum1,
@@ -339,7 +345,8 @@ simulate_E <-
         SE2_i = excess,
         RSE2_i
       )
-    seat_excess <- dplyr::mutate(seat_excess, Seats = as.integer(Seats))
+    seat_excess <-
+      dplyr::mutate(seat_excess, Seats = as.integer(Seats))
 
 
     ### Disproportionality indexes ###
@@ -347,12 +354,15 @@ simulate_E <-
     disp <-
       dplyr::summarise(
         disp,
-        meanRSE2 = signif( sum(abs(RSE2_i)) / np, digits = 2 ),
-        LHI = signif( 1 / 2 * sum(abs(SeatShare - VoteShare)), digits = 2 ),
-        GHI = signif( sqrt(1 / 2 * sum((
+        meanRSE2 = signif(sum(abs(RSE2_i)) / np, digits = 2),
+        LHI = signif(1 / 2 * sum(abs(
           SeatShare - VoteShare
-        ) ^ 2)), digits = 2 ),
-        SLI = signif( sum((SeatShare - VoteShare) ^ 2 / (VoteShare)), digits = 2 )
+        )), digits = 2),
+        GHI = signif(sqrt(1 / 2 * sum((SeatShare - VoteShare) ^ 2
+        )), digits = 2),
+        SLI = signif(sum((
+          SeatShare - VoteShare
+        ) ^ 2 / (VoteShare)), digits = 2)
       )
 
     summary <-
@@ -367,7 +377,8 @@ simulate_E <-
 
     ## Seat biases - by Party
 
-    apportionment_sum3 <- dplyr::group_by(apportionment, distTS, Party)
+    apportionment_sum3 <-
+      dplyr::group_by(apportionment, distTS, Party)
     esb <-
       dplyr::summarise(apportionment_sum3,
                        E = mean((SeatShare / 100 - VoteShare / 100)),
@@ -399,7 +410,8 @@ simulate_E <-
     ### Results
 
     out <-
-      list(seat_excess, apportionment, disp, esb, esb.2, esb.3, summary)
+      list(seat_excess, apportionment, summary)
+    #      list(seat_excess, apportionment, disp, esb, esb.2, esb.3, summary)
 
     return(out)
 
@@ -435,7 +447,9 @@ simulate_Disp <-
 
     # Data
     if (nd >= minTS) {
-      stop("The total number of districts ('nd') needs to be less than the minimal total number of seats ('minTS').")
+      stop(
+        "The total number of districts ('nd') needs to be less than the minimal total number of seats ('minTS')."
+      )
     }
 
     else {
@@ -489,15 +503,17 @@ simulate_Disp <-
                          SB_i = mean(Seats - VoteShare / 100 * distTS),
                          V = sum(Votes))
       ese_mean <- dplyr::group_by(ese_mean, Party)
-      ese_mean <- dplyr::summarise(ese_mean, ESB = mean(SB_i), TV = sum(V))
+      ese_mean <-
+        dplyr::summarise(ese_mean, ESB = mean(SB_i), TV = sum(V))
 
       # Return list
 
       bias_data <-
-        list(sb_bw = sb_bw,
-             ese = ese,
-             ese2 = ese2,
-             ese_mean = ese_mean
+        list(
+          sb_bw = sb_bw,
+          ese = ese,
+          ese2 = ese2,
+          ese_mean = ese_mean
         )
 
       return(bias_data)
@@ -516,7 +532,6 @@ simulate_Disp <-
 plot_Disp <-
   function(bias_data, tse = c(0, 5 / 12, -1 / 12, -4 / 12), ...)
   {
-
     # Plots
     sb_bw_plot1 <-
       ggplot2::ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
@@ -553,8 +568,8 @@ plot_Disp <-
         colour = factor(TS)
       ),
       size = 4,
-      alpha = 1 / 2) + ylab("B_i1(M)") + facet_grid( ~ V) + scale_color_viridis(name =
-                                                                                  "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = tse)
+      alpha = 1 / 2) + ylab("B_i1(M)") + facet_grid(~ V) + scale_color_viridis(name =
+                                                                                 "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = tse)
 
     ese_plot2 <-
       ggplot2::ggplot(data = bias_data$ese2) + geom_point(aes(
@@ -563,8 +578,8 @@ plot_Disp <-
         colour = factor(TS)
       ),
       size = 4,
-      alpha = 1 / 2) + ylab("B_i2(M)") + facet_grid( ~ V) + scale_color_viridis(name =
-                                                                                  "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = c(0))
+      alpha = 1 / 2) + ylab("B_i2(M)") + facet_grid(~ V) + scale_color_viridis(name =
+                                                                                 "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
       ggplot2::ggplot(data = bias_data$ese_mean) + geom_point(aes(
