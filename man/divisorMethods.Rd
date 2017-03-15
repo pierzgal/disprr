@@ -39,9 +39,6 @@ A data.frame of length parties containing apportioned seats.
 \description{
 Allocate seats to parties using a variaty of divisor methods.
 }
-\details{
-Acknowledgments: This function uses a modified code of the function HighestAverages from the SciencesPo package developed by Daniel Marcelino.
-}
 \examples{
 (...)
 }
