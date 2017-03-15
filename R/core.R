@@ -249,14 +249,14 @@ simulate_E <-
     set.seed(seed)
 
     sample <-
-      sampleElectionData(seed, dist, np, nd, ne, mean, sd, rate, max, TS, formula_dist)
+      sampleElectionData(seed = seed, dist = dist, np = np, nd = nd, ne = ne, mean = mean, sd = sd, rate = rate, max = max, TS = TS, formula_dist = formula_dist)
 
 
     # Seat apportionment per district
     # Return list (Party Seats SeatShare Votes VoteShare id elec dist distTS)
 
     apportionment <-
-      .ProportionalRepresentation(sample, formula, threshold, threshold_country)
+      .ProportionalRepresentation(sample = sample, formula = formula, threshold = threshold, threshold_country = threshold_country)
 
 
     # Determine number of votes by election
@@ -441,20 +441,20 @@ simulate_Disp <-
       for (i in seq(1, steps, by = 1)) {
         sim[[i]] <-
           simulate_E(
-            seed,
-            dist,
-            np,
-            nd,
-            ne,
-            mean,
-            sd,
-            rate,
-            max,
+            seed = seed,
+            dist = dist,
+            np = np,
+            nd = nd,
+            ne = ne,
+            mean = mean,
+            sd = sd,
+            rate = rate,
+            max = max,
             TS = minTS + i * 6 - 6,
-            formula,
-            formula_dist,
-            threshold,
-            threshold_country
+            formula = formula,
+            formula_dist = formula_dist,
+            threshold = threshold,
+            threshold_country = threshold_country
           )
 
         sb_bw[[i]] <-
