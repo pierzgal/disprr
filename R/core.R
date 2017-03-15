@@ -249,14 +249,14 @@ simulate_E <-
     set.seed(seed)
 
     sample <-
-      sampleElectionData(seed = seed, dist = dist, np = np, nd = nd, ne = ne, mean = mean, sd = sd, rate = rate, max = max, TS = TS, formula_dist = formula_dist)
+      sampleElectionData(seed, dist, np, nd, ne, mean, sd, rate, max, TS, formula_dist)
 
 
     # Seat apportionment per district
     # Return list (Party Seats SeatShare Votes VoteShare id elec dist distTS)
 
     apportionment <-
-      .ProportionalRepresentation(sample = sample, formula = formula, threshold = threshold, threshold_country = threshold_country)
+      .ProportionalRepresentation(sample, formula, threshold, threshold_country)
 
 
     # Determine number of votes by election
@@ -313,15 +313,16 @@ simulate_E <-
 
     ## Seat excesses
     seat_excess <-
-      dplyr::mutate(
+      mutate(
         merged,
         Party = as.factor(Party),
-        excess = round(seat_perc / 100 - SeatShareIdeal / 100, 6),
-        SeatShare = round(seat_perc / 100, 4),
-        VoteShare = round(VoteShareTotalParty / 100, 4),
+        excess = signif(seat_perc / 100 - SeatShareIdeal / 100, 2),
+        SeatShare = signif(seat_perc / 100, 2),
+        VoteShare = signif(VoteShareTotalParty / 100, 2),
         StandardQuota = (SeatShareIdeal / 100) * TS,
-        RSE2_i = round((seat_perc - SeatShareIdeal) / SeatShareIdeal, 4)
+        RSE2_i = signif((seat_perc - SeatShareIdeal) / SeatShareIdeal, 2)
       )
+
 
     # Remark :  RSE_i = DEV0
 
@@ -342,16 +343,16 @@ simulate_E <-
 
 
     ### Disproportionality indexes ###
-    disp <- dplyr::group_by(seat_excess, ElectionID)
+    disp <- group_by(seat_excess, ElectionID)
     disp <-
       dplyr::summarise(
         disp,
-        meanRSE2 = sum(abs(RSE2_i)) / np,
-        LHI = 1 / 2 * sum(abs(SeatShare - VoteShare)),
-        GHI = sqrt(1 / 2 * sum((
+        meanRSE2 = signif( sum(abs(RSE2_i)) / np, digits = 2 ),
+        LHI = signif( 1 / 2 * sum(abs(SeatShare - VoteShare)), digits = 2 ),
+        GHI = signif( sqrt(1 / 2 * sum((
           SeatShare - VoteShare
-        ) ^ 2)),
-        SLI = sum((SeatShare - VoteShare) ^ 2 / (VoteShare))
+        ) ^ 2)), digits = 2 ),
+        SLI = signif( sum((SeatShare - VoteShare) ^ 2 / (VoteShare)), digits = 2 )
       )
 
     summary <-
@@ -441,20 +442,20 @@ simulate_Disp <-
       for (i in seq(1, steps, by = 1)) {
         sim[[i]] <-
           simulate_E(
-            seed = seed,
-            dist = dist,
-            np = np,
-            nd = nd,
-            ne = ne,
-            mean = mean,
-            sd = sd,
-            rate = rate,
-            max = max,
+            seed,
+            dist,
+            np,
+            nd,
+            ne,
+            mean,
+            sd,
+            rate,
+            max,
             TS = minTS + i * 6 - 6,
-            formula = formula,
-            formula_dist = formula_dist,
-            threshold = threshold,
-            threshold_country = threshold_country
+            formula,
+            formula_dist,
+            threshold,
+            threshold_country
           )
 
         sb_bw[[i]] <-
