@@ -343,7 +343,6 @@ simulate_E <-
         VoteShare,
         SQ = StandardQuota,
         SE1_i,
-        SE1_i_2,
         SE2_i,
         SE2_i_pp,
         RSE2_i
