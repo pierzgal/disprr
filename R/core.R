@@ -406,7 +406,7 @@ simulate_E <-
     ### Results
 
     out <-
-      list(SE2_i = seat_excess, apportionment, summary)
+      list(Seat_Excess = seat_excess, Apportionment = apportionment, Disproportionality_per_elec = disp, Summary = summary)
     #      list(seat_excess, apportionment, disp, esb, esb.2, esb.3, summary)
 
     return(out)
