@@ -302,10 +302,10 @@ simulate_E <-
         apportionment_sum1,
         seats = sum(Seats),
         seat_perc = sum(Seats) / TS * 100,
+        distTS = distTS[1],
         TS = TS[1]
       )
-
-    apportionment_sum <-
+    apportionment_sum3 <-
       dplyr::left_join(apportionment_sum2, vote_share, by = c("Party", "elec"))
 
 
@@ -314,7 +314,7 @@ simulate_E <-
 
     ## Merge
     merged <-
-      dplyr::left_join(apportionment_sum, seats_ideal, by = c("Party", "elec"))
+      dplyr::left_join(apportionment_sum3, seats_ideal, by = c("Party", "elec"))
 
 
     ## Seat excesses
@@ -322,15 +322,15 @@ simulate_E <-
       mutate(
         merged,
         Party = as.factor(Party),
-        excess = signif(seat_perc / 100 - SeatShareIdeal / 100, 2),
+#        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
+        SE1_i = signif(seats - VoteShareTotalParty / 100 * TS, 2),
+        SE2_i = signif(seat_perc / 100 - VoteShareTotalParty / 100, 2),
+        SE2_i_pp = signif(seat_perc - SeatShareIdeal, 2),
         SeatShare = signif(seat_perc / 100, 2),
         VoteShare = signif(VoteShareTotalParty / 100, 2),
         StandardQuota = (SeatShareIdeal / 100) * TS,
         RSE2_i = signif((seat_perc - SeatShareIdeal) / SeatShareIdeal, 2)
       )
-
-
-    # Remark :  RSE_i = DEV0
 
     seat_excess <-
       dplyr::select(
@@ -342,7 +342,10 @@ simulate_E <-
         Votes = VotesTotalParty,
         VoteShare,
         SQ = StandardQuota,
-        SE2_i = excess,
+        SE1_i,
+        SE1_i_2,
+        SE2_i,
+        SE2_i_pp,
         RSE2_i
       )
     seat_excess <-
@@ -381,15 +384,8 @@ simulate_E <-
       dplyr::group_by(apportionment, distTS, Party)
     esb <-
       dplyr::summarise(apportionment_sum3,
-                       E = mean((SeatShare / 100 - VoteShare / 100)),
+                       SB2_i = mean((SeatShare / 100 - VoteShare / 100)),
                        VotesParty_DM = sum(Votes))
-
-    apportionment_sum3.2 <-
-      dplyr::group_by(apportionment, elec, distTS, Party)
-    esb.2 <-
-      dplyr::summarise(apportionment_sum3.2,
-                       E = mean((SeatShare / 100 - VoteShare / 100)),
-                       VotesParty_dist = sum(Votes))
 
 
     # Only for country-wide districts
@@ -397,7 +393,7 @@ simulate_E <-
       apportionment_sum3.3 <- dplyr::group_by(apportionment, Party)
       esb.3 <-
         dplyr::summarise(apportionment_sum3.3,
-                         E = mean((SeatShare / 100 - VoteShare / 100)),
+                         SB2_i = mean((SeatShare / 100 - VoteShare / 100)),
                          VotesParty_dist = sum(Votes))
 
     }
@@ -410,7 +406,7 @@ simulate_E <-
     ### Results
 
     out <-
-      list(seat_excess, apportionment, summary)
+      list(SE2_i = seat_excess, apportionment, summary)
     #      list(seat_excess, apportionment, disp, esb, esb.2, esb.3, summary)
 
     return(out)
@@ -477,9 +473,9 @@ simulate_Disp <-
             sim[[i]][[2]],
             method = "dh",
             TS = minTS + i * 6 - 6,
-            SE1 = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
-            SE2 = Seats - VoteShare / 100 * distTS,
-            TSB = (3 * VoteShare / 100 - 1) / 2
+#            SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
+            SE1_i = Seats - VoteShare / 100 * distTS,
+            SE2_i = SeatShare / 100 - VoteShare / 100
           )
 
       }
