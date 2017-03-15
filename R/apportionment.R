@@ -46,9 +46,6 @@ divisorMethods <-
     .ratio <- votes / sum(votes)
     .votes <- ifelse(.ratio < threshold, 0, votes)
 
-    if (length(parties) != length(seats))
-      stop("Allocation error.")
-
     # Methods
 
     switch(
@@ -203,6 +200,9 @@ divisorMethods <-
       # Reorder by column name
       output <-
         output[c("Party", "Seats", "SeatShare", "Votes", "VoteShare")]
+      
+          if (length(parties) != length(seats))
+      stop("Allocation error.")
 
       return(output)
 
