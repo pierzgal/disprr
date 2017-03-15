@@ -12,4 +12,6 @@ if.parties.null(x)
 \description{
 Create 3-letter identifiers for parties if 'parties' parameter in 'divisorMethods' or 'LR.Hamilton' functions is NULL.
 }
-\keyword{internal}
+\examples{
+(...)
+}
