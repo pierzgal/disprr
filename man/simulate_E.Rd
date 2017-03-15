@@ -15,7 +15,7 @@ disp,
 summary.
 }
 \description{
-The function simulate election results and compute a variaty of disproportionality measures.
+The function simulates election results and computes a variaty of disproportionality measures.
 }
 \examples{
 (...)
