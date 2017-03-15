@@ -191,15 +191,15 @@
                   distTS = sample[[2]][[i]][j]
                 )
                 e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
-                                      Party,
-                                      Seats,
-                                      SeatShare,
-                                      Votes,
-                                      VoteShare,
-                                      id,
-                                      elec,
-                                      dist,
-                                      distTS)
+                                             Party,
+                                             Seats,
+                                             SeatShare,
+                                             Votes,
+                                             VoteShare,
+                                             id,
+                                             elec,
+                                             dist,
+                                             distTS)
 
               }
             }
@@ -233,15 +233,15 @@
                   distTS = sample[[2]][[i]][j]
                 )
                 e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
-                                      Party,
-                                      Seats,
-                                      SeatShare,
-                                      Votes,
-                                      VoteShare,
-                                      id,
-                                      elec,
-                                      dist,
-                                      distTS)
+                                             Party,
+                                             Seats,
+                                             SeatShare,
+                                             Votes,
+                                             VoteShare,
+                                             id,
+                                             elec,
+                                             dist,
+                                             distTS)
 
               }
             }

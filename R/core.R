@@ -2,7 +2,9 @@
 #'
 #' Create 3-letter identifiers for parties if 'parties' parameter in 'divisorMethods' or 'LR.Hamilton' functions is NULL.
 #' @return 3-letter identifiers for parties.
-#' @keywords internal
+#' @examples
+#' (...)
+#' @export
 
 if.parties.null <- function(x) {
   set.seed(1)
@@ -472,19 +474,19 @@ simulate_Disp <-
       ese <- dplyr::group_by(sb_bw, TS, Party)
       ese <-
         dplyr::summarise(ese,
-                  SB_i = mean(Seats - VoteShare / 100 * distTS),
-                  V = sum(Votes))
+                         SB_i = mean(Seats - VoteShare / 100 * distTS),
+                         V = sum(Votes))
 
       ese2 <- dplyr::group_by(sb_bw, TS, Party)
       ese2 <-
         dplyr::summarise(ese2,
-                  SB2_i = mean(SeatShare / 100 - VoteShare / 100),
-                  V = sum(Votes))
+                         SB2_i = mean(SeatShare / 100 - VoteShare / 100),
+                         V = sum(Votes))
       ese_mean <- dplyr::group_by(sb_bw, TS, Party)
       ese_mean <-
         dplyr::summarise(ese_mean,
-                  SB_i = mean(Seats - VoteShare / 100 * distTS),
-                  V = sum(Votes))
+                         SB_i = mean(Seats - VoteShare / 100 * distTS),
+                         V = sum(Votes))
       ese_mean <- dplyr::group_by(ese_mean, Party)
       ese_mean <- dplyr::summarise(ese_mean, ESB = mean(SB_i), TV = sum(V))
 
