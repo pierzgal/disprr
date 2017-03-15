@@ -46,7 +46,7 @@ divisorMethods <-
     .ratio <- votes / sum(votes)
     .votes <- ifelse(.ratio < threshold, 0, votes)
     
-    if (length(parties) != length(seats))
+    if (length(parties) != length(votes))
     
       stop("Allocation error.")    
 
