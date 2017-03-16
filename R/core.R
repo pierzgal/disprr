@@ -319,7 +319,7 @@ simulate_E <-
 
     ## Seat excesses
     seat_excess <-
-      mutate(
+      dplyr::mutate(
         merged,
         Party = as.factor(Party),
 #        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
@@ -484,7 +484,7 @@ simulate_Disp <-
       ese <- dplyr::group_by(sb_bw, TS, Party)
       ese <-
         dplyr::summarise(ese,
-                         SB_i = mean(Seats - VoteShare / 100 * distTS),
+                         SB1_i = mean(Seats - VoteShare / 100 * distTS),
                          V = sum(Votes))
 
       ese2 <- dplyr::group_by(sb_bw, TS, Party)
@@ -495,11 +495,11 @@ simulate_Disp <-
       ese_mean <- dplyr::group_by(sb_bw, TS, Party)
       ese_mean <-
         dplyr::summarise(ese_mean,
-                         SB_i = mean(Seats - VoteShare / 100 * distTS),
+                         SB1_i = mean(Seats - VoteShare / 100 * distTS),
                          V = sum(Votes))
       ese_mean <- dplyr::group_by(ese_mean, Party)
       ese_mean <-
-        dplyr::summarise(ese_mean, ESB = mean(SB_i), TV = sum(V))
+        dplyr::summarise(ese_mean, ESB1 = mean(SB1_i), TV = sum(V))
 
       # Return list
 
