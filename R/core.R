@@ -352,7 +352,7 @@ simulate_E <-
 
 
     ### Disproportionality indexes ###
-    disp <- group_by(seat_excess, ElectionID)
+    disp <- dplyr::group_by(seat_excess, ElectionID)
     disp <-
       dplyr::summarise(
         disp,
