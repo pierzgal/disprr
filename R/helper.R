@@ -93,16 +93,15 @@
 
 
   for (i in seq(1, ne, by = 1)) {
-    result2[[i]] <- dplyr::mutate(result2[[i]], Party = if.parties.null(np))
+    result2[[i]] <- dplyr::mutate(result2[[i]], Party = as.character(if.parties.null(np)))
     result2[[i]] <- dplyr::arrange(result2[[i]], desc(SeatShareIdeal))
   }
 
   result2
-  result2 <- dplyr::bind_rows(result2)
+  result2 <- data.table::rbindlist(result2) # data.table used instead dplyr::bind_rows
   out <- result2
 
   return(out)
-
 }
 
 
@@ -283,7 +282,7 @@
                   dist = paste("d", j, sep = ""),
                   distTS = sample[[2]][[i]][j]
                 )
-                e[[i]][[j]] <- select(x[[i]][[j]],
+                e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
                                       Party,
                                       Seats,
                                       SeatShare,
@@ -325,7 +324,7 @@
                   dist = paste("d", j, sep = ""),
                   distTS = sample[[2]][[i]][j]
                 )
-                e[[i]][[j]] <- select(x[[i]][[j]],
+                e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
                                       Party,
                                       Seats,
                                       SeatShare,
