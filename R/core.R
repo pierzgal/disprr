@@ -529,61 +529,61 @@ plot_Disp <-
   {
     # Plots
     sb_bw_plot1 <-
-      ggplot2::ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
+      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(aes(
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         colour = factor(TS)
       )) + ylab("Seat Excess") + scale_color_viridis(discrete = TRUE,
                                                      name = "DM",
-                                                     option = "D") + geom_hline(yintercept = tse) + theme_classic()
+                                                     option = "D") + ggplot2::geom_hline(yintercept = tse) + theme_classic()
 
 
     sb_bw_plot2 <-
-      ggplot2::ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
+      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(aes(
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
         colour = factor(TS)
       )) + ylab("SE_i1(M)") + scale_color_viridis(discrete = TRUE,
                                                   name = "M",
-                                                  option = "D") + geom_hline(yintercept = tse) + theme_classic()
+                                                  option = "D") + ggplot2::geom_hline(yintercept = tse) + theme_classic()
 
     sb_bw_plot3 <-
-      ggplot2::ggplot(data = bias_data$sb_bw) + geom_boxplot(aes(
+      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(aes(
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
         colour = factor(TS)
       )) + ylab("SE_i2(M)") + scale_color_viridis(discrete = TRUE,
                                                   name = "M",
-                                                  option = "D") + geom_hline(yintercept = c(0)) + theme_classic()
+                                                  option = "D") + ggplot2::geom_hline(yintercept = c(0)) + theme_classic()
 
     ese_plot <-
-      ggplot2::ggplot(data = bias_data$ese) + geom_point(aes(
+      ggplot2::ggplot(data = bias_data$ese) + ggplot2::geom_point(aes(
         x = Party,
         y = SB_i,
         colour = factor(TS)
       ),
       size = 4,
       alpha = 1 / 2) + ylab("B_i1(M)") + facet_grid(~ V) + scale_color_viridis(name =
-                                                                                 "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = tse)
+                                                                                 "M", discrete = TRUE) + theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
-      ggplot2::ggplot(data = bias_data$ese2) + geom_point(aes(
+      ggplot2::ggplot(data = bias_data$ese2) + ggplot2::geom_point(aes(
         x = Party,
         y = SB2_i,
         colour = factor(TS)
       ),
       size = 4,
       alpha = 1 / 2) + ylab("B_i2(M)") + facet_grid(~ V) + scale_color_viridis(name =
-                                                                                 "M", discrete = TRUE) + theme_classic() + geom_hline(yintercept = c(0))
+                                                                                 "M", discrete = TRUE) + theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
-      ggplot2::ggplot(data = bias_data$ese_mean) + geom_point(aes(
+      ggplot2::ggplot(data = bias_data$ese_mean) + ggplot2::geom_point(aes(
         x = Party,
         y = ESB,
         colour = factor(TV)
       ),
       size = 4,
-      alpha = 1 / 2) + ylab("B_i1(M)") + theme_classic() + geom_hline(yintercept = tse) + scale_color_viridis(name =
+      alpha = 1 / 2) + ylab("B_i1(M)") + theme_classic() + ggplot2::geom_hline(yintercept = tse) + scale_color_viridis(name =
                                                                                                                 "TV", discrete = TRUE)
     # Return list
 
