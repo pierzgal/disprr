@@ -533,7 +533,7 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         colour = factor(TS)
-      )) + ggplot2::ylab("Seat Excess") + ggplot2::scale_color_viridis(discrete = TRUE,
+      )) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
                                                      name = "DM",
                                                      option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
 
@@ -543,7 +543,7 @@ plot_Disp <-
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
         colour = factor(TS)
-      )) + ggplot2::ylab("SE_i1(M)") + ggplot2::scale_color_viridis(discrete = TRUE,
+      )) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                   name = "M",
                                                   option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
 
@@ -552,7 +552,7 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
         colour = factor(TS)
-      )) + ggplot2::ylab("SE_i2(M)") + ggplot2::scale_color_viridis(discrete = TRUE,
+      )) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                   name = "M",
                                                   option = "D") + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic()
 
@@ -563,7 +563,7 @@ plot_Disp <-
         colour = factor(TS)
       ),
       size = 4,
-      alpha = 1 / 2) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid(~ V) + ggplot2::scale_color_viridis(name =
+      alpha = 1 / 2) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
                                                                                  "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
@@ -573,7 +573,7 @@ plot_Disp <-
         colour = factor(TS)
       ),
       size = 4,
-      alpha = 1 / 2) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid(~ V) + ggplot2::scale_color_viridis(name =
+      alpha = 1 / 2) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
                                                                                  "M", discrete = TRUE) + theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
@@ -583,7 +583,7 @@ plot_Disp <-
         colour = factor(TV)
       ),
       size = 4,
-      alpha = 1 / 2) + ggplot2::ylab("B_i1(M)") + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse) + ggplot2::scale_color_viridis(name =
+      alpha = 1 / 2) + ggplot2::ylab("B_i1(M)") + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse) + viridis::scale_color_viridis(name =
                                                                                                                 "TV", discrete = TRUE)
     # Return list
 
