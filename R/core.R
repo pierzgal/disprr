@@ -574,7 +574,7 @@ plot_Disp <-
       ),
       size = 4,
       alpha = 1 / 2) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
-                                                                                 "M", discrete = TRUE) + theme_classic() + ggplot2::geom_hline(yintercept = c(0))
+                                                                                 "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
       ggplot2::ggplot(data = bias_data$ese_mean) + ggplot2::geom_point(ggplot2::aes(
