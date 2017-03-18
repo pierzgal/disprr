@@ -62,7 +62,6 @@ sampleElectionData <-
     seats_dist = list()
     votes_share = list()
 
-
     switch (dist,
             uniform = {
               for (j in seq(1, ne, by = 1)) {
@@ -144,8 +143,7 @@ sampleElectionData <-
 
     }
 
-    # Apportionment functions with sorting disabled
-
+    # Use apportionment functions with order_name = FALSE
     switch (
       formula_dist,
       hamilton = {
@@ -216,7 +214,6 @@ sampleElectionData <-
 
   }
 
-
 # --------------------
 
 
@@ -247,7 +244,8 @@ simulate_E <-
             formula,
             formula_dist,
             threshold,
-            threshold_country) {
+            threshold_country,
+            ...) {
     set.seed(seed)
 
     sample <-
@@ -322,7 +320,7 @@ simulate_E <-
       dplyr::mutate(
         merged,
         Party = as.factor(Party),
-#        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
+        #        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
         SE1_i = signif(seats - VoteShareTotalParty / 100 * TS, 2),
         SE2_i = signif(seat_perc / 100 - VoteShareTotalParty / 100, 2),
         SE2_i_pp = signif(seat_perc - SeatShareIdeal, 2),
@@ -405,7 +403,12 @@ simulate_E <-
     ### Results
 
     out <-
-      list(Seat_Excess = seat_excess, Apportionment = apportionment, Disproportionality_per_elec = disp, Summary = summary)
+      list(
+        Seat_Excess = seat_excess,
+        Apportionment = apportionment,
+        Disproportionality_per_elec = disp,
+        Summary = summary
+      )
     #      list(seat_excess, apportionment, disp, esb, esb.2, esb.3, summary)
 
     return(out)
@@ -472,7 +475,7 @@ simulate_Disp <-
             sim[[i]][[2]],
             method = "dh",
             TS = minTS + i * 6 - 6,
-#            SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
+            #            SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
             SE1_i = Seats - VoteShare / 100 * distTS,
             SE2_i = SeatShare / 100 - VoteShare / 100
           )
@@ -534,8 +537,8 @@ plot_Disp <-
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         colour = factor(TS)
       )) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
-                                                     name = "DM",
-                                                     option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
+                                                                       name = "DM",
+                                                                       option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
 
 
     sb_bw_plot2 <-
@@ -544,8 +547,8 @@ plot_Disp <-
         y = (Seats - VoteShare / 100 * distTS),
         colour = factor(TS)
       )) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
-                                                  name = "M",
-                                                  option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
+                                                                    name = "M",
+                                                                    option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
 
     sb_bw_plot3 <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
@@ -553,38 +556,44 @@ plot_Disp <-
         y = (SeatShare / 100 - VoteShare / 100),
         colour = factor(TS)
       )) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
-                                                  name = "M",
-                                                  option = "D") + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic()
+                                                                    name = "M",
+                                                                    option = "D") + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic()
 
     ese_plot <-
-      ggplot2::ggplot(data = bias_data$ese) + ggplot2::geom_point(ggplot2::aes(
-        x = Party,
-        y = SB1_i,
-        colour = factor(TS)
-      ),
-      size = 4,
-      alpha = 1 / 2) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
-                                                                                 "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
+      ggplot2::ggplot(data = bias_data$ese) + ggplot2::geom_point(
+        ggplot2::aes(
+          x = Party,
+          y = SB1_i,
+          colour = factor(TS)
+        ),
+        size = 4,
+        alpha = 1 / 2
+      ) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+                                                                                                "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
-      ggplot2::ggplot(data = bias_data$ese2) + ggplot2::geom_point(ggplot2::aes(
-        x = Party,
-        y = SB2_i,
-        colour = factor(TS)
-      ),
-      size = 4,
-      alpha = 1 / 2) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
-                                                                                 "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
+      ggplot2::ggplot(data = bias_data$ese2) + ggplot2::geom_point(
+        ggplot2::aes(
+          x = Party,
+          y = SB2_i,
+          colour = factor(TS)
+        ),
+        size = 4,
+        alpha = 1 / 2
+      ) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+                                                                                                "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
-      ggplot2::ggplot(data = bias_data$ese_mean) + ggplot2::geom_point(ggplot2::aes(
-        x = Party,
-        y = ESB1,
-        colour = factor(TV)
-      ),
-      size = 4,
-      alpha = 1 / 2) + ggplot2::ylab("B_i1(M)") + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse) + viridis::scale_color_viridis(name =
-                                                                                                                "TV", discrete = TRUE)
+      ggplot2::ggplot(data = bias_data$ese_mean) + ggplot2::geom_point(
+        ggplot2::aes(
+          x = Party,
+          y = ESB1,
+          colour = factor(TV)
+        ),
+        size = 4,
+        alpha = 1 / 2
+      ) + ggplot2::ylab("B_i1(M)") + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse) + viridis::scale_color_viridis(name =
+                                                                                                                                       "TV", discrete = TRUE)
     # Return list
 
     sb <-

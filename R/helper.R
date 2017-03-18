@@ -93,12 +93,15 @@
 
 
   for (i in seq(1, ne, by = 1)) {
-    result2[[i]] <- dplyr::mutate(result2[[i]], Party = as.character(if.parties.null(np)))
-    result2[[i]] <- dplyr::arrange(result2[[i]], desc(SeatShareIdeal))
+    result2[[i]] <-
+      dplyr::mutate(result2[[i]], Party = as.character(if.parties.null(np)))
+    result2[[i]] <-
+      dplyr::arrange(result2[[i]], desc(SeatShareIdeal))
   }
 
   result2
-  result2 <- data.table::rbindlist(result2) # data.table used instead dplyr::bind_rows
+  result2 <-
+    data.table::rbindlist(result2) # data.table used instead dplyr::bind_rows
   out <- result2
 
   return(out)
@@ -132,7 +135,8 @@
   function (sample,
             formula,
             threshold = 0,
-            threshold_country = 0) {
+            threshold_country = 0,
+            ...) {
     ne <- sample$Params[1]
     nd <- sample$Params[2]
     np <- sample$Params[3]
@@ -283,15 +287,15 @@
                   distTS = sample[[2]][[i]][j]
                 )
                 e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
-                                      Party,
-                                      Seats,
-                                      SeatShare,
-                                      Votes,
-                                      VoteShare,
-                                      id,
-                                      elec,
-                                      dist,
-                                      distTS)
+                                             Party,
+                                             Seats,
+                                             SeatShare,
+                                             Votes,
+                                             VoteShare,
+                                             id,
+                                             elec,
+                                             dist,
+                                             distTS)
 
               }
             }
@@ -325,15 +329,15 @@
                   distTS = sample[[2]][[i]][j]
                 )
                 e[[i]][[j]] <- dplyr::select(x[[i]][[j]],
-                                      Party,
-                                      Seats,
-                                      SeatShare,
-                                      Votes,
-                                      VoteShare,
-                                      id,
-                                      elec,
-                                      dist,
-                                      distTS)
+                                             Party,
+                                             Seats,
+                                             SeatShare,
+                                             Votes,
+                                             VoteShare,
+                                             id,
+                                             elec,
+                                             dist,
+                                             distTS)
 
               }
             }
@@ -342,7 +346,8 @@
 
 
           ### Result
-          out <- dplyr::bind_rows(lapply(e,  FUN = dplyr::bind_rows))
+          out <-
+            dplyr::bind_rows(lapply(e,  FUN = dplyr::bind_rows))
           out
 
         }

@@ -45,10 +45,10 @@ divisorMethods <-
            ...) {
     .ratio <- votes / sum(votes)
     .votes <- ifelse(.ratio < threshold, 0, votes)
-    
+
+
     if (length(parties) != length(votes))
-    
-      stop("Allocation error.")    
+      stop("Allocation error.")
 
     # Methods
 
