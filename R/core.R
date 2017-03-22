@@ -363,7 +363,7 @@ simulate_E <-
         SLI = signif(sum((
           SeatShare - VoteShare
         ) ^ 2 / (VoteShare)), digits = 2),
-        ENPP = signif(sum( 1/(SeatShare)^2 ), digits = 2)
+        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 2)
       )
 
     summary <-
@@ -569,8 +569,8 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
-                                                                                                "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
+      ) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
+                                                                                               "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
       ggplot2::ggplot(data = bias_data$ese2) + ggplot2::geom_point(
@@ -581,8 +581,8 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
-                                                                                                "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
+      ) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
+                                                                                               "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
       ggplot2::ggplot(data = bias_data$ese_mean) + ggplot2::geom_point(
@@ -616,14 +616,14 @@ plot_Disp <-
 #' @export
 
 plot_Disp2 <- function(seed = 1000,
-                           np = 3,
-                           nd = 1,
-                           ne = 100,
-                           dist = "lnorm",
-                           minTS = 3,
-                           threshold = 0,
-                           threshold_country = 0,
-                           ...)
+                       np = 3,
+                       nd = 1,
+                       ne = 100,
+                       dist = "lnorm",
+                       minTS = 3,
+                       threshold = 0,
+                       threshold_country = 0,
+                       ...)
 
 {
   dsl <- list()
@@ -849,7 +849,8 @@ plot_Disp2 <- function(seed = 1000,
                                      discrete = TRUE,
                                      begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 1)) + ggplot2::theme_classic()
 
-  out <- list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp_enpp)
+  out <-
+    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp_enpp)
   return(out)
 
 }
