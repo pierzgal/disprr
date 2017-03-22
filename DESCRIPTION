@@ -4,9 +4,10 @@ Title: Simulate Election Results and Compute Disproportionality Measures
 Version: 0.1.0
 Author: Michal Pierzgalski
 Maintainer: The package maintainer <pierzgal@gmail.com>
-Description: (...)
+Description: The package provides a few functions to simulate election results and then compute and plot a variaty of disproportionality measures.
+Depends: R (>= 3.1.0)
 License: GPL
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Imports: lattice, ggplot2, ggthemes, viridis, dplyr, truncdist, psych
+Imports: ggplot2 (>= 2.2), ggthemes (>= 3.3.0), viridis (>= 0.3.0), dplyr (>= 0.5.0), truncdist (>= 1.0-2), psych (>= 1.6.12)
