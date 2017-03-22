@@ -817,7 +817,7 @@ plot_Disp2 <- function(seed = 1000,
       fill = factor(method)
     )) + viridis::scale_fill_viridis(option = "C",
                                      discrete = TRUE,
-                                     begin = 0.3) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
 
   plot_disp2 <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
@@ -826,7 +826,7 @@ plot_Disp2 <- function(seed = 1000,
       fill = factor(method)
     )) + viridis::scale_fill_viridis(option = "D",
                                      discrete = TRUE,
-                                     begin = 0.3) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
 
   plot_disp3 <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_smooth(ggplot2::aes(
