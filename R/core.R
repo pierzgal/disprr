@@ -222,10 +222,10 @@ sampleElectionData <-
 #' The function simulates election results and computes a variaty of disproportionality measures.
 #'
 #' @return A list containg the following data objects:
-#' seat_excess,
-#' apportionment,
-#' disp,
-#' summary.
+#' Seat_Excess,
+#' Apportionment,
+#' Disproportionality_per_elec,
+#' Summary.
 #' @examples
 #' (...)
 #' @export
@@ -524,7 +524,7 @@ simulate_Disp <-
 
 #' Plot Disproportionality Measures Related to District Sizes and Numbers of Parties
 #'
-#' The function plots the relationships betweenon, on the one hand, values of a variaty of disproportionality measures and, on the other hand, district sizes or numbers of parties.
+#' The function plots the relationships between, on the one hand, values of a variaty of disproportionality measures and, on the other hand, district sizes or numbers of parties.
 #' @export
 
 plot_Disp <-
@@ -605,3 +605,241 @@ plot_Disp <-
 
     return(sb)
   }
+
+
+# ----
+
+#' Plot Aggregate-Level Disproportionality Measures Related to District Sizes
+#'
+#' The function plots the relationships between values of LHI and GHI measures and district sizes.
+#' @export
+
+plot_Disp2 <- function(seed = 1000,
+                           np = 3,
+                           nd = 1,
+                           ne = 100,
+                           dist = "lnorm",
+                           minTS = 3,
+                           threshold = 0,
+                           threshold_country = 0,
+                           ...)
+
+{
+  dsl <- list()
+  dmsl <- list()
+  ddh <- list()
+  dhh <- list()
+  dad <- list()
+  dhamilton <- list()
+
+  seatbias <- list()
+  out <- list()
+
+
+  for (i in seq(2, 16, by = 2)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 0.000001,
+        mean = 12,
+        sd = 1.5,
+        max = 500000,
+        TS = minTS + i - 2,
+        formula = "dh",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    ddh[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "DH",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+  for (i in seq(2, 16, by = 2)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 0.000001,
+        mean = 12,
+        sd = 1.5,
+        max = 500000,
+        TS = minTS + i - 2,
+        formula = "sl",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    dsl[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "SL",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+
+  for (i in seq(2, 16, by = 2)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 0.000001,
+        mean = 12,
+        sd = 1.5,
+        max = 500000,
+        TS = minTS + i - 2,
+        formula = "msl",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    dmsl[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "MSL",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+
+  for (i in seq(2, 16, by = 2)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 0.000001,
+        mean = 12,
+        sd = 1.5,
+        max = 500000,
+        TS = minTS + i - 2,
+        formula = "hamilton",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    dhamilton[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "H",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+  for (i in seq(2, 16, by = 2)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 0.000001,
+        mean = 12,
+        sd = 1.5,
+        max = 500000,
+        TS = minTS + i - 2,
+        formula = "hh",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    dhh[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "HH",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+  for (i in seq(2, 16, by = 2)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 0.000001,
+        mean = 12,
+        sd = 1.5,
+        max = 500000,
+        TS = minTS + i - 2,
+        formula = "ad",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    dad[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "A",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+  lghi_dh <- dplyr::bind_rows(ddh)
+  lghi_sl <- dplyr::bind_rows(dsl)
+  lghi_msl <- dplyr::bind_rows(dmsl)
+  lghi_hh <- dplyr::bind_rows(dhh)
+  lghi_ad <- dplyr::bind_rows(dad)
+  lghi_hamilton <- dplyr::bind_rows(dhamilton)
+
+  lghi_all <-
+    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
+
+  plot_disp1 <-
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
+      x = factor(DM),
+      y = GHI,
+      fill = factor(method)
+    )) + viridis::scale_fill_viridis(option = "C",
+                                     discrete = TRUE,
+                                     begin = 0.3) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
+
+  plot_disp2 <-
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
+      x = factor(DM),
+      y = LHI,
+      fill = factor(method)
+    )) + viridis::scale_fill_viridis(option = "D",
+                                     discrete = TRUE,
+                                     begin = 0.3) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
+
+  plot_disp3 <-
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_smooth(ggplot2::aes(
+      x = DM,
+      y = GHI,
+      color = factor(method)
+    )) + ggplot2::geom_point(aes(
+      x = DM,
+      y = GHI,
+      color = factor(method)
+    )) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
+
+  out <- list(lghi_all, plot_disp1, plot_disp2, plot_disp3)
+  return(out)
+
+}
