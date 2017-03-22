@@ -847,7 +847,7 @@ plot_Disp2 <- function(seed = 1000,
       fill = factor(method)
     )) + viridis::scale_fill_viridis(option = "D",
                                      discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 1)) + ggplot2::theme_classic()
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(2)) + ggplot2::theme_classic()
 
   out <-
     list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp_enpp)
