@@ -362,7 +362,8 @@ simulate_E <-
         )), digits = 2),
         SLI = signif(sum((
           SeatShare - VoteShare
-        ) ^ 2 / (VoteShare)), digits = 2)
+        ) ^ 2 / (VoteShare)), digits = 2),
+        ENPP = signif(sum( 1/(SeatShare)^2 ), digits = 2)
       )
 
     summary <-
@@ -839,7 +840,16 @@ plot_Disp2 <- function(seed = 1000,
       color = factor(method)
     )) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
 
-  out <- list(lghi_all, plot_disp1, plot_disp2, plot_disp3)
+  plot_disp_enpp <-
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
+      x = factor(DM),
+      y = ENPP,
+      fill = factor(method)
+    )) + viridis::scale_fill_viridis(option = "D",
+                                     discrete = TRUE,
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 1)) + ggplot2::theme_classic()
+
+  out <- list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp_enpp)
   return(out)
 
 }
