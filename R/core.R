@@ -833,7 +833,7 @@ plot_Disp2 <- function(seed = 1000,
       x = DM,
       y = GHI,
       color = factor(method)
-    )) + ggplot2::geom_point(aes(
+    )) + ggplot2::geom_point(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
