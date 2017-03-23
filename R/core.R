@@ -569,8 +569,8 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
-                                                                                               "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
+      ) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+                                                                                                "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
       ggplot2::ggplot(data = bias_data$ese2) + ggplot2::geom_point(
@@ -581,8 +581,8 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
-                                                                                               "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
+      ) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+                                                                                                "M", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
       ggplot2::ggplot(data = bias_data$ese_mean) + ggplot2::geom_point(
@@ -818,7 +818,20 @@ plot_Disp2 <- function(seed = 1000,
       fill = factor(method)
     )) + viridis::scale_fill_viridis(option = "C",
                                      discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic()
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic(
+                                       panel.grid.major = element_line(size = .5, color = "grey"),
+                                       #increase size of axis lines
+                                       axis.line = element_line(size =
+                                                                  .7, color = "black"),
+                                       #Adjust legend position to maximize space, use a vector of proportion
+                                       #across the plot and up the plot where you want the legend.
+                                       #You can also use "left", "right", "top", "bottom", for legends on t
+                                       #he side of the plot
+                                       legend.position = c(.85, .7),
+                                       #increase the font size
+                                       text = element_text(size =
+                                                             14)
+                                     )
 
   plot_disp2 <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
