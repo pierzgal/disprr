@@ -818,19 +818,19 @@ plot_Disp2 <- function(seed = 1000,
       fill = factor(method)
     )) + viridis::scale_fill_viridis(option = "C",
                                      discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic(
-                                       panel.grid.major = element_line(size = .5, color = "grey"),
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic() + ggplot2::theme(
+                                       panel.grid.major = ggplot2::element_line(size = .5, color = "grey"),
                                        #increase size of axis lines
-                                       axis.line = element_line(size =
-                                                                  .7, color = "black"),
+                                       axis.line = ggplot2::element_line(size =
+                                                                           .7, color = "black"),
                                        #Adjust legend position to maximize space, use a vector of proportion
                                        #across the plot and up the plot where you want the legend.
                                        #You can also use "left", "right", "top", "bottom", for legends on t
                                        #he side of the plot
                                        legend.position = c(.85, .7),
                                        #increase the font size
-                                       text = element_text(size =
-                                                             14)
+                                       text = ggplot2::element_text(size =
+                                                                      14)
                                      )
 
   plot_disp2 <-
