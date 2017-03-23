@@ -819,10 +819,10 @@ plot_Disp2 <- function(seed = 1000,
     )) + viridis::scale_fill_viridis(option = "C",
                                      discrete = TRUE,
                                      begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = .5, color = "grey"),
+                                       panel.grid.major = ggplot2::element_line(size = .2, color = "red"),
                                        #increase size of axis lines
                                        axis.line = ggplot2::element_line(size =
-                                                                           .7, color = "black"),
+                                                                           .2, color = "red"),
                                        #Adjust legend position to maximize space, use a vector of proportion
                                        #across the plot and up the plot where you want the legend.
                                        #You can also use "left", "right", "top", "bottom", for legends on t
