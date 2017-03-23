@@ -816,13 +816,15 @@ plot_Disp2 <- function(seed = 1000,
       x = factor(DM),
       y = GHI,
       fill = factor(method)
-    ), lwd = 0.2, fatten = 0.2) + viridis::scale_fill_viridis(option = "C",
+    ), lwd = 0.25, fatten = 0.25, outlier.size = 0.5) + viridis::scale_fill_viridis(option = "C",
                                      discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1)) + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = .2, color = "red"),
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.25, linetype = "longdash", colour = "blue" ) + ggplot2::theme_classic() + ggplot2::theme(
+                                       panel.grid.major = ggplot2::element_line(size = .25, color = "red"),
                                        #increase size of axis lines
                                        axis.line = ggplot2::element_line(size =
-                                                                           .2, color = "black"),
+                                                                           .25, color = "black"),
+                                       axis.ticks = ggplot2::element_line(size =
+                                                                           .25, color = "black"),
                                        #Adjust legend position to maximize space, use a vector of proportion
                                        #across the plot and up the plot where you want the legend.
                                        #You can also use "left", "right", "top", "bottom", for legends on t
