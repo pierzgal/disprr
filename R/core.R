@@ -425,13 +425,13 @@ simulate_E <-
 
 simulate_Disp <-
   function(seed = 1000,
-           dist = "uniform",
+           dist = "lnorm",
            np,
            nd = 1,
            ne,
            mean = 12.5,
            sd = 1.5,
-           rate = 0.00001,
+           rate = 1 / 150000,
            max = 500000,
            formula,
            formula_dist = "hh",
