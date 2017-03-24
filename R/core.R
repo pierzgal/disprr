@@ -437,8 +437,8 @@ simulate_Disp <-
            formula_dist = "hh",
            threshold = 0,
            threshold_country = 0,
-           minTS = 6,
-           steps = 20,
+           minTS = 3,
+           steps = 10,
            ...) {
     # Declare vars
     sb_bw <- list()
@@ -464,7 +464,7 @@ simulate_Disp <-
             sd,
             rate,
             max,
-            TS = minTS + i * 6 - 6,
+            TS = minTS + i - 2,
             formula,
             formula_dist,
             threshold,
