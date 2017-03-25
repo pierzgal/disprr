@@ -537,7 +537,7 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         colour = factor(TS)
-      ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
                                                                        name = "DM",
                                                                        option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                          panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
@@ -557,7 +557,7 @@ plot_Disp <-
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
         colour = factor(TS)
-      ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                                     name = "M",
                                                                     option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
@@ -576,7 +576,7 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
         colour = factor(TS)
-      ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                                     name = "M",
                                                                     option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
@@ -846,7 +846,7 @@ plot_Disp2 <- function(seed = 1000,
       x = factor(DM),
       y = GHI,
       fill = factor(method)
-    ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "C",
+    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "C",
                                      discrete = TRUE,
                                      begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue" ) + ggplot2::theme_classic() + ggplot2::theme(
                                        panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
@@ -870,7 +870,7 @@ plot_Disp2 <- function(seed = 1000,
       x = factor(DM),
       y = LHI,
       fill = factor(method)
-    ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
+    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
                                      discrete = TRUE,
                                      begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
                                        panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
@@ -894,7 +894,7 @@ plot_Disp2 <- function(seed = 1000,
       x = DM,
       y = GHI,
       color = factor(method)
-    ), lwd = 0.35) + ggplot2::geom_point(ggplot2::aes(
+    ), lwd = 0.25) + ggplot2::geom_point(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
@@ -920,7 +920,7 @@ plot_Disp2 <- function(seed = 1000,
       x = factor(DM),
       y = ENPP,
       fill = factor(method)
-    ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
+    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
                                      discrete = TRUE,
                                      begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(2), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
                                        panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
