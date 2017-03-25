@@ -234,6 +234,9 @@ LR_Hamilton <- function(parties = NULL,
   .ratio <- votes / sum(votes)
   .votes <- ifelse(.ratio < threshold, 0, votes)
 
+  if (sum(.votes) == 0)
+    stop("Allocation is impossible - all parties below electoral threshold.")
+
   output <- data.frame(
     parties = parties,
     scores = .votes / sum(.votes) * seats,
