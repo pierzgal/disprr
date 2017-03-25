@@ -388,9 +388,9 @@ simulate_E <-
 
     # Only for country-wide districts
     if (nd == 1) {
-      apportionment_sum3.3 <- dplyr::group_by(apportionment, Party)
+      apportionment_sum3a <- dplyr::group_by(apportionment, Party)
       esb.3 <-
-        dplyr::summarise(apportionment_sum3.3,
+        dplyr::summarise(apportionment_sum3a,
                          SB2_i = mean((SeatShare / 100 - VoteShare / 100)),
                          VotesParty_dist = sum(Votes))
 
@@ -537,15 +537,15 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         colour = factor(TS)
-      ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
                                                                        name = "DM",
-                                                                       option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                       option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                          panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                          #increase size of axis lines
                                                                          axis.line = ggplot2::element_line(size =
                                                                                                              .3, color = "black"),
                                                                          axis.ticks = ggplot2::element_line(size =
-                                                                                                              .3, color = "black"),
+                                                                                                              0.35, color = "black"),
                                                                          #increase the font size
                                                                          text = ggplot2::element_text(size =
                                                                                                         12)
@@ -557,9 +557,9 @@ plot_Disp <-
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
         colour = factor(TS)
-      ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                                     name = "M",
-                                                                    option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                    option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                       #increase size of axis lines
                                                                       axis.line = ggplot2::element_line(size =
@@ -576,9 +576,9 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
         colour = factor(TS)
-      ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                                     name = "M",
-                                                                    option = "D") + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                    option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                       #increase size of axis lines
                                                                       axis.line = ggplot2::element_line(size =
@@ -846,15 +846,15 @@ plot_Disp2 <- function(seed = 1000,
       x = factor(DM),
       y = GHI,
       fill = factor(method)
-    ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "C",
+    ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "C",
                                      discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.3, linetype = "longdash", colour = "blue" ) + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue" ) + ggplot2::theme_classic() + ggplot2::theme(
+                                       panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
                                        #increase size of axis lines
                                        axis.line = ggplot2::element_line(size =
-                                                                           .3, color = "black"),
+                                                                           0.35, color = "black"),
                                        axis.ticks = ggplot2::element_line(size =
-                                                                           .3, color = "black"),
+                                                                           0.35, color = "black"),
                                        #Adjust legend position to maximize space, use a vector of proportion
                                        #across the plot and up the plot where you want the legend.
                                        #You can also use "left", "right", "top", "bottom", for legends on t
@@ -870,15 +870,15 @@ plot_Disp2 <- function(seed = 1000,
       x = factor(DM),
       y = LHI,
       fill = factor(method)
-    ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
+    ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
                                      discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.3, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+                                       panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
                                        #increase size of axis lines
                                        axis.line = ggplot2::element_line(size =
-                                                                           .3, color = "black"),
+                                                                           0.35, color = "black"),
                                        axis.ticks = ggplot2::element_line(size =
-                                                                            .3, color = "black"),
+                                                                            0.35, color = "black"),
                                        #Adjust legend position to maximize space, use a vector of proportion
                                        #across the plot and up the plot where you want the legend.
                                        #You can also use "left", "right", "top", "bottom", for legends on t
@@ -894,17 +894,17 @@ plot_Disp2 <- function(seed = 1000,
       x = DM,
       y = GHI,
       color = factor(method)
-    ), lwd = 0.3) + ggplot2::geom_point(ggplot2::aes(
+    ), lwd = 0.35) + ggplot2::geom_point(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
-    ), size = 0.6) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.3, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
-      panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+    ), size = 0.6) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
       #increase size of axis lines
       axis.line = ggplot2::element_line(size =
-                                          .3, color = "black"),
+                                          0.35, color = "black"),
       axis.ticks = ggplot2::element_line(size =
-                                           .3, color = "black"),
+                                           0.35, color = "black"),
       #Adjust legend position to maximize space, use a vector of proportion
       #across the plot and up the plot where you want the legend.
       #You can also use "left", "right", "top", "bottom", for legends on t
@@ -920,15 +920,15 @@ plot_Disp2 <- function(seed = 1000,
       x = factor(DM),
       y = ENPP,
       fill = factor(method)
-    ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
+    ), lwd = 0.35, fatten = 0.35, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
                                      discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(2), size = 0.3, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(2), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+                                       panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
                                        #increase size of axis lines
                                        axis.line = ggplot2::element_line(size =
-                                                                           .3, color = "black"),
+                                                                           0.35, color = "black"),
                                        axis.ticks = ggplot2::element_line(size =
-                                                                            .3, color = "black"),
+                                                                            0.35, color = "black"),
                                        #Adjust legend position to maximize space, use a vector of proportion
                                        #across the plot and up the plot where you want the legend.
                                        #You can also use "left", "right", "top", "bottom", for legends on t
