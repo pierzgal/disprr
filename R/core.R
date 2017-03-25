@@ -452,7 +452,7 @@ simulate_Disp <-
     }
 
     else {
-      for (i in seq(1, steps, by = 1)) {
+      for (i in seq(2, steps, by = 2)) {
         sim[[i]] <-
           simulate_E(
             seed,
@@ -475,7 +475,7 @@ simulate_Disp <-
           dplyr::mutate(
             sim[[i]][[2]],
             method = "dh",
-            TS = minTS + i * 6 - 6,
+            TS = minTS + i - 2,
             #            SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
             SE1_i = Seats - VoteShare / 100 * distTS,
             SE2_i = SeatShare / 100 - VoteShare / 100
