@@ -46,6 +46,8 @@ divisorMethods <-
     .ratio <- votes / sum(votes)
     .votes <- ifelse(.ratio < threshold, 0, votes)
 
+    if (sum(.votes) == 0)
+      stop("Allocation cannot be done - all parties vote totals below electoral threshold.")
 
     if (length(parties) != length(votes))
       stop("Allocation error.")
@@ -235,7 +237,7 @@ LR_Hamilton <- function(parties = NULL,
   .votes <- ifelse(.ratio < threshold, 0, votes)
 
   if (sum(.votes) == 0)
-    stop("Allocation is impossible - all parties below electoral threshold.")
+    stop("Allocation cannot be done - all parties vote totals below electoral threshold.")
 
   output <- data.frame(
     parties = parties,
