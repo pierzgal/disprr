@@ -537,9 +537,24 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         colour = factor(TS)
-      )) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
                                                                        name = "DM",
-                                                                       option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
+                                                                       option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                         panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+                                                                         #increase size of axis lines
+                                                                         axis.line = ggplot2::element_line(size =
+                                                                                                             .3, color = "black"),
+                                                                         axis.ticks = ggplot2::element_line(size =
+                                                                                                              .3, color = "black"),
+                                                                         #Adjust legend position to maximize space, use a vector of proportion
+                                                                         #across the plot and up the plot where you want the legend.
+                                                                         #You can also use "left", "right", "top", "bottom", for legends on t
+                                                                         #he side of the plot
+                                                                         legend.position = c(.85, .7),
+                                                                         #increase the font size
+                                                                         text = ggplot2::element_text(size =
+                                                                                                        12)
+                                                                       )
 
 
     sb_bw_plot2 <-
@@ -547,18 +562,48 @@ plot_Disp <-
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
         colour = factor(TS)
-      )) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                                     name = "M",
-                                                                    option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic()
+                                                                    option = "D") + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                      panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+                                                                      #increase size of axis lines
+                                                                      axis.line = ggplot2::element_line(size =
+                                                                                                          .3, color = "black"),
+                                                                      axis.ticks = ggplot2::element_line(size =
+                                                                                                           .3, color = "black"),
+                                                                      #Adjust legend position to maximize space, use a vector of proportion
+                                                                      #across the plot and up the plot where you want the legend.
+                                                                      #You can also use "left", "right", "top", "bottom", for legends on t
+                                                                      #he side of the plot
+                                                                      legend.position = c(.85, .7),
+                                                                      #increase the font size
+                                                                      text = ggplot2::element_text(size =
+                                                                                                     12)
+                                                                    )
 
     sb_bw_plot3 <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
         colour = factor(TS)
-      )) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
+      ), lwd = 0.3, fatten = 0.3, outlier.size = 0.6) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
                                                                     name = "M",
-                                                                    option = "D") + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic()
+                                                                    option = "D") + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                      panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+                                                                      #increase size of axis lines
+                                                                      axis.line = ggplot2::element_line(size =
+                                                                                                          .3, color = "black"),
+                                                                      axis.ticks = ggplot2::element_line(size =
+                                                                                                           .3, color = "black"),
+                                                                      #Adjust legend position to maximize space, use a vector of proportion
+                                                                      #across the plot and up the plot where you want the legend.
+                                                                      #You can also use "left", "right", "top", "bottom", for legends on t
+                                                                      #he side of the plot
+                                                                      legend.position = c(.85, .7),
+                                                                      #increase the font size
+                                                                      text = ggplot2::element_text(size =
+                                                                                                     12)
+                                                                    )
 
     ese_plot <-
       ggplot2::ggplot(data = bias_data$ese) + ggplot2::geom_point(
