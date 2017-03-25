@@ -546,11 +546,6 @@ plot_Disp <-
                                                                                                              .3, color = "black"),
                                                                          axis.ticks = ggplot2::element_line(size =
                                                                                                               .3, color = "black"),
-                                                                         #Adjust legend position to maximize space, use a vector of proportion
-                                                                         #across the plot and up the plot where you want the legend.
-                                                                         #You can also use "left", "right", "top", "bottom", for legends on t
-                                                                         #he side of the plot
-                                                                         legend.position = c(.85, .7),
                                                                          #increase the font size
                                                                          text = ggplot2::element_text(size =
                                                                                                         12)
@@ -571,11 +566,6 @@ plot_Disp <-
                                                                                                           .3, color = "black"),
                                                                       axis.ticks = ggplot2::element_line(size =
                                                                                                            .3, color = "black"),
-                                                                      #Adjust legend position to maximize space, use a vector of proportion
-                                                                      #across the plot and up the plot where you want the legend.
-                                                                      #You can also use "left", "right", "top", "bottom", for legends on t
-                                                                      #he side of the plot
-                                                                      legend.position = c(.85, .7),
                                                                       #increase the font size
                                                                       text = ggplot2::element_text(size =
                                                                                                      12)
@@ -595,11 +585,6 @@ plot_Disp <-
                                                                                                           .3, color = "black"),
                                                                       axis.ticks = ggplot2::element_line(size =
                                                                                                            .3, color = "black"),
-                                                                      #Adjust legend position to maximize space, use a vector of proportion
-                                                                      #across the plot and up the plot where you want the legend.
-                                                                      #You can also use "left", "right", "top", "bottom", for legends on t
-                                                                      #he side of the plot
-                                                                      legend.position = c(.85, .7),
                                                                       #increase the font size
                                                                       text = ggplot2::element_text(size =
                                                                                                      12)
