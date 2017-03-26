@@ -536,10 +536,10 @@ plot_Disp <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
-        colour = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("Seat Excess") + viridis::scale_color_viridis(discrete = TRUE,
+        fill = factor(TS)
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("Seat Excess") + viridis::scale_fill_viridis(discrete = TRUE,
                                                                        name = "DM",
-                                                                       option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                       option = "D", end = 0.8) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                          panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                          #increase size of axis lines
                                                                          axis.line = ggplot2::element_line(size =
@@ -556,10 +556,10 @@ plot_Disp <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
-        colour = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("SE_i1(M)") + viridis::scale_color_viridis(discrete = TRUE,
+        fill = factor(TS)
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("SE_i1(M)") + viridis::scale_fill_viridis(discrete = TRUE,
                                                                     name = "M",
-                                                                    option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                    option = "D", end = 0.8) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                       #increase size of axis lines
                                                                       axis.line = ggplot2::element_line(size =
@@ -575,10 +575,10 @@ plot_Disp <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
-        colour = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("SE_i2(M)") + viridis::scale_color_viridis(discrete = TRUE,
+        fill = factor(TS)
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + ggplot2::ylab("SE_i2(M)") + viridis::scale_fill_viridis(discrete = TRUE,
                                                                     name = "M",
-                                                                    option = "D", begin = 0.2) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                    option = "D", end = 0.8) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                       #increase size of axis lines
                                                                       axis.line = ggplot2::element_line(size =
