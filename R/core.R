@@ -918,11 +918,11 @@ plot_Disp2 <- function(seed = 1000,
   plot_disp4 <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
       x = factor(DM),
-      y = SL,
+      y = SLI,
       fill = factor(method)
     ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
                                                                                    discrete = TRUE,
-                                                                                   begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("SL") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+                                                                                   begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("SLI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
                                                                                      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
                                                                                      #increase size of axis lines
                                                                                      axis.line = ggplot2::element_line(size =
