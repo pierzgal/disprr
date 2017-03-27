@@ -474,7 +474,7 @@ simulate_Disp <-
         sb_bw[[i]] <-
           dplyr::mutate(
             sim[[i]][[2]],
-            method = "dh",
+            method = formula,
             TS = minTS + i - 2,
             #            SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
             SE1_i = Seats - VoteShare / 100 * distTS,
@@ -937,7 +937,7 @@ plot_Disp2 <- function(seed = 1000,
                                                                                      #increase the font size
                                                                                      text = ggplot2::element_text(size =
                                                                                                                     12)
-                                                                                   )
+                                                                                   ) + ylim(0, 1)
 
   plot_disp_enpp <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
