@@ -915,6 +915,30 @@ plot_Disp2 <- function(seed = 1000,
                                      12)
     )
 
+  plot_disp4 <-
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
+      x = factor(DM),
+      y = SL,
+      fill = factor(method)
+    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
+                                                                                   discrete = TRUE,
+                                                                                   begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("SL") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+                                                                                     panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+                                                                                     #increase size of axis lines
+                                                                                     axis.line = ggplot2::element_line(size =
+                                                                                                                         0.35, color = "black"),
+                                                                                     axis.ticks = ggplot2::element_line(size =
+                                                                                                                          0.35, color = "black"),
+                                                                                     #Adjust legend position to maximize space, use a vector of proportion
+                                                                                     #across the plot and up the plot where you want the legend.
+                                                                                     #You can also use "left", "right", "top", "bottom", for legends on t
+                                                                                     #he side of the plot
+                                                                                     legend.position = c(.85, .7),
+                                                                                     #increase the font size
+                                                                                     text = ggplot2::element_text(size =
+                                                                                                                    12)
+                                                                                   )
+
   plot_disp_enpp <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
       x = factor(DM),
@@ -940,7 +964,7 @@ plot_Disp2 <- function(seed = 1000,
                                      )
 
   out <-
-    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp_enpp)
+    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp4, plot_disp_enpp)
   return(out)
 
 }
