@@ -846,7 +846,7 @@ plot_Disp2 <- function(seed = 1000,
   # Models
   ## DH
 
-  model_dh <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method = "DH") )
+  model_dh <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "DH") )
   model_dh <- summary(model_dh)
 
   # ----
