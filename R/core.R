@@ -640,12 +640,13 @@ plot_Disp <-
 
 # ----
 
-#' Plot Aggregate-Level Disproportionality Measures Related to District Sizes
+
+#' Aggregate-Level Disproportionality Measures
 #'
-#' The function plots the relationships between values of LHI and GHI measures and district sizes.
+#' The function computes aggregate-level measures of disproportionality. It also models and plots relationships between values of aggregate-level disproportionality measures and district sizes.
 #' @export
 
-plot_Disp2 <- function(seed = 1000,
+Disp2 <- function(seed = 1000,
                        np = 3,
                        nd = 1,
                        ne = 100,
@@ -843,6 +844,8 @@ plot_Disp2 <- function(seed = 1000,
 
   lghi_all <- dplyr::mutate( lghi_all, logGHI = log(GHI) )
 
+  # ----
+
   # Models
   ## DH
 
@@ -850,6 +853,28 @@ plot_Disp2 <- function(seed = 1000,
   model_dh <- summary(model_dh)
 
   # ----
+
+  ## SL
+
+  model_sl <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "SL") )
+  model_sl <- summary(model_dh)
+
+  # ----
+
+  ## MSL
+
+  model_msl <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "MSL") )
+  model_msl <- summary(model_dh)
+
+  # ----
+
+  ## H
+
+  model_h <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "H") )
+  model_h <- summary(model_dh)
+
+  # ----
+
 
   # Plots
 
@@ -902,7 +927,7 @@ plot_Disp2 <- function(seed = 1000,
                                      )
 
   plot_disp3 <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_smooth(ggplot2::aes(
+    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %>% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_smooth(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
@@ -976,7 +1001,7 @@ plot_Disp2 <- function(seed = 1000,
                                      )
 
   out <-
-    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp4, plot_disp_enpp, model_dh)
+    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp4, plot_disp_enpp, model_dh, model_sl, model_msl, model_msl, model_h)
   return(out)
 
 }
