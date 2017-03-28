@@ -927,7 +927,7 @@ Disp2 <- function(seed = 1000,
                                      )
 
   plot_disp3 <-
-    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %>% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_smooth(ggplot2::aes(
+    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_smooth(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
