@@ -841,6 +841,18 @@ plot_Disp2 <- function(seed = 1000,
   lghi_all <-
     dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
 
+  lghi_all <- dplyr::mutate( lghi_all, logGHI = log(GHI) )
+
+  # Models
+  ## DH
+
+  model_dh <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method = "DH") )
+  model_dh <- summary(model_dh)
+
+  # ----
+
+  # Plots
+
   plot_disp1 <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
       x = factor(DM),
@@ -964,7 +976,7 @@ plot_Disp2 <- function(seed = 1000,
                                      )
 
   out <-
-    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp4, plot_disp_enpp)
+    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp4, plot_disp_enpp, model_dh)
   return(out)
 
 }
