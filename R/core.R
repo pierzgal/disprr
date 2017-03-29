@@ -858,21 +858,21 @@ Disp2 <- function(seed = 1000,
   ## SL
 
   model_sl <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "SL") )
-  model_sl <- summary(model_dh)
+  model_sl <- summary(model_sl)
 
   # ----
 
   ## MSL
 
   model_msl <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "MSL") )
-  model_msl <- summary(model_dh)
+  model_msl <- summary(model_msl)
 
   # ----
 
   ## H
 
   model_h <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "H") )
-  model_h <- summary(model_dh)
+  model_h <- summary(model_h)
 
   # ----
 
