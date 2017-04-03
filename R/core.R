@@ -869,7 +869,7 @@ Disp2 <- function(seed = 1000,
 
   ## H
 
-  model_h <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_h, method == "H") )
+  model_h <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_hamilton, method == "H") )
 
   lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = exp(predict(model_h)) )
 
