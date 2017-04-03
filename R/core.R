@@ -953,7 +953,7 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.3)
+    ) + ggplot2::geom_line( ggplot2::aes(x = factor(DM), y = GHI_predicted, fill = factor(method)), size=0.3)
 
   # ----
 
