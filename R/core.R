@@ -847,7 +847,7 @@ Disp2 <- function(seed = 1000,
 
   model_dh <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_dh, method == "DH") )
 
-  lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = exp(predict(model_dh, lghi_dh$DM)) )
+  lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = exp(predict(model_dh)) )
 
   # ----
 
@@ -855,7 +855,7 @@ Disp2 <- function(seed = 1000,
 
   model_sl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_sl, method == "SL") )
 
-  lghi_sl = dplyr::mutate(lghi_sl, GHI_predicted = exp(predict(model_sl, lghi_sl$DM)) )
+  lghi_sl = dplyr::mutate(lghi_sl, GHI_predicted = exp(predict(model_sl)) )
 
   # ----
 
@@ -863,7 +863,7 @@ Disp2 <- function(seed = 1000,
 
   model_msl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_msl, method == "MSL") )
 
-  lghi_msl = dplyr::mutate(lghi_msl, GHI_predicted = exp(predict(model_msl, lghi_msl$DM)) )
+  lghi_msl = dplyr::mutate(lghi_msl, GHI_predicted = exp(predict(model_msl)) )
 
   # ----
 
@@ -871,7 +871,7 @@ Disp2 <- function(seed = 1000,
 
   model_h <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_h, method == "H") )
 
-  lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = exp(predict(model_h, lghi_hamilton$DM)) )
+  lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = exp(predict(model_h)) )
 
   # ----
 
