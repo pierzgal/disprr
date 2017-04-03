@@ -848,9 +848,9 @@ Disp2 <- function(seed = 1000,
 
 #  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
 
-  model_dh <- nls( GHI ~ C*[exp(A*DM)], start = list(C = 0.5, A = -0.1), data = dplyr::filter(lghi_dh, method == "DH") )
+  model_dh <- nls( GHI ~ C*exp(A*DM), start = list(C = 0.5, A = -0.1), data = dplyr::filter(lghi_dh, method == "DH") )
 
-  lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = exp(predict(model_dh)) )
+  lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = predict(model_dh) )
 
   # ----
 
