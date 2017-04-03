@@ -848,7 +848,7 @@ Disp2 <- function(seed = 1000,
 
 #  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
 
-  model_dh <- nls( GHI ~ C*exp(A*DM), start = list(C = 0.5, A = -0.1), data = dplyr::filter(lghi_dh, method == "DH") )
+  model_dh <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.5, alpha = -0.1), data = dplyr::filter(lghi_dh, method == "DH") )
 
   lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = predict(model_dh) )
 
@@ -856,25 +856,27 @@ Disp2 <- function(seed = 1000,
 
   ## SL
 
-  model_sl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_sl, method == "SL") )
+#  model_sl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_sl, method == "SL") )
 
-  lghi_sl = dplyr::mutate(lghi_sl, GHI_predicted = exp(predict(model_sl)) )
+  model_sl <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.5, alpha = -0.1), data = dplyr::filter(lghi_sl, method == "SL") )
+
+  lghi_sl = dplyr::mutate(lghi_sl, GHI_predicted = predict(model_sl) )
 
   # ----
 
   ## MSL
 
-  model_msl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_msl, method == "MSL") )
+  model_msl <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.5, alpha = -0.1), data = dplyr::filter(lghi_msl, method == "MSL") )
 
-  lghi_msl = dplyr::mutate(lghi_msl, GHI_predicted = exp(predict(model_msl)) )
+  lghi_msl = dplyr::mutate(lghi_msl, GHI_predicted = predict(model_msl) )
 
   # ----
 
   ## H
 
-  model_h <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_hamilton, method == "H") )
+  model_h <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.5, alpha = -0.1), data = dplyr::filter(lghi_hamilton, method == "H") )
 
-  lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = exp(predict(model_h)) )
+  lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = predict(model_h) )
 
   # ----
 
