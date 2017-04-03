@@ -942,8 +942,8 @@ Disp2 <- function(seed = 1000,
       x = DM,
       y = GHI,
       color = factor(method)
-    ), size = 0.8) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
-      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+    ), size = 1, alpha = 0.25) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+      panel.grid.major.y = ggplot2::element_line(size = 0.35, color = "red"),
       #increase size of axis lines
       axis.line = ggplot2::element_line(size =
                                           0.35, color = "black"),
@@ -957,7 +957,9 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.3) + geom_abline(intercept = 0, slope = 1)
+    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.3)
+
+  # + geom_abline(intercept = 0, slope = 1)
 
   # ----
 
