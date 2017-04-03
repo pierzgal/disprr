@@ -942,7 +942,7 @@ Disp2 <- function(seed = 1000,
       x = DM,
       y = GHI,
       color = factor(method)
-    ), size = 2, alpha = 0.2) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+    ), size = 1, alpha = 0.3, width = 0.2) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
       panel.grid.major.y = ggplot2::element_line(size = 0.35, color = "red"),
       #increase size of axis lines
       axis.line = ggplot2::element_line(size =
