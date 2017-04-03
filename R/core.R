@@ -846,7 +846,9 @@ Disp2 <- function(seed = 1000,
   # Models
   ## DH
 
-  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
+#  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
+
+  model_dh <- nls( GHI = exp(a + b*DM), start = list(a = -1, b = -0.1), data = dplyr::filter(lghi_dh, method == "DH") )
 
   lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = exp(predict(model_dh)) )
 
@@ -953,7 +955,7 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.3)
+    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.3) + geom_abline(intercept = 0, slope = 1)
 
   # ----
 
