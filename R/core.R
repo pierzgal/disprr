@@ -846,7 +846,7 @@ Disp2 <- function(seed = 1000,
   # Models
   ## DH
 
-  model_dh <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_dh, method == "DH") )
+  model_dh <- glm( I(GHI) ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
 
   lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = exp(predict(model_dh)) )
 
@@ -935,7 +935,7 @@ Disp2 <- function(seed = 1000,
 
   plot_disp3 <-
     ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_point(ggplot2::aes(
-      x = DM,
+      x = factor(DM),
       y = GHI,
       color = factor(method)
     ), size = 0.8) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
