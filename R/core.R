@@ -846,7 +846,7 @@ Disp2 <- function(seed = 1000,
   # Models
   ## DH
 
-  model_dh <- glm( I(GHI) ~ DM, family = gaussian(link = "log"), start = c(3), data = dplyr::filter(lghi_dh, method == "DH") )
+  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
 
   lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = exp(predict(model_dh)) )
 
