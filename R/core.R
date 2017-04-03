@@ -653,6 +653,7 @@ Disp2 <- function(seed = 1000,
                        dist = "lnorm",
                        minTS = 3,
                        lim = 16,
+                       jump = 1,
                        threshold = 0,
                        threshold_country = 0,
                        ...)
@@ -669,7 +670,7 @@ Disp2 <- function(seed = 1000,
   out <- list()
 
 
-  for (i in seq(2, lim, by = 2)) {
+  for (i in seq(2, lim, by = jump)) {
     seatbias[[i]] <-
       simulate_E(
         seed = seed,
@@ -696,7 +697,7 @@ Disp2 <- function(seed = 1000,
 
   }
 
-  for (i in seq(2, lim, by = 2)) {
+  for (i in seq(2, lim, by = jump)) {
     seatbias[[i]] <-
       simulate_E(
         seed = seed,
@@ -724,7 +725,7 @@ Disp2 <- function(seed = 1000,
   }
 
 
-  for (i in seq(2, lim, by = 2)) {
+  for (i in seq(2, lim, by = jump)) {
     seatbias[[i]] <-
       simulate_E(
         seed = seed,
@@ -752,7 +753,7 @@ Disp2 <- function(seed = 1000,
   }
 
 
-  for (i in seq(2, lim, by = 2)) {
+  for (i in seq(2, lim, by = jump)) {
     seatbias[[i]] <-
       simulate_E(
         seed = seed,
@@ -779,7 +780,7 @@ Disp2 <- function(seed = 1000,
 
   }
 
-  for (i in seq(2, lim, by = 2)) {
+  for (i in seq(2, lim, by = jump)) {
     seatbias[[i]] <-
       simulate_E(
         seed = seed,
@@ -806,7 +807,7 @@ Disp2 <- function(seed = 1000,
 
   }
 
-  for (i in seq(2, lim, by = 2)) {
+  for (i in seq(2, lim, by = jump)) {
     seatbias[[i]] <-
       simulate_E(
         seed = seed,
