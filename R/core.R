@@ -938,7 +938,7 @@ Disp2 <- function(seed = 1000,
                                      )
 
   plot_disp3 <-
-    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_point(ggplot2::aes(
+    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
@@ -957,8 +957,7 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.5, alpha = 0.5) + geom_jitter(width = 0.1)
-
+    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.5, alpha = 0.5)
   # + geom_abline(intercept = 0, slope = 1)
 
   # ----
