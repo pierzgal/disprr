@@ -840,42 +840,51 @@ Disp2 <- function(seed = 1000,
   lghi_ad <- dplyr::bind_rows(dad)
   lghi_hamilton <- dplyr::bind_rows(dhamilton)
 
-  lghi_all <-
-    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
-
-  lghi_all <- dplyr::mutate( lghi_all, logGHI = log(GHI) )
-
   # ----
 
   # Models
   ## DH
 
-  model_dh <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "DH") )
+  model_dh <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_dh, method == "DH") )
   model_dh <- summary(model_dh)
+
+  lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = exp(predict(model_dh, lghi_dh$DM)) )
 
   # ----
 
   ## SL
 
-  model_sl <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "SL") )
+  model_sl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_sl, method == "SL") )
   model_sl <- summary(model_sl)
+
+  lghi_sl = dplyr::mutate(lghi_sl, GHI_predicted = exp(predict(model_sl, lghi_sl$DM)) )
 
   # ----
 
   ## MSL
 
-  model_msl <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "MSL") )
+  model_msl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_msl, method == "MSL") )
   model_msl <- summary(model_msl)
+
+  lghi_msl = dplyr::mutate(lghi_msl, GHI_predicted = exp(predict(model_msl, lghi_msl$DM)) )
 
   # ----
 
   ## H
 
-  model_h <- lm(logGHI ~ DM, data = dplyr::filter(lghi_all, method == "H") )
+  model_h <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_h, method == "H") )
   model_h <- summary(model_h)
+
+  lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = exp(predict(model_h, lghi_hamilton$DM)) )
 
   # ----
 
+
+#  lghi_all <-
+#    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
+
+  lghi_all <-
+    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton)
 
   # Plots
 
@@ -932,7 +941,7 @@ Disp2 <- function(seed = 1000,
       x = DM,
       y = GHI,
       color = factor(method)
-    ), lwd = 0.25) + ggplot2::geom_point(ggplot2::aes(
+    ), lwd = 0.25, method = "glm", family = gaussian(link = 'log')) + ggplot2::geom_point(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
@@ -951,7 +960,7 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    )
+    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.5)
 
   plot_disp4 <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
