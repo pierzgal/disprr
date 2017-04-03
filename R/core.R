@@ -933,15 +933,11 @@ Disp2 <- function(seed = 1000,
                                      )
 
   plot_disp3 <-
-    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_smooth(ggplot2::aes(
+    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_point(ggplot2::aes(
       x = DM,
       y = GHI,
       color = factor(method)
-    ), lwd = 0.25, method = "glm", family = gaussian(link = 'log')) + ggplot2::geom_point(ggplot2::aes(
-      x = DM,
-      y = GHI,
-      color = factor(method)
-    ), size = 0.6) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+    ), size = 0.8) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
       panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
       #increase size of axis lines
       axis.line = ggplot2::element_line(size =
@@ -956,7 +952,17 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.5)
+    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=0.3)
+
+  # ----
+
+  # ggplot2::geom_smooth(ggplot2::aes(
+  # x = DM,
+  # y = GHI,
+  # color = factor(method)
+  # ), lwd = 0.25, method = "glm", family = gaussian(link = 'log'))
+
+  # ----
 
   plot_disp4 <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
