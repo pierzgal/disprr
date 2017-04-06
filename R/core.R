@@ -889,7 +889,7 @@ Disp2 <- function(seed = 1000,
 
   # Plots
 
-  plot_disp1 <-
+  plot_GHI <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
       x = factor(DM),
       y = GHI,
@@ -913,7 +913,7 @@ Disp2 <- function(seed = 1000,
                                                                       12)
                                      )
 
-  plot_disp2 <-
+  plot_LHI <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
       x = factor(DM),
       y = LHI,
@@ -937,12 +937,36 @@ Disp2 <- function(seed = 1000,
                                                                       12)
                                      )
 
-  plot_disp3 <-
+  # ----
+
+  # scatter_GHI <-
+  #   ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
+  #     x = DM,
+  #     y = GHI,
+  #     color = factor(method)
+  #   ), size = 1.5, alpha = 0.5, width = 0.2) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+  #     #increase size of axis lines
+  #     axis.line = ggplot2::element_line(size =
+  #                                         0.35, color = "black"),
+  #     axis.ticks = ggplot2::element_line(size =
+  #                                          0.35, color = "black"),
+  #     #Adjust legend position to maximize space, use a vector of proportion
+  #     #across the plot and up the plot where you want the legend.
+  #     #You can also use "left", "right", "top", "bottom", for legends on t
+  #     #he side of the plot
+  #     legend.position = c(.85, .7),
+  #     #increase the font size
+  #     text = ggplot2::element_text(size =
+  #                                    12)
+  #   ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=1, alpha = 0.8)
+
+  # ----
+
+  scatter_GHI <-
     ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
       x = DM,
-      y = GHI,
-      color = factor(method)
-    ), size = 1.5, alpha = 0.5, width = 0.2) + viridis::scale_color_viridis(option = "D", discrete = TRUE) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+      y = GHI
+), size = 1.5, alpha = 0.5, width = 0.2) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.7), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
       #increase size of axis lines
       axis.line = ggplot2::element_line(size =
                                           0.35, color = "black"),
@@ -956,8 +980,7 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=1, alpha = 0.8)
-  # + geom_abline(intercept = 0, slope = 1)
+    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=1, alpha = 0.8) + facet_grid(factor(method) ~ .)
 
   # ----
 
@@ -969,7 +992,7 @@ Disp2 <- function(seed = 1000,
 
   # ----
 
-  plot_disp4 <-
+  plot_SLI <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
       x = factor(DM),
       y = SLI,
@@ -993,7 +1016,7 @@ Disp2 <- function(seed = 1000,
                                                                                                                     12)
                                                                                    ) + ylim(0, 1)
 
-  plot_disp_enpp <-
+  plot_ENPP <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
       x = factor(DM),
       y = ENPP,
@@ -1018,7 +1041,8 @@ Disp2 <- function(seed = 1000,
                                      )
 
   out <-
-    list(lghi_all, plot_disp1, plot_disp2, plot_disp3, plot_disp4, plot_disp_enpp, model_dh, model_sl, model_msl, model_msl, model_h)
+    list(summary = lghi_all, plot_GHI = plot_GHI, scatter_GHI = scatter_GHI, Model_DH = model_dh, Model_SL = model_sl, Model_MSL = model_msl, Model_Hamilton = model_h)
+
   return(out)
 
 }
