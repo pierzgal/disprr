@@ -947,7 +947,7 @@ Disp2 <- function(seed = 1000,
 
   ## Danish
 
-  model_danish <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_danish, method == "Danish") )
+  model_danish <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_da, method == "Danish") )
 
   lghi_da = dplyr::mutate(lghi_da, GHI_predicted = predict(model_danish) )
 
@@ -955,7 +955,7 @@ Disp2 <- function(seed = 1000,
 
   ## Imperiali
 
-  model_imperiali <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_imperiali, method == "Imperiali") )
+  model_imperiali <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_imp, method == "Imperiali") )
 
   lghi_imp = dplyr::mutate(lghi_imp, GHI_predicted = predict(model_imperiali) )
 
