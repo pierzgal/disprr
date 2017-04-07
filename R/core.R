@@ -834,12 +834,73 @@ Disp2 <- function(seed = 1000,
 
   }
 
+  # ---- Danish and HA Imperiali
+
+  for (i in seq(2, lim, by = jump)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 1 / 15000,
+        mean = 11,
+        sd = 1.8,
+        max = 50000,
+        TS = minTS + i - 2,
+        formula = "imperiali",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    dimp[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "Imperiali",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+  for (i in seq(2, lim, by = jump)) {
+    seatbias[[i]] <-
+      simulate_E(
+        seed = seed,
+        np = np,
+        nd = nd,
+        ne = ne,
+        dist = dist,
+        rate = 1 / 15000,
+        mean = 11,
+        sd = 1.8,
+        max = 50000,
+        TS = minTS + i - 2,
+        formula = "Danish",
+        formula_dist = "hh",
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
+
+    dda[[i]] <-
+      dplyr::mutate(seatbias[[i]][[3]],
+                    method = "Danish",
+                    DM = minTS + i - 2,
+                    NP = np)
+
+  }
+
+  # ----
+
   lghi_dh <- dplyr::bind_rows(ddh)
   lghi_sl <- dplyr::bind_rows(dsl)
   lghi_msl <- dplyr::bind_rows(dmsl)
   lghi_hh <- dplyr::bind_rows(dhh)
   lghi_ad <- dplyr::bind_rows(dad)
   lghi_hamilton <- dplyr::bind_rows(dhamilton)
+
+  lghi_imp <- dplyr::bind_rows(dimp)
+  lghi_da <- dplyr::bind_rows(dda)
 
   # ----
 
@@ -881,11 +942,30 @@ Disp2 <- function(seed = 1000,
   # ----
 
 
+  ## Danish
+
+  model_danish <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_danish, method == "Danish") )
+
+  lghi_danish = dplyr::mutate(lghi_danish, GHI_predicted = predict(model_danish) )
+
+  # ----
+
+  ## Imperiali
+
+  model_imperiali <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_imperiali, method == "Imperiali") )
+
+  lghi_imperiali = dplyr::mutate(lghi_imperiali, GHI_predicted = predict(model_imperiali) )
+
+  # ----
+
+
+
 #  lghi_all <-
 #    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
 
   lghi_all <-
-    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton)
+    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_danish, lghi_imperiali)
+
 
   # Plots
 
@@ -1041,7 +1121,7 @@ Disp2 <- function(seed = 1000,
                                      )
 
   out <-
-    list(summary = lghi_all, plot_GHI = plot_GHI, scatter_GHI = scatter_GHI, Model_DH = model_dh, Model_SL = model_sl, Model_MSL = model_msl, Model_Hamilton = model_h)
+    list(summary = lghi_all, plot_GHI = plot_GHI, scatter_GHI = scatter_GHI, Model_DH = model_dh, Model_SL = model_sl, Model_MSL = model_msl, Model_Hamilton = model_h, Model_Danish = model_danish, Model_Imperiali = model_imperiali)
 
   return(out)
 
