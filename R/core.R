@@ -666,6 +666,9 @@ Disp2 <- function(seed = 1000,
   dad <- list()
   dhamilton <- list()
 
+  dimp <- list()
+  dda <- list()
+
   seatbias <- list()
   out <- list()
 
