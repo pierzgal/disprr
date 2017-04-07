@@ -1046,7 +1046,7 @@ Disp2 <- function(seed = 1000,
   # ----
 
   scatter_GHI <-
-    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
+    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H", "Danish", "Imperiali") )) + ggplot2::geom_jitter(ggplot2::aes(
       x = DM,
       y = GHI
 ), size = 1, alpha = 0.4, width = 0.2) + ggplot2::facet_wrap( ~ method ) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::theme_classic() + ggplot2::theme(
