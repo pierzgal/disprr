@@ -149,7 +149,7 @@ sampleElectionData <-
       hamilton = {
         for (i in seq(1, ne, by = 1)) {
           seats_dist[[i]] <-
-            Hamilton3(
+            LR_Hamilton(
               parties = if.parties.null(nd),
               votes = 1 * csum[[i]],
               seats = TS,
@@ -879,7 +879,7 @@ Disp2 <- function(seed = 1000,
         sd = 1.8,
         max = 50000,
         TS = minTS + i - 2,
-        formula = "Danish",
+        formula = "danish",
         formula_dist = "hh",
         threshold = threshold,
         threshold_country = threshold_country
