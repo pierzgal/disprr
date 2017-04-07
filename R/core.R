@@ -966,7 +966,7 @@ Disp2 <- function(seed = 1000,
     ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
       x = DM,
       y = GHI
-), size = 1.5, alpha = 0.5, width = 0.2) + ggplot2::facet_grid( . ~ method ) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.07), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
+), size = 1.5, alpha = 0.5, width = 0.2) + ggplot2::facet_grid( method ~ .) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::geom_hline(yintercept = c(0.07), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
       #increase size of axis lines
       axis.line = ggplot2::element_line(size =
                                           0.35, color = "black"),
