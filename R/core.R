@@ -967,7 +967,7 @@ Disp2 <- function(seed = 1000,
 #    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
 
   lghi_all <-
-    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_danish, lghi_imperiali)
+    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_da, lghi_imp)
 
 
   # Plots
