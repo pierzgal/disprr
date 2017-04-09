@@ -537,9 +537,9 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
         fill = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.4) + ggplot2::ylab("Seat Excess") + viridis::scale_fill_viridis(discrete = TRUE,
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.3) + ggplot2::ylab("SE1_i(DM)") + viridis::scale_fill_viridis(discrete = TRUE,
                                                                        name = "DM",
-                                                                       option = "D", begin = 0.4) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                       option = "D", begin = 0.5) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                          panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                          #increase size of axis lines
                                                                          axis.line = ggplot2::element_line(size =
@@ -557,9 +557,9 @@ plot_Disp <-
         x = Party,
         y = (Seats - VoteShare / 100 * distTS),
         fill = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.4) + ggplot2::ylab("SE_i1(M)") + viridis::scale_fill_viridis(discrete = TRUE,
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.3) + ggplot2::ylab("SE1_i(DM)") + viridis::scale_fill_viridis(discrete = TRUE,
                                                                     name = "DM",
-                                                                    option = "D", begin = 0.4) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                    option = "D", begin = 0.5) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                       #increase size of axis lines
                                                                       axis.line = ggplot2::element_line(size =
@@ -576,9 +576,9 @@ plot_Disp <-
         x = Party,
         y = (SeatShare / 100 - VoteShare / 100),
         fill = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.4) + ggplot2::ylab("SE_i2(M)") + viridis::scale_fill_viridis(discrete = TRUE,
+      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.3) + ggplot2::ylab("SE2_i(DM)") + viridis::scale_fill_viridis(discrete = TRUE,
                                                                     name = "DM",
-                                                                    option = "D", begin = 0.4) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                    option = "D", begin = 0.5) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
                                                                       panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
                                                                       #increase size of axis lines
                                                                       axis.line = ggplot2::element_line(size =
@@ -599,7 +599,7 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i1(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+      ) + ggplot2::ylab("B_i1(DM)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
                                                                                                 "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
@@ -611,7 +611,7 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i2(M)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+      ) + ggplot2::ylab("B_i2(DM)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
                                                                                                 "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
@@ -623,7 +623,7 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i1(M)") + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse) + viridis::scale_color_viridis(name =
+      ) + ggplot2::ylab("B_i1(DM)") + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse) + viridis::scale_color_viridis(name =
                                                                                                                                        "TV", discrete = TRUE)
     # Return list
 
