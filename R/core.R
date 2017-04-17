@@ -214,7 +214,7 @@ sampleElectionData <-
 
   }
 
-# --------------------
+# ----
 
 
 #' Simulate Elections under Proportional Representation
@@ -349,7 +349,7 @@ simulate_E <-
       dplyr::mutate(seat_excess, Seats = as.integer(Seats))
 
 
-    ### Disproportionality indexes ###
+    ### Disproportionality indexes
     disp <- dplyr::group_by(seat_excess, ElectionID)
     disp <-
       dplyr::summarise(
@@ -373,33 +373,8 @@ simulate_E <-
         IQR = TRUE,
         skew = FALSE
       )
-    ### Disproportionality indexes ###
 
-
-    ## Seat biases - by Party
-
-    apportionment_sum3 <-
-      dplyr::group_by(apportionment, distTS, Party)
-    esb <-
-      dplyr::summarise(apportionment_sum3,
-                       SB2_i = mean((SeatShare / 100 - VoteShare / 100)),
-                       VotesParty_DM = sum(Votes))
-
-
-    # Only for country-wide districts
-    if (nd == 1) {
-      apportionment_sum3a <- dplyr::group_by(apportionment, Party)
-      esb.3 <-
-        dplyr::summarise(apportionment_sum3a,
-                         SB2_i = mean((SeatShare / 100 - VoteShare / 100)),
-                         VotesParty_dist = sum(Votes))
-
-    }
-
-    else {
-      esb.3 = NULL
-    }
-    ###
+    # ----
 
     ### Results
 
@@ -410,13 +385,12 @@ simulate_E <-
         Disproportionality_per_elec = disp,
         Summary = summary
       )
-    #      list(seat_excess, apportionment, disp, esb, esb.2, esb.3, summary)
 
     return(out)
 
   }
 
-# --------------------
+# ----
 
 #' Per-party Disproportionality Measures for Varying District Sizes and Numbers of Parties
 #'
@@ -533,62 +507,86 @@ plot_Disp <-
   {
     # Plots
     sb_bw_plot1 <-
-      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
-        x = Party,
-        y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
-        fill = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.3) + ggplot2::ylab("SE1_i(DM)") + viridis::scale_fill_viridis(discrete = TRUE,
-                                                                       name = "DM",
-                                                                       option = "D", begin = 0.5) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
-                                                                         panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
-                                                                         #increase size of axis lines
-                                                                         axis.line = ggplot2::element_line(size =
-                                                                                                             .3, color = "black"),
-                                                                         axis.ticks = ggplot2::element_line(size =
-                                                                                                              0.35, color = "black"),
-                                                                         #increase the font size
-                                                                         text = ggplot2::element_text(size =
-                                                                                                        12)
-                                                                       )
+      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
+        ggplot2::aes(
+          x = Party,
+          y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
+          fill = factor(TS)
+        ),
+        lwd = 0.25,
+        fatten = 0.4,
+        outlier.size = 0.3
+      ) + ggplot2::ylab("SE1_i(DM)") + viridis::scale_fill_viridis(
+        discrete = TRUE,
+        name = "DM",
+        option = "D",
+        begin = 0.5
+      ) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+        panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+        #increase size of axis lines
+        axis.line = ggplot2::element_line(size =
+                                            .3, color = "black"),
+        axis.ticks = ggplot2::element_line(size =
+                                             0.35, color = "black"),
+        #increase the font size
+        text = ggplot2::element_text(size =
+                                       12)
+      )
 
 
     sb_bw_plot2 <-
-      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
-        x = Party,
-        y = (Seats - VoteShare / 100 * distTS),
-        fill = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.3) + ggplot2::ylab("SE1_i(DM)") + viridis::scale_fill_viridis(discrete = TRUE,
-                                                                    name = "DM",
-                                                                    option = "D", begin = 0.5) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
-                                                                      panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
-                                                                      #increase size of axis lines
-                                                                      axis.line = ggplot2::element_line(size =
-                                                                                                          .3, color = "black"),
-                                                                      axis.ticks = ggplot2::element_line(size =
-                                                                                                           .3, color = "black"),
-                                                                      #increase the font size
-                                                                      text = ggplot2::element_text(size =
-                                                                                                     12)
-                                                                    )
+      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
+        ggplot2::aes(
+          x = Party,
+          y = (Seats - VoteShare / 100 * distTS),
+          fill = factor(TS)
+        ),
+        lwd = 0.25,
+        fatten = 0.4,
+        outlier.size = 0.3
+      ) + ggplot2::ylab("SE1_i(DM)") + viridis::scale_fill_viridis(
+        discrete = TRUE,
+        name = "DM",
+        option = "D",
+        begin = 0.5
+      ) + ggplot2::geom_hline(yintercept = tse) + ggplot2::theme_classic() + ggplot2::theme(
+        panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+        #increase size of axis lines
+        axis.line = ggplot2::element_line(size =
+                                            .3, color = "black"),
+        axis.ticks = ggplot2::element_line(size =
+                                             .3, color = "black"),
+        #increase the font size
+        text = ggplot2::element_text(size =
+                                       12)
+      )
 
     sb_bw_plot3 <-
-      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(ggplot2::aes(
-        x = Party,
-        y = (SeatShare / 100 - VoteShare / 100),
-        fill = factor(TS)
-      ), lwd = 0.25, fatten = 0.4, outlier.size = 0.3) + ggplot2::ylab("SE2_i(DM)") + viridis::scale_fill_viridis(discrete = TRUE,
-                                                                    name = "DM",
-                                                                    option = "D", begin = 0.5) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
-                                                                      panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
-                                                                      #increase size of axis lines
-                                                                      axis.line = ggplot2::element_line(size =
-                                                                                                          .3, color = "black"),
-                                                                      axis.ticks = ggplot2::element_line(size =
-                                                                                                           .3, color = "black"),
-                                                                      #increase the font size
-                                                                      text = ggplot2::element_text(size =
-                                                                                                     12)
-                                                                    )
+      ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
+        ggplot2::aes(
+          x = Party,
+          y = (SeatShare / 100 - VoteShare / 100),
+          fill = factor(TS)
+        ),
+        lwd = 0.25,
+        fatten = 0.4,
+        outlier.size = 0.3
+      ) + ggplot2::ylab("SE2_i(DM)") + viridis::scale_fill_viridis(
+        discrete = TRUE,
+        name = "DM",
+        option = "D",
+        begin = 0.5
+      ) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
+        panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
+        #increase size of axis lines
+        axis.line = ggplot2::element_line(size =
+                                            .3, color = "black"),
+        axis.ticks = ggplot2::element_line(size =
+                                             .3, color = "black"),
+        #increase the font size
+        text = ggplot2::element_text(size =
+                                       12)
+      )
 
     ese_plot <-
       ggplot2::ggplot(data = bias_data$ese) + ggplot2::geom_point(
@@ -599,7 +597,7 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i1(DM)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+      ) + ggplot2::ylab("B_i1(DM)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
                                                                                                 "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
@@ -611,7 +609,7 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i2(DM)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+      ) + ggplot2::ylab("B_i2(DM)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
                                                                                                 "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
@@ -624,7 +622,7 @@ plot_Disp <-
         size = 4,
         alpha = 1 / 2
       ) + ggplot2::ylab("B_i1(DM)") + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse) + viridis::scale_color_viridis(name =
-                                                                                                                                       "TV", discrete = TRUE)
+                                                                                                                                        "TV", discrete = TRUE)
     # Return list
 
     sb <-
@@ -647,16 +645,16 @@ plot_Disp <-
 #' @export
 
 Disp2 <- function(seed = 1000,
-                       np = 3,
-                       nd = 1,
-                       ne = 100,
-                       dist = "lnorm",
-                       minTS = 3,
-                       lim = 16,
-                       jump = 1,
-                       threshold = 0,
-                       threshold_country = 0,
-                       ...)
+                  np = 3,
+                  nd = 1,
+                  ne = 100,
+                  dist = "lnorm",
+                  minTS = 3,
+                  lim = 16,
+                  jump = 1,
+                  threshold = 0,
+                  threshold_country = 0,
+                  ...)
 
 {
   dsl <- list()
@@ -910,61 +908,91 @@ Disp2 <- function(seed = 1000,
   # Models
   ## DH
 
-#  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
+  #  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
 
-  model_dh <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_dh, method == "DH") )
+  model_dh <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = 0.4, alpha = -0.1),
+      data = dplyr::filter(lghi_dh, method == "DH")
+    )
 
-  lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = predict(model_dh) )
+  lghi_dh = dplyr::mutate(lghi_dh, GHI_predicted = predict(model_dh))
 
   # ----
 
   ## SL
 
-#  model_sl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_sl, method == "SL") )
+  #  model_sl <- lm( I(log(GHI)) ~ DM, data = dplyr::filter(lghi_sl, method == "SL") )
 
-  model_sl <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_sl, method == "SL") )
+  model_sl <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = 0.4, alpha = -0.1),
+      data = dplyr::filter(lghi_sl, method == "SL")
+    )
 
-  lghi_sl = dplyr::mutate(lghi_sl, GHI_predicted = predict(model_sl) )
+  lghi_sl = dplyr::mutate(lghi_sl, GHI_predicted = predict(model_sl))
 
   # ----
 
   ## MSL
 
-  model_msl <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_msl, method == "MSL") )
+  model_msl <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = 0.4, alpha = -0.1),
+      data = dplyr::filter(lghi_msl, method == "MSL")
+    )
 
-  lghi_msl = dplyr::mutate(lghi_msl, GHI_predicted = predict(model_msl) )
+  lghi_msl = dplyr::mutate(lghi_msl, GHI_predicted = predict(model_msl))
 
   # ----
 
   ## H
 
-  model_h <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_hamilton, method == "H") )
+  model_h <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = 0.4, alpha = -0.1),
+      data = dplyr::filter(lghi_hamilton, method == "H")
+    )
 
-  lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = predict(model_h) )
+  lghi_hamilton = dplyr::mutate(lghi_hamilton, GHI_predicted = predict(model_h))
 
   # ----
 
 
   ## Danish
 
-  model_danish <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_da, method == "Danish") )
+  model_danish <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = 0.4, alpha = -0.1),
+      data = dplyr::filter(lghi_da, method == "Danish")
+    )
 
-  lghi_da = dplyr::mutate(lghi_da, GHI_predicted = predict(model_danish) )
+  lghi_da = dplyr::mutate(lghi_da, GHI_predicted = predict(model_danish))
 
   # ----
 
   ## Imperiali
 
-  model_imperiali <- nls( GHI ~ C*exp(alpha*DM), start = list(C = 0.4, alpha = -0.1), data = dplyr::filter(lghi_imp, method == "Imperiali") )
+  model_imperiali <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = 0.4, alpha = -0.1),
+      data = dplyr::filter(lghi_imp, method == "Imperiali")
+    )
 
-  lghi_imp = dplyr::mutate(lghi_imp, GHI_predicted = predict(model_imperiali) )
+  lghi_imp = dplyr::mutate(lghi_imp, GHI_predicted = predict(model_imperiali))
 
   # ----
 
 
 
-#  lghi_all <-
-#    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
+  #  lghi_all <-
+  #    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
 
   lghi_all <-
     dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_da, lghi_imp)
@@ -973,52 +1001,72 @@ Disp2 <- function(seed = 1000,
   # Plots
 
   plot_GHI <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
-      x = factor(DM),
-      y = GHI,
-      fill = factor(method)
-    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "C",
-                                     discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0.1), size = 0.35, linetype = "longdash", colour = "blue" ) + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
-                                       #increase size of axis lines
-                                       axis.line = ggplot2::element_line(size =
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
+      ggplot2::aes(
+        x = factor(DM),
+        y = GHI,
+        fill = factor(method)
+      ),
+      lwd = 0.25,
+      fatten = 0.4,
+      outlier.size = 0.6
+    ) + viridis::scale_fill_viridis(option = "C",
+                                    discrete = TRUE,
+                                    begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+                                      yintercept = c(0.1),
+                                      size = 0.35,
+                                      linetype = "longdash",
+                                      colour = "blue"
+                                    ) + ggplot2::theme_classic() + ggplot2::theme(
+                                      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+                                      #increase size of axis lines
+                                      axis.line = ggplot2::element_line(size =
+                                                                          0.35, color = "black"),
+                                      axis.ticks = ggplot2::element_line(size =
                                                                            0.35, color = "black"),
-                                       axis.ticks = ggplot2::element_line(size =
-                                                                           0.35, color = "black"),
-                                       #Adjust legend position to maximize space, use a vector of proportion
-                                       #across the plot and up the plot where you want the legend.
-                                       #You can also use "left", "right", "top", "bottom", for legends on t
-                                       #he side of the plot
-                                       legend.position = c(.85, .7),
-                                       #increase the font size
-                                       text = ggplot2::element_text(size =
-                                                                      12)
-                                     )
+                                      #Adjust legend position to maximize space, use a vector of proportion
+                                      #across the plot and up the plot where you want the legend.
+                                      #You can also use "left", "right", "top", "bottom", for legends on t
+                                      #he side of the plot
+                                      legend.position = c(.85, .7),
+                                      #increase the font size
+                                      text = ggplot2::element_text(size =
+                                                                     12)
+                                    )
 
   plot_LHI <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
-      x = factor(DM),
-      y = LHI,
-      fill = factor(method)
-    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
-                                     discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
-                                       #increase size of axis lines
-                                       axis.line = ggplot2::element_line(size =
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
+      ggplot2::aes(
+        x = factor(DM),
+        y = LHI,
+        fill = factor(method)
+      ),
+      lwd = 0.25,
+      fatten = 0.4,
+      outlier.size = 0.6
+    ) + viridis::scale_fill_viridis(option = "D",
+                                    discrete = TRUE,
+                                    begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+                                      yintercept = c(0, 0.1),
+                                      size = 0.35,
+                                      linetype = "longdash",
+                                      colour = "blue"
+                                    ) + ggplot2::theme_classic() + ggplot2::theme(
+                                      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+                                      #increase size of axis lines
+                                      axis.line = ggplot2::element_line(size =
+                                                                          0.35, color = "black"),
+                                      axis.ticks = ggplot2::element_line(size =
                                                                            0.35, color = "black"),
-                                       axis.ticks = ggplot2::element_line(size =
-                                                                            0.35, color = "black"),
-                                       #Adjust legend position to maximize space, use a vector of proportion
-                                       #across the plot and up the plot where you want the legend.
-                                       #You can also use "left", "right", "top", "bottom", for legends on t
-                                       #he side of the plot
-                                       legend.position = c(.85, .7),
-                                       #increase the font size
-                                       text = ggplot2::element_text(size =
-                                                                      12)
-                                     )
+                                      #Adjust legend position to maximize space, use a vector of proportion
+                                      #across the plot and up the plot where you want the legend.
+                                      #You can also use "left", "right", "top", "bottom", for legends on t
+                                      #he side of the plot
+                                      legend.position = c(.85, .7),
+                                      #increase the font size
+                                      text = ggplot2::element_text(size =
+                                                                     12)
+                                    )
 
   # ----
 
@@ -1046,10 +1094,16 @@ Disp2 <- function(seed = 1000,
   # ----
 
   scatter_GHI <-
-    ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H", "Danish", "Imperiali") )) + ggplot2::geom_jitter(ggplot2::aes(
-      x = DM,
-      y = GHI
-), size = 1, alpha = 0.4, width = 0.2) + ggplot2::facet_wrap( ~ method ) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::theme_classic() + ggplot2::theme(
+    ggplot2::ggplot(data = dplyr::filter(
+      lghi_all,
+      method %in% c("DH", "SL", "MSL", "H", "Danish", "Imperiali")
+    )) + ggplot2::geom_jitter(
+      ggplot2::aes(x = DM,
+                   y = GHI),
+      size = 1,
+      alpha = 0.4,
+      width = 0.2
+    ) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::theme_classic() + ggplot2::theme(
       #increase size of axis lines
       axis.line = ggplot2::element_line(size =
                                           0.35, color = "black"),
@@ -1063,7 +1117,19 @@ Disp2 <- function(seed = 1000,
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted), size=0.5, alpha = 0.8) + ggplot2::geom_hline(yintercept = c(0.07), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::geom_vline(xintercept = c(4, 8, 10), size = 0.35, linetype = "longdash", colour = "red")
+    ) + ggplot2::geom_line(ggplot2::aes(x = DM, y = GHI_predicted),
+                           size = 0.5,
+                           alpha = 0.8) + ggplot2::geom_hline(
+                             yintercept = c(0.07),
+                             size = 0.35,
+                             linetype = "longdash",
+                             colour = "blue"
+                           ) + ggplot2::geom_vline(
+                             xintercept = c(4, 8, 10),
+                             size = 0.35,
+                             linetype = "longdash",
+                             colour = "red"
+                           )
 
   # ----
 
@@ -1075,56 +1141,52 @@ Disp2 <- function(seed = 1000,
 
   # ----
 
-  plot_SLI <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
-      x = factor(DM),
-      y = SLI,
-      fill = factor(method)
-    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
-                                                                                   discrete = TRUE,
-                                                                                   begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("SLI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(0, 0.1), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
-                                                                                     panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
-                                                                                     #increase size of axis lines
-                                                                                     axis.line = ggplot2::element_line(size =
-                                                                                                                         0.35, color = "black"),
-                                                                                     axis.ticks = ggplot2::element_line(size =
-                                                                                                                          0.35, color = "black"),
-                                                                                     #Adjust legend position to maximize space, use a vector of proportion
-                                                                                     #across the plot and up the plot where you want the legend.
-                                                                                     #You can also use "left", "right", "top", "bottom", for legends on t
-                                                                                     #he side of the plot
-                                                                                     legend.position = c(.85, .7),
-                                                                                     #increase the font size
-                                                                                     text = ggplot2::element_text(size =
-                                                                                                                    12)
-                                                                                   ) + ylim(0, 1)
-
   plot_ENPP <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(ggplot2::aes(
-      x = factor(DM),
-      y = ENPP,
-      fill = factor(method)
-    ), lwd = 0.25, fatten = 0.4, outlier.size = 0.6) + viridis::scale_fill_viridis(option = "D",
-                                     discrete = TRUE,
-                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(yintercept = c(2), size = 0.35, linetype = "longdash", colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
-                                       panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
-                                       #increase size of axis lines
-                                       axis.line = ggplot2::element_line(size =
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
+      ggplot2::aes(
+        x = factor(DM),
+        y = ENPP,
+        fill = factor(method)
+      ),
+      lwd = 0.25,
+      fatten = 0.4,
+      outlier.size = 0.6
+    ) + viridis::scale_fill_viridis(option = "D",
+                                    discrete = TRUE,
+                                    begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+                                      yintercept = c(2),
+                                      size = 0.35,
+                                      linetype = "longdash",
+                                      colour = "blue"
+                                    ) + ggplot2::theme_classic() + ggplot2::theme(
+                                      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+                                      #increase size of axis lines
+                                      axis.line = ggplot2::element_line(size =
+                                                                          0.35, color = "black"),
+                                      axis.ticks = ggplot2::element_line(size =
                                                                            0.35, color = "black"),
-                                       axis.ticks = ggplot2::element_line(size =
-                                                                            0.35, color = "black"),
-                                       #Adjust legend position to maximize space, use a vector of proportion
-                                       #across the plot and up the plot where you want the legend.
-                                       #You can also use "left", "right", "top", "bottom", for legends on t
-                                       #he side of the plot
-                                       legend.position = c(.85, .7),
-                                       #increase the font size
-                                       text = ggplot2::element_text(size =
-                                                                      12)
-                                     )
+                                      #Adjust legend position to maximize space, use a vector of proportion
+                                      #across the plot and up the plot where you want the legend.
+                                      #You can also use "left", "right", "top", "bottom", for legends on t
+                                      #he side of the plot
+                                      legend.position = c(.85, .7),
+                                      #increase the font size
+                                      text = ggplot2::element_text(size =
+                                                                     12)
+                                    )
 
   out <-
-    list(summary = lghi_all, plot_GHI = plot_GHI, scatter_GHI = scatter_GHI, Model_DH = model_dh, Model_SL = model_sl, Model_MSL = model_msl, Model_Hamilton = model_h, Model_Danish = model_danish, Model_Imperiali = model_imperiali)
+    list(
+      summary = lghi_all,
+      plot_GHI = plot_GHI,
+      scatter_GHI = scatter_GHI,
+      Model_DH = model_dh,
+      Model_SL = model_sl,
+      Model_MSL = model_msl,
+      Model_Hamilton = model_h,
+      Model_Danish = model_danish,
+      Model_Imperiali = model_imperiali
+    )
 
   return(out)
 
