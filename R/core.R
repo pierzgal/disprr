@@ -654,6 +654,8 @@ Disp2 <- function(seed = 1000,
                   jump = 1,
                   threshold = 0,
                   threshold_country = 0,
+                  start_C = 0.2,
+                  start_alpha = -0.2,
                   ...)
 
 {
@@ -913,7 +915,7 @@ Disp2 <- function(seed = 1000,
   model_dh <-
     nls(
       GHI ~ C * exp(alpha * DM),
-      start = list(C = 0.4, alpha = -0.1),
+      start = list(C = start_C, alpha = start_alpha),
       data = dplyr::filter(lghi_dh, method == "DH")
     )
 
@@ -928,7 +930,7 @@ Disp2 <- function(seed = 1000,
   model_sl <-
     nls(
       GHI ~ C * exp(alpha * DM),
-      start = list(C = 0.4, alpha = -0.1),
+      start = list(C = start_C, alpha = start_alpha),
       data = dplyr::filter(lghi_sl, method == "SL")
     )
 
@@ -941,7 +943,7 @@ Disp2 <- function(seed = 1000,
   model_msl <-
     nls(
       GHI ~ C * exp(alpha * DM),
-      start = list(C = 0.4, alpha = -0.1),
+      start = list(C = start_C, alpha = start_alpha),
       data = dplyr::filter(lghi_msl, method == "MSL")
     )
 
@@ -954,7 +956,7 @@ Disp2 <- function(seed = 1000,
   model_h <-
     nls(
       GHI ~ C * exp(alpha * DM),
-      start = list(C = 0.4, alpha = -0.1),
+      start = list(C = start_C, alpha = start_alpha),
       data = dplyr::filter(lghi_hamilton, method == "H")
     )
 
@@ -968,7 +970,7 @@ Disp2 <- function(seed = 1000,
   model_danish <-
     nls(
       GHI ~ C * exp(alpha * DM),
-      start = list(C = 0.4, alpha = -0.1),
+      start = list(C = start_C, alpha = start_alpha),
       data = dplyr::filter(lghi_da, method == "Danish")
     )
 
@@ -981,7 +983,7 @@ Disp2 <- function(seed = 1000,
   model_imperiali <-
     nls(
       GHI ~ C * exp(alpha * DM),
-      start = list(C = 0.4, alpha = -0.1),
+      start = list(C = start_C, alpha = start_alpha),
       data = dplyr::filter(lghi_imp, method == "Imperiali")
     )
 
