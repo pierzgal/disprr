@@ -2,7 +2,7 @@ Package: disprr
 Type: Package
 Title: Simulate Election Results and Compute Disproportionality Measures
 Version: 0.1.0
-Author: Michal Pierzgalski
+Author: pierzgal
 Maintainer: The package maintainer <pierzgal@gmail.com>
 Description: The package provides a few functions to simulate election results, using various proportional representation algorithms to apportion seats. It also computes and plots a variaty of disproportionality measures.
 Depends: R (>= 3.1.0)
