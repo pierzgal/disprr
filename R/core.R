@@ -398,7 +398,7 @@ simulate_E <-
 #' @export
 
 simulate_Disp <-
-  function(seed = 1000,
+  function(seed = 0,
            dist = "lnorm",
            np,
            nd = 1,
@@ -451,7 +451,7 @@ simulate_Disp <-
             sim[[i]][[2]],
             method = formula,
             TS = minTS + i - 2,
-            #            SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
+            # SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
             SE1_i = Seats - VoteShare / 100 * distTS,
             SE2_i = SeatShare / 100 - VoteShare / 100
           )
@@ -645,7 +645,7 @@ plot_Disp <-
 #' The function computes aggregate-level measures of disproportionality. It also models and plots relationships between values of aggregate-level disproportionality measures and district sizes.
 #' @export
 
-Disp2 <- function(seed = 1000,
+Disp2 <- function(seed = 0,
                   np = 3,
                   nd = 1,
                   ne = 100,
