@@ -413,6 +413,7 @@ simulate_Disp <-
            threshold_country = 0,
            minTS = 3,
            maxTS = 20,
+           by = 2,
            ...) {
     # Declare vars
     sb_bw <- list()
@@ -426,7 +427,7 @@ simulate_Disp <-
     }
 
     else {
-      for (i in seq(2, maxTS, by = 2)) {
+      for (i in seq(2, maxTS, by = by)) {
         sim[[i]] <-
           simulate_E(
             seed,
