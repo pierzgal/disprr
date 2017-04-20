@@ -7,6 +7,7 @@
 #' @export
 
 if.parties.null <- function(x) {
+  # SET SEED
   set.seed(1)
   parties <- replicate(x,
                        paste(sample(LETTERS, 3,
@@ -41,7 +42,7 @@ if.parties.null <- function(x) {
 #' @export
 
 sampleElectionData <-
-  function (seed,
+  function (seed = 0,
             dist = "uniform",
             np,
             nd,
@@ -53,6 +54,7 @@ sampleElectionData <-
             TS,
             formula_dist,
             ...) {
+    # SET SEED
     set.seed(seed)
 
     x = array(dim = c(np, nd, ne))
@@ -246,17 +248,18 @@ simulate_E <-
             threshold,
             threshold_country,
             ...) {
+    # SET SEED
     set.seed(seed)
 
     sample <-
-      sampleElectionData(seed, dist, np, nd, ne, mean, sd, rate, max, TS, formula_dist)
+      sampleElectionData(seed = seed, dist = dist, np = np, nd = nd, ne = ne, mean = mean, sd = sd, rate = rate, max = max, TS = TS, formula_dist = formula_dist)
 
 
     # Seat apportionment per district
     # Return list (Party Seats SeatShare Votes VoteShare id elec dist distTS)
 
     apportionment <-
-      .ProportionalRepresentation(sample, formula, threshold, threshold_country)
+      .ProportionalRepresentation(sample = sample, formula = formula, threshold = threshold, threshold_country = threshold_country)
 
     apportionment$Party <- as.character(apportionment$Party)
 
