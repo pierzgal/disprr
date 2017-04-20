@@ -451,6 +451,7 @@ simulate_Disp <-
             sim[[i]][[2]],
             method = formula,
             TS = minTS + i - 2,
+            VoteShare = VoteShare,
             # SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
             SE1_i = Seats - VoteShare / 100 * distTS,
             SE2_i = SeatShare / 100 - VoteShare / 100
