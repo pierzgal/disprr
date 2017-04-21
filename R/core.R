@@ -252,14 +252,31 @@ simulate_E <-
     set.seed(seed)
 
     sample <-
-      sampleElectionData(seed = seed, dist = dist, np = np, nd = nd, ne = ne, mean = mean, sd = sd, rate = rate, max = max, TS = TS, formula_dist = formula_dist)
+      sampleElectionData(
+        seed = seed,
+        dist = dist,
+        np = np,
+        nd = nd,
+        ne = ne,
+        mean = mean,
+        sd = sd,
+        rate = rate,
+        max = max,
+        TS = TS,
+        formula_dist = formula_dist
+      )
 
 
     # Seat apportionment per district
     # Return list (Party Seats SeatShare Votes VoteShare id elec dist distTS)
 
     apportionment <-
-      .ProportionalRepresentation(sample = sample, formula = formula, threshold = threshold, threshold_country = threshold_country)
+      .ProportionalRepresentation(
+        sample = sample,
+        formula = formula,
+        threshold = threshold,
+        threshold_country = threshold_country
+      )
 
     apportionment$Party <- as.character(apportionment$Party)
 
@@ -602,8 +619,8 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i1(DM)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
-                                                                                                "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
+      ) + ggplot2::ylab("B_i1(DM)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+                                                                                                 "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = tse)
 
     ese_plot2 <-
       ggplot2::ggplot(data = bias_data$ese2) + ggplot2::geom_point(
@@ -614,8 +631,8 @@ plot_Disp <-
         ),
         size = 4,
         alpha = 1 / 2
-      ) + ggplot2::ylab("B_i2(DM)") + ggplot2::facet_grid(~ V) + viridis::scale_color_viridis(name =
-                                                                                                "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
+      ) + ggplot2::ylab("B_i2(DM)") + ggplot2::facet_grid( ~ V) + viridis::scale_color_viridis(name =
+                                                                                                 "DM", discrete = TRUE) + ggplot2::theme_classic() + ggplot2::geom_hline(yintercept = c(0))
 
     ese_mean_plot <-
       ggplot2::ggplot(data = bias_data$ese_mean) + ggplot2::geom_point(
@@ -1011,73 +1028,108 @@ Disp2 <- function(seed = 0,
 
   # Plots
 
+  # plot_GHI <-
+  #   ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
+  #     ggplot2::aes(
+  #       x = factor(DM),
+  #       y = GHI,
+  #       fill = factor(method)
+  #     ),
+  #     lwd = 0.25,
+  #     fatten = 0.4,
+  #     outlier.size = 0.6
+  #   ) + viridis::scale_fill_viridis(option = "C",
+  #                                   discrete = TRUE,
+  #                                   begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+  #                                     yintercept = c(0.1),
+  #                                     size = 0.35,
+  #                                     linetype = "longdash",
+  #                                     colour = "blue"
+  #                                   ) + ggplot2::theme_classic() + ggplot2::theme(
+  #                                     panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+  #                                     #increase size of axis lines
+  #                                     axis.line = ggplot2::element_line(size =
+  #                                                                         0.35, color = "black"),
+  #                                     axis.ticks = ggplot2::element_line(size =
+  #                                                                          0.35, color = "black"),
+  #                                     #Adjust legend position to maximize space, use a vector of proportion
+  #                                     #across the plot and up the plot where you want the legend.
+  #                                     #You can also use "left", "right", "top", "bottom", for legends on t
+  #                                     #he side of the plot
+  #                                     legend.position = c(.85, .7),
+  #                                     #increase the font size
+  #                                     text = ggplot2::element_text(size =
+  #                                                                    12)
+  #                                   )
+
   plot_GHI <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
-      ggplot2::aes(
-        x = factor(DM),
-        y = GHI,
-        fill = factor(method)
-      ),
+      ggplot2::aes(x = as.factor(DM),
+                   y = GHI),
       lwd = 0.25,
       fatten = 0.4,
       outlier.size = 0.6
-    ) + viridis::scale_fill_viridis(option = "C",
-                                    discrete = TRUE,
-                                    begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
-                                      yintercept = c(0.1),
-                                      size = 0.35,
-                                      linetype = "longdash",
-                                      colour = "blue"
-                                    ) + ggplot2::theme_classic() + ggplot2::theme(
-                                      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
-                                      #increase size of axis lines
-                                      axis.line = ggplot2::element_line(size =
-                                                                          0.35, color = "black"),
-                                      axis.ticks = ggplot2::element_line(size =
-                                                                           0.35, color = "black"),
-                                      #Adjust legend position to maximize space, use a vector of proportion
-                                      #across the plot and up the plot where you want the legend.
-                                      #You can also use "left", "right", "top", "bottom", for legends on t
-                                      #he side of the plot
-                                      legend.position = c(.85, .7),
-                                      #increase the font size
-                                      text = ggplot2::element_text(size =
-                                                                     12)
-                                    )
+    ) + ggplot2::geom_line(
+      ggplot2::aes(x = as.factor(DM), y = GHI_predicted, group=1),
+      size = 0.5,
+      colour = "blue"
+    ) + ggplot2::facet_wrap( ~ method) + viridis::scale_fill_viridis(option = "C",
+                                                                     discrete = TRUE,
+                                                                     begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+                                                                       yintercept = c(0.1),
+                                                                       size = 0.35,
+                                                                       linetype = "longdash",
+                                                                       colour = "blue"
+                                                                     ) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                       panel.grid.major = ggplot2::element_line(size = 0.1, color = "red"),
+                                                                       #increase size of axis lines
+                                                                       axis.line = ggplot2::element_line(size =
+                                                                                                           0.35, color = "black"),
+                                                                       axis.ticks = ggplot2::element_line(size =
+                                                                                                            0.35, color = "black"),
+                                                                       #Adjust legend position to maximize space, use a vector of proportion
+                                                                       #across the plot and up the plot where you want the legend.
+                                                                       #You can also use "left", "right", "top", "bottom", for legends on t
+                                                                       #he side of the plot
+                                                                       legend.position = c(.85, .7),
+                                                                       #increase the font size
+                                                                       text = ggplot2::element_text(size =
+                                                                                                      12)
+                                                                     ) # + scale_x_continuous(breaks=c(2,4,6,8,10,12,14,16,18,20))
 
-  plot_LHI <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
-      ggplot2::aes(
-        x = factor(DM),
-        y = LHI,
-        fill = factor(method)
-      ),
-      lwd = 0.25,
-      fatten = 0.4,
-      outlier.size = 0.6
-    ) + viridis::scale_fill_viridis(option = "D",
-                                    discrete = TRUE,
-                                    begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
-                                      yintercept = c(0, 0.1),
-                                      size = 0.35,
-                                      linetype = "longdash",
-                                      colour = "blue"
-                                    ) + ggplot2::theme_classic() + ggplot2::theme(
-                                      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
-                                      #increase size of axis lines
-                                      axis.line = ggplot2::element_line(size =
-                                                                          0.35, color = "black"),
-                                      axis.ticks = ggplot2::element_line(size =
-                                                                           0.35, color = "black"),
-                                      #Adjust legend position to maximize space, use a vector of proportion
-                                      #across the plot and up the plot where you want the legend.
-                                      #You can also use "left", "right", "top", "bottom", for legends on t
-                                      #he side of the plot
-                                      legend.position = c(.85, .7),
-                                      #increase the font size
-                                      text = ggplot2::element_text(size =
-                                                                     12)
-                                    )
+  # plot_LHI <-
+  #   ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
+  #     ggplot2::aes(
+  #       x = factor(DM),
+  #       y = LHI,
+  #       fill = factor(method)
+  #     ),
+  #     lwd = 0.25,
+  #     fatten = 0.4,
+  #     outlier.size = 0.6
+  #   ) + viridis::scale_fill_viridis(option = "D",
+  #                                   discrete = TRUE,
+  #                                   begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("LHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+  #                                     yintercept = c(0, 0.1),
+  #                                     size = 0.35,
+  #                                     linetype = "longdash",
+  #                                     colour = "blue"
+  #                                   ) + ggplot2::theme_classic() + ggplot2::theme(
+  #                                     panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+  #                                     #increase size of axis lines
+  #                                     axis.line = ggplot2::element_line(size =
+  #                                                                         0.35, color = "black"),
+  #                                     axis.ticks = ggplot2::element_line(size =
+  #                                                                          0.35, color = "black"),
+  #                                     #Adjust legend position to maximize space, use a vector of proportion
+  #                                     #across the plot and up the plot where you want the legend.
+  #                                     #You can also use "left", "right", "top", "bottom", for legends on t
+  #                                     #he side of the plot
+  #                                     legend.position = c(.85, .7),
+  #                                     #increase the font size
+  #                                     text = ggplot2::element_text(size =
+  #                                                                    12)
+  #                                   )
 
   # ----
 
@@ -1108,39 +1160,42 @@ Disp2 <- function(seed = 0,
     ggplot2::ggplot(data = dplyr::filter(
       lghi_all,
       method %in% c("DH", "SL", "MSL", "H", "Danish", "Imperiali")
-    )) + ggplot2::geom_jitter(
+    )) + ggplot2::geom_hex(
       ggplot2::aes(x = DM,
                    y = GHI),
-      size = 1,
-      alpha = 0.4,
-      width = 0.2
-    ) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggplot2::theme_classic() + ggplot2::theme(
+      #      size = 1,
+      #      alpha = 0.4,
+      #      width = 0.2,
+                   binwidth = c(0.5, 0.025)
+    ) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggthemes::theme_few() + ggplot2::theme(
       #increase size of axis lines
-      axis.line = ggplot2::element_line(size =
-                                          0.35, color = "black"),
-      axis.ticks = ggplot2::element_line(size =
-                                           0.35, color = "black"),
+      #axis.line = ggplot2::element_line(size =
+      #                                    0.35, color = "black"),
+      #axis.ticks = ggplot2::element_line(size =
+      #                                     0.35, color = "black"),
       #Adjust legend position to maximize space, use a vector of proportion
       #across the plot and up the plot where you want the legend.
       #You can also use "left", "right", "top", "bottom", for legends on t
       #he side of the plot
-      legend.position = c(.85, .7),
+      legend.position = c(.9, .8),
       #increase the font size
       text = ggplot2::element_text(size =
                                      12)
-    ) + ggplot2::geom_line(ggplot2::aes(x = DM, y = GHI_predicted),
-                           size = 0.5,
-                           alpha = 0.8) + ggplot2::geom_hline(
-                             yintercept = c(0.07),
-                             size = 0.35,
-                             linetype = "longdash",
-                             colour = "blue"
-                           ) + ggplot2::geom_vline(
-                             xintercept = c(4, 8, 10),
-                             size = 0.35,
-                             linetype = "longdash",
-                             colour = "red"
-                           )
+    ) + ggplot2::geom_line(
+      ggplot2::aes(x = DM, y = GHI_predicted),
+      size = 0.5,
+      colour = "black"
+    ) + ggplot2::geom_hline(
+      yintercept = c(0.07),
+      size = 0.35,
+      linetype = "longdash",
+      colour = "blue"
+    ) + ggplot2::geom_vline(
+      xintercept = c(4, 8, 10),
+      size = 0.35,
+      linetype = "longdash",
+      colour = "red"
+    ) + scale_fill_viridis(name = "Count", direction = -1)
 
   # ----
 
@@ -1152,39 +1207,39 @@ Disp2 <- function(seed = 0,
 
   # ----
 
-  plot_ENPP <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
-      ggplot2::aes(
-        x = factor(DM),
-        y = ENPP,
-        fill = factor(method)
-      ),
-      lwd = 0.25,
-      fatten = 0.4,
-      outlier.size = 0.6
-    ) + viridis::scale_fill_viridis(option = "D",
-                                    discrete = TRUE,
-                                    begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
-                                      yintercept = c(2),
-                                      size = 0.35,
-                                      linetype = "longdash",
-                                      colour = "blue"
-                                    ) + ggplot2::theme_classic() + ggplot2::theme(
-                                      panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
-                                      #increase size of axis lines
-                                      axis.line = ggplot2::element_line(size =
-                                                                          0.35, color = "black"),
-                                      axis.ticks = ggplot2::element_line(size =
-                                                                           0.35, color = "black"),
-                                      #Adjust legend position to maximize space, use a vector of proportion
-                                      #across the plot and up the plot where you want the legend.
-                                      #You can also use "left", "right", "top", "bottom", for legends on t
-                                      #he side of the plot
-                                      legend.position = c(.85, .7),
-                                      #increase the font size
-                                      text = ggplot2::element_text(size =
-                                                                     12)
-                                    )
+  # plot_ENPP <-
+  #   ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
+  #     ggplot2::aes(
+  #       x = factor(DM),
+  #       y = ENPP,
+  #       fill = factor(method)
+  #     ),
+  #     lwd = 0.25,
+  #     fatten = 0.4,
+  #     outlier.size = 0.6
+  #   ) + viridis::scale_fill_viridis(option = "D",
+  #                                   discrete = TRUE,
+  #                                   begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+  #                                     yintercept = c(2),
+  #                                     size = 0.35,
+  #                                     linetype = "longdash",
+  #                                     colour = "blue"
+  #                                   ) + ggplot2::theme_classic() + ggplot2::theme(
+  #                                     panel.grid.major = ggplot2::element_line(size = 0.35, color = "red"),
+  #                                     #increase size of axis lines
+  #                                     axis.line = ggplot2::element_line(size =
+  #                                                                         0.35, color = "black"),
+  #                                     axis.ticks = ggplot2::element_line(size =
+  #                                                                          0.35, color = "black"),
+  #                                     #Adjust legend position to maximize space, use a vector of proportion
+  #                                     #across the plot and up the plot where you want the legend.
+  #                                     #You can also use "left", "right", "top", "bottom", for legends on t
+  #                                     #he side of the plot
+  #                                     legend.position = c(.85, .7),
+  #                                     #increase the font size
+  #                                     text = ggplot2::element_text(size =
+  #                                                                    12)
+  #                                   )
 
   out <-
     list(
