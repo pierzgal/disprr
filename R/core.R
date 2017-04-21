@@ -433,7 +433,7 @@ simulate_Disp <-
            threshold_country = 0,
            minTS = 3,
            maxTS = 20,
-           by = 2,
+           jump = 2,
            ...) {
     # Declare vars
     sb_bw <- list()
@@ -447,7 +447,10 @@ simulate_Disp <-
     }
 
     else {
-      for (i in seq(2, maxTS, by = by)) {
+
+#      set.seed(seed = seed)
+
+      for (i in seq(from = minTS, to = maxTS, by = jump)) {
         sim[[i]] <-
           simulate_E(
             seed = seed,
@@ -459,7 +462,7 @@ simulate_Disp <-
             sd = sd,
             rate = rate,
             max = max,
-            TS = minTS + i - 2,
+            TS = i,
             formula = formula,
             formula_dist = formula_dist,
             threshold = threshold,
@@ -470,7 +473,7 @@ simulate_Disp <-
           dplyr::mutate(
             sim[[i]][[2]],
             method = formula,
-            TS = minTS + i - 2,
+            TS = i,
             VoteShare = VoteShare,
             # SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
             SE1_i = Seats - VoteShare / 100 * distTS,
