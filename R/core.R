@@ -552,7 +552,7 @@ plot_Disp <-
         axis.line = ggplot2::element_line(size =
                                             .3, color = "black"),
         axis.ticks = ggplot2::element_line(size =
-                                             0.35, color = "black"),
+                                             0.3, color = "black"),
         #increase the font size
         text = ggplot2::element_text(size =
                                        12)
@@ -589,19 +589,19 @@ plot_Disp <-
     sb_bw_plot3 <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
         ggplot2::aes(
-          x = Party,
+          x = "",
           y = (SeatShare / 100 - VoteShare / 100),
           fill = factor(TS)
         ),
         lwd = 0.25,
         fatten = 0.4,
         outlier.size = 0.3
-      ) + ggplot2::ylab("SE2_i(DM)") + viridis::scale_fill_viridis(
+      ) + ggplot2::facet_wrap( ~ Party) + ggplot2::ylab("SE2_i(DM)") + viridis::scale_fill_viridis(
         discrete = TRUE,
         name = "DM",
         option = "D",
         begin = 0.5
-      ) + ggplot2::geom_hline(yintercept = c(0)) + ggplot2::theme_classic() + ggplot2::theme(
+      ) + ggplot2::geom_hline(yintercept = c(0, 0.1), colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
         panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
         #increase size of axis lines
         axis.line = ggplot2::element_line(size =
