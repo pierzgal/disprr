@@ -1129,17 +1129,14 @@ plot_Disp2 <- function(data = NULL) {
 
 
   plot_NPP <-
-    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_point(
-      ggplot2::aes(x = as.factor(DM),
-                   y = NPP ),
-      size = 6,
-      alpha = 0.1
-    ) + ggplot2::facet_wrap( ~ method) + ggplot2::xlab("DM") + ggplot2::ylab("NPP") + ggplot2::labs(fill = "Method") + ggplot2::theme_classic() + ggplot2::theme(
-      panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"),
-      axis.line = ggplot2::element_line(size = 0.35, color = "black"),
-      axis.ticks = ggplot2::element_line(size = 0.35, color = "black"),
-      text = ggplot2::element_text(size = 12)
-    )
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_count(ggplot2::aes(x = DM,
+                                                                        y = NPP),
+                                                           colour = "red", alpha = 0.7) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("NPP") + ggplot2::theme_classic() + ggplot2::theme(
+                                                             panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"),
+                                                             axis.line = ggplot2::element_line(size = 0.35, color = "black"),
+                                                             axis.ticks = ggplot2::element_line(size = 0.35, color = "black"),
+                                                             text = ggplot2::element_text(size = 12)
+                                                           )
 
   # scatter_GHI <-
   #   ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
@@ -1168,7 +1165,7 @@ plot_Disp2 <- function(data = NULL) {
     ggplot2::ggplot(data = dplyr::filter(
       lghi_all,
       method %in% c("DH", "SL", "MSL", "H", "Danish", "Imperiali")
-    )) + ggplot2::geom_hex(
+    )) + ggplot2::geom_count(
       ggplot2::aes(x = DM,
                    y = GHI),
       #      size = 1,
