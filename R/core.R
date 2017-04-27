@@ -383,7 +383,8 @@ simulate_E <-
         SLI = signif(sum((
           SeatShare - VoteShare
         ) ^ 2 / (VoteShare)), digits = 2),
-        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 2)
+#        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 2)
+        NPP = sum(SeatShare > 0)
       )
 
     summary <-
@@ -558,7 +559,6 @@ plot_Disp <-
                                        12)
       )
 
-
     sb_bw_plot2 <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
         ggplot2::aes(
@@ -600,7 +600,7 @@ plot_Disp <-
         discrete = TRUE,
         name = "DM",
         option = "D",
-        begin = 0.5
+        begin = 0.6
       ) + ggplot2::geom_hline(yintercept = c(0, 0.1), colour = "blue") + ggplot2::theme_classic() + ggplot2::theme(
         panel.grid.major = ggplot2::element_line(size = .3, color = "red"),
         #increase size of axis lines
@@ -611,7 +611,7 @@ plot_Disp <-
         #increase the font size
         text = ggplot2::element_text(size =
                                        12)
-      )
+      ) + ggplot2::stat_summary( ggplot2::aes( x = "", y = (SeatShare / 100 - VoteShare / 100), fill = factor(TS) ), fun.y = "mean", shape = 3, geom = "point", size = 2, position = ggplot2::position_dodge(width=0.75), color="black" )
 
     ese_plot <-
       ggplot2::ggplot(data = bias_data$ese) + ggplot2::geom_point(
@@ -666,7 +666,7 @@ plot_Disp <-
 
 #' Aggregate-Level Disproportionality Measures
 #'
-#' The function computes aggregate-level measures of disproportionality. It also models and plots relationships between values of aggregate-level disproportionality measures and district sizes.
+#' The function computes aggregate-level measures of disproportionality. It also models relationships between values of aggregate-level disproportionality measures and district sizes.
 #' @export
 
 Disp2 <- function(seed = 0,
@@ -698,12 +698,20 @@ Disp2 <- function(seed = 0,
   dimp <- list()
   dda <- list()
 
-  seatbias <- list()
+  dh_seatbias <- list()
+  sl_seatbias <- list()
+  msl_seatbias <- list()
+  h_seatbias <- list()
+  ad_seatbias <- list()
+  hh_seatbias <- list()
+  imp_seatbias <- list()
+  da_seatbias <- list()
+
   out <- list()
 
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+    dh_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -722,7 +730,7 @@ Disp2 <- function(seed = 0,
       )
 
     ddh[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(dh_seatbias[[i]][[3]],
                     method = "DH",
                     DM = minTS + i - 2,
                     NP = np)
@@ -730,7 +738,7 @@ Disp2 <- function(seed = 0,
   }
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+    sl_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -749,7 +757,7 @@ Disp2 <- function(seed = 0,
       )
 
     dsl[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(sl_seatbias[[i]][[3]],
                     method = "SL",
                     DM = minTS + i - 2,
                     NP = np)
@@ -758,7 +766,7 @@ Disp2 <- function(seed = 0,
 
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+    msl_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -777,7 +785,7 @@ Disp2 <- function(seed = 0,
       )
 
     dmsl[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(msl_seatbias[[i]][[3]],
                     method = "MSL",
                     DM = minTS + i - 2,
                     NP = np)
@@ -786,7 +794,7 @@ Disp2 <- function(seed = 0,
 
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+    h_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -805,7 +813,7 @@ Disp2 <- function(seed = 0,
       )
 
     dhamilton[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(h_seatbias[[i]][[3]],
                     method = "H",
                     DM = minTS + i - 2,
                     NP = np)
@@ -813,7 +821,7 @@ Disp2 <- function(seed = 0,
   }
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+    hh_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -832,7 +840,7 @@ Disp2 <- function(seed = 0,
       )
 
     dhh[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(hh_seatbias[[i]][[3]],
                     method = "HH",
                     DM = minTS + i - 2,
                     NP = np)
@@ -840,7 +848,7 @@ Disp2 <- function(seed = 0,
   }
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+   ad_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -859,7 +867,7 @@ Disp2 <- function(seed = 0,
       )
 
     dad[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(ad_seatbias[[i]][[3]],
                     method = "A",
                     DM = minTS + i - 2,
                     NP = np)
@@ -869,7 +877,7 @@ Disp2 <- function(seed = 0,
   # ---- Danish and HA Imperiali
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+    imp_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -888,7 +896,7 @@ Disp2 <- function(seed = 0,
       )
 
     dimp[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(imp_seatbias[[i]][[3]],
                     method = "Imperiali",
                     DM = minTS + i - 2,
                     NP = np)
@@ -896,7 +904,7 @@ Disp2 <- function(seed = 0,
   }
 
   for (i in seq(2, lim, by = jump)) {
-    seatbias[[i]] <-
+    da_seatbias[[i]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -915,7 +923,7 @@ Disp2 <- function(seed = 0,
       )
 
     dda[[i]] <-
-      dplyr::mutate(seatbias[[i]][[3]],
+      dplyr::mutate(da_seatbias[[i]][[3]],
                     method = "Danish",
                     DM = minTS + i - 2,
                     NP = np)
@@ -1028,6 +1036,39 @@ Disp2 <- function(seed = 0,
   lghi_all <-
     dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_da, lghi_imp)
 
+  out <-
+    list(
+      summary = lghi_all,
+      Model_DH = model_dh,
+      Model_SL = model_sl,
+      Model_MSL = model_msl,
+      Model_Hamilton = model_h,
+      Model_Danish = model_danish,
+      Model_Imperiali = model_imperiali,
+      DH = dh_seatbias,
+      SL = sl_seatbias,
+      MSL = msl_seatbias,
+      H = h_seatbias,
+      AD = ad_seatbias,
+      HH = hh_seatbias,
+      I = imp_seatbias,
+      D = da_seatbias
+    )
+
+  return(out)
+
+}
+
+# ----
+
+#' Plot Aggregate-Level Disproportionality Measures
+#'
+#' The function plots relationships between values of aggregate-level disproportionality measures and district sizes.
+#' @export
+
+plot_Disp2 <- function(data = NULL) {
+
+  lghi_all <- data[['summary']]
 
   # Plots
 
@@ -1086,6 +1127,20 @@ Disp2 <- function(seed = 0,
                                                                      ) + ggplot2::theme_classic() + ggplot2::theme(
                                                                        panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"), axis.line = ggplot2::element_line(size = 0.35, color = "black"), axis.ticks = ggplot2::element_line(size = 0.35, color = "black"), text = ggplot2::element_text(size = 12))
 
+
+  plot_NPP <-
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_point(
+      ggplot2::aes(x = as.factor(DM),
+                   y = NPP ),
+      size = 6,
+      alpha = 0.1
+    ) + ggplot2::facet_wrap( ~ method) + ggplot2::xlab("DM") + ggplot2::ylab("NPP") + ggplot2::labs(fill = "Method") + ggplot2::theme_classic() + ggplot2::theme(
+      panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"),
+      axis.line = ggplot2::element_line(size = 0.35, color = "black"),
+      axis.ticks = ggplot2::element_line(size = 0.35, color = "black"),
+      text = ggplot2::element_text(size = 12)
+    )
+
   # scatter_GHI <-
   #   ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
   #     x = DM,
@@ -1119,7 +1174,7 @@ Disp2 <- function(seed = 0,
       #      size = 1,
       #      alpha = 0.4,
       #      width = 0.2,
-                   binwidth = c(0.5, 0.025)
+      binwidth = c(0.5, 0.025)
     ) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggthemes::theme_few() + ggplot2::theme(
       #increase size of axis lines
       #axis.line = ggplot2::element_line(size =
@@ -1154,15 +1209,8 @@ Disp2 <- function(seed = 0,
 
   out <-
     list(
-      summary = lghi_all,
       plot_GHI = plot_GHI,
-      scatter_GHI = scatter_GHI,
-      Model_DH = model_dh,
-      Model_SL = model_sl,
-      Model_MSL = model_msl,
-      Model_Hamilton = model_h,
-      Model_Danish = model_danish,
-      Model_Imperiali = model_imperiali
+      plot_NPP = plot_NPP
     )
 
   return(out)
