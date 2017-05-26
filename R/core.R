@@ -1132,7 +1132,7 @@ plot_Disp2 <- function(data = NULL) {
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_count(ggplot2::aes(x = DM,
                                                                         y = NPP),
                                                            colour = "red", alpha = 0.7) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("NPP") + ggplot2::theme_classic() + ggplot2::theme(
-                                                             panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"),
+                                                             panel.grid.major = ggplot2::element_line(size = 0.1, color = "red"),
                                                              axis.line = ggplot2::element_line(size = 0.35, color = "black"),
                                                              axis.ticks = ggplot2::element_line(size = 0.35, color = "black"),
                                                              text = ggplot2::element_text(size = 12)
@@ -1158,49 +1158,6 @@ plot_Disp2 <- function(data = NULL) {
   #     text = ggplot2::element_text(size =
   #                                    12)
   #   ) + ggplot2::geom_line( ggplot2::aes(x = DM, y = GHI_predicted, color = factor(method)), size=1, alpha = 0.8)
-
-  # ----
-
-  scatter_GHI <-
-    ggplot2::ggplot(data = dplyr::filter(
-      lghi_all,
-      method %in% c("DH", "SL", "MSL", "H", "Danish", "Imperiali")
-    )) + ggplot2::geom_count(
-      ggplot2::aes(x = DM,
-                   y = GHI),
-      #      size = 1,
-      #      alpha = 0.4,
-      #      width = 0.2,
-      binwidth = c(0.5, 0.025)
-    ) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(color = "Method") + ggthemes::theme_few() + ggplot2::theme(
-      #increase size of axis lines
-      #axis.line = ggplot2::element_line(size =
-      #                                    0.35, color = "black"),
-      #axis.ticks = ggplot2::element_line(size =
-      #                                     0.35, color = "black"),
-      #Adjust legend position to maximize space, use a vector of proportion
-      #across the plot and up the plot where you want the legend.
-      #You can also use "left", "right", "top", "bottom", for legends on t
-      #he side of the plot
-      legend.position = c(.9, .8),
-      #increase the font size
-      text = ggplot2::element_text(size =
-                                     12)
-    ) + ggplot2::geom_line(
-      ggplot2::aes(x = DM, y = GHI_predicted),
-      size = 0.5,
-      colour = "black"
-    ) + ggplot2::geom_hline(
-      yintercept = c(0.07),
-      size = 0.35,
-      linetype = "longdash",
-      colour = "blue"
-    ) + ggplot2::geom_vline(
-      xintercept = c(4, 8, 10),
-      size = 0.35,
-      linetype = "longdash",
-      colour = "red"
-    ) + scale_fill_viridis(name = "Count", direction = -1)
 
   # ----
 
