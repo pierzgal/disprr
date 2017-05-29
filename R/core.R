@@ -1141,7 +1141,7 @@ plot_Disp2 <- function(data = NULL) {
   plot_ENPP <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_count(ggplot2::aes(x = DM,
                                                                         y = ENPP),
-                                                           colour = "red", alpha = 0.7) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::theme_classic() + ggplot2::theme(
+                                                           colour = "red", alpha = 0.8, shape = 1) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::theme_classic() + ggplot2::theme(
                                                              panel.grid.major = ggplot2::element_line(size = 0.1, color = "red"),
                                                              axis.line = ggplot2::element_line(size = 0.35, color = "black"),
                                                              axis.ticks = ggplot2::element_line(size = 0.35, color = "black"),
