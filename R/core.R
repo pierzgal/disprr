@@ -383,7 +383,7 @@ simulate_E <-
         SLI = signif(sum((
           SeatShare - VoteShare
         ) ^ 2 / (VoteShare)), digits = 2),
-#        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 2)
+        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 2),
         NPP = sum(SeatShare > 0)
       )
 
@@ -1138,6 +1138,16 @@ plot_Disp2 <- function(data = NULL) {
                                                              text = ggplot2::element_text(size = 12)
                                                            )
 
+  plot_ENPP <-
+    ggplot2::ggplot(data = lghi_all) + ggplot2::geom_count(ggplot2::aes(x = DM,
+                                                                        y = ENPP),
+                                                           colour = "red", alpha = 0.7) + ggplot2::facet_wrap(~ method) + ggplot2::xlab("DM") + ggplot2::ylab("ENPP") + ggplot2::theme_classic() + ggplot2::theme(
+                                                             panel.grid.major = ggplot2::element_line(size = 0.1, color = "red"),
+                                                             axis.line = ggplot2::element_line(size = 0.35, color = "black"),
+                                                             axis.ticks = ggplot2::element_line(size = 0.35, color = "black"),
+                                                             text = ggplot2::element_text(size = 12)
+                                                           )
+
   # scatter_GHI <-
   #   ggplot2::ggplot(data = dplyr::filter(lghi_all, method %in% c("DH", "SL", "MSL", "H") )) + ggplot2::geom_jitter(ggplot2::aes(
   #     x = DM,
@@ -1164,7 +1174,8 @@ plot_Disp2 <- function(data = NULL) {
   out <-
     list(
       plot_GHI = plot_GHI,
-      plot_NPP = plot_NPP
+      plot_NPP = plot_NPP,
+      plot_ENPP = plot_ENPP
     )
 
   return(out)
