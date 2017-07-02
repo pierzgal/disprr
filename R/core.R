@@ -341,13 +341,13 @@ simulate_E <-
         merged,
         Party = as.factor(Party),
         #        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
-        SE1_i = signif(seats - VoteShareTotalParty / 100 * TS, 2),
-        SE2_i = signif(seat_perc / 100 - VoteShareTotalParty / 100, 2),
-        SE2_i_pp = signif(seat_perc - SeatShareIdeal, 2),
-        SeatShare = signif(seat_perc / 100, 2),
-        VoteShare = signif(VoteShareTotalParty / 100, 2),
+        SE1_i = signif(seats - VoteShareTotalParty / 100 * TS, 4),
+        SE2_i = signif(seat_perc / 100 - VoteShareTotalParty / 100, 4),
+        SE2_i_pp = signif(seat_perc - SeatShareIdeal, 4),
+        SeatShare = signif(seat_perc / 100, 4),
+        VoteShare = signif(VoteShareTotalParty / 100, 4),
         StandardQuota = (SeatShareIdeal / 100) * TS,
-        RSE2_i = signif((seat_perc - SeatShareIdeal) / SeatShareIdeal, 2)
+        RSE2_i = signif((seat_perc - SeatShareIdeal) / SeatShareIdeal, 4)
       )
 
     seat_excess <-
@@ -377,13 +377,13 @@ simulate_E <-
         meanRSE2 = signif(sum(abs(RSE2_i)) / np, digits = 2),
         LHI = signif(1 / 2 * sum(abs(
           SeatShare - VoteShare
-        )), digits = 2),
+        )), digits = 4),
         GHI = signif(sqrt(1 / 2 * sum((SeatShare - VoteShare) ^ 2
-        )), digits = 2),
+        )), digits = 4),
         SLI = signif(sum((
           SeatShare - VoteShare
-        ) ^ 2 / (VoteShare)), digits = 2),
-        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 2),
+        ) ^ 2 / (VoteShare)), digits = 4),
+        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 4),
         NPP = sum(SeatShare > 0)
       )
 
@@ -1124,6 +1124,11 @@ plot_Disp2 <- function(data = NULL) {
                                                                        size = 0.35,
                                                                        linetype = "longdash",
                                                                        colour = "blue"
+                                                                     ) + ggplot2::geom_vline(
+                                                                       xintercept = c(3, 7),
+                                                                       size = 0.45,
+                                                                       linetype = "longdash",
+                                                                       colour = "green"
                                                                      ) + ggplot2::theme_classic() + ggplot2::theme(
                                                                        panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"), axis.line = ggplot2::element_line(size = 0.35, color = "black"), axis.ticks = ggplot2::element_line(size = 0.35, color = "black"), text = ggplot2::element_text(size = 12))
 
