@@ -86,8 +86,8 @@
     result2[[i]] <-
       data.frame(
         elec = paste("e", i, sep = ""),
-        SeatTotalIdeal = round(result$SeatTotalIdeal[[i]], 4),
-        SeatShareIdeal = round(result$SeatShareIdeal[[i]], 4)
+        SeatTotalIdeal = signif(result$SeatTotalIdeal[[i]], 4),
+        SeatShareIdeal = signif(result$SeatShareIdeal[[i]], 4)
       )
   }
 

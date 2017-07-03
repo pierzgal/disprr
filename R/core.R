@@ -374,7 +374,7 @@ simulate_E <-
     disp <-
       dplyr::summarise(
         disp,
-        meanRSE2 = signif(sum(abs(RSE2_i)) / np, digits = 2),
+        meanRSE2 = signif(sum(abs(RSE2_i)) / np, digits = 4),
         LHI = signif(1 / 2 * sum(abs(
           SeatShare - VoteShare
         )), digits = 4),
