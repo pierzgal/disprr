@@ -341,13 +341,13 @@ simulate_E <-
         merged,
         Party = as.factor(Party),
         #        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
-        SE1_i = signif(seats - VoteShareTotalParty * TS, 4),
-        SE2_i = signif(seat_perc - VoteShareTotalParty, 4),
-        SE2_i_pp = signif(seat_perc - SeatShareIdeal, 4),
-        SeatShare = signif(seat_perc, 4),
-        VoteShare = signif(VoteShareTotalParty, 4),
+        SE1_i = signif(seats - VoteShareTotalParty * TS, 3),
+        SE2_i = signif(seat_perc - VoteShareTotalParty, 3),
+        SE2_i_pp = signif(seat_perc - SeatShareIdeal, 3),
+        SeatShare = signif(seat_perc, 3),
+        VoteShare = signif(VoteShareTotalParty, 3),
         StandardQuota = (SeatShareIdeal) * TS,
-        RSE2_i = signif((seat_perc - SeatShareIdeal) / SeatShareIdeal, 4)
+        RSE2_i = signif((seat_perc - SeatShareIdeal) / SeatShareIdeal, 3)
       )
 
     seat_excess <-
@@ -374,16 +374,16 @@ simulate_E <-
     disp <-
       dplyr::summarise(
         disp,
-        meanRSE2 = signif(sum(abs(RSE2_i)) / np, digits = 4),
+        meanRSE2 = signif(sum(abs(RSE2_i)) / np, digits = 3),
         LHI = signif(1 / 2 * sum(abs(
           SeatShare - VoteShare
         )), digits = 4),
         GHI = signif(sqrt(1 / 2 * sum((SeatShare - VoteShare) ^ 2
-        )), digits = 4),
+        )), digits = 3),
         SLI = signif(sum((
           SeatShare - VoteShare
         ) ^ 2 / (VoteShare)), digits = 4),
-        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 4),
+        ENPP = signif(1 / sum((SeatShare) ^ 2), digits = 3),
         NPP = sum(SeatShare > 0)
       )
 

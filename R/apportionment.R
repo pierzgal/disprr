@@ -170,9 +170,9 @@ divisorMethods <-
       class = names(TABLE),
       Freq = as.vector(TABLE[]),
       Prop = if (percentages == TRUE) {
-        signif(as.vector(ptab[]), 4)
+        signif(as.vector(ptab[]), 3)
       } else {
-        signif(as.vector(ptab[]), 4)
+        signif(as.vector(ptab[]), 3)
       }
     )
 
@@ -242,7 +242,7 @@ LR_Hamilton <- function(parties = NULL,
   output <- data.frame(
     parties = parties,
     scores = .votes / sum(.votes) * seats,
-    perc = signif(.votes / sum(.votes), 4)
+    perc = signif(.votes / sum(.votes), 3)
   )
 
   integer <- with(output, floor(scores))
