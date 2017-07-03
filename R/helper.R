@@ -73,7 +73,7 @@
   } # SeatShareIdeal
 
   for (j in seq(1, ne, by = 1)) {
-    out2[[j]] =  sample[[3]][[j]] * 100
+    out2[[j]] =  sample[[3]][[j]]
   }
 
   result <- list(SeatTotalIdeal = out1, SeatShareIdeal = out2)

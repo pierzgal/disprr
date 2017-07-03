@@ -170,7 +170,7 @@ divisorMethods <-
       class = names(TABLE),
       Freq = as.vector(TABLE[]),
       Prop = if (percentages == TRUE) {
-        100 * round(as.vector(ptab[]), 3)
+        round(as.vector(ptab[]), 3)
       } else {
         round(as.vector(ptab[]), 3)
       }
@@ -185,7 +185,7 @@ divisorMethods <-
         data.frame(
           Party = parties,
           Votes = votes,
-          VoteShare = 100 * votes / sum(votes)
+          VoteShare = votes / sum(votes)
         )
 
       output <- dplyr::left_join(output, result, by = "Party")
@@ -198,7 +198,7 @@ divisorMethods <-
         data.frame(
           Party = parties,
           Votes = votes,
-          VoteShare = 100 * votes / sum(votes)
+          VoteShare = votes / sum(votes)
         )
 
       output <- dplyr::left_join(result, output, by = "Party")
@@ -242,7 +242,7 @@ LR_Hamilton <- function(parties = NULL,
   output <- data.frame(
     parties = parties,
     scores = .votes / sum(.votes) * seats,
-    perc = round(.votes / sum(.votes) * 100, 3)
+    perc = round(.votes / sum(.votes), 3)
   )
 
   integer <- with(output, floor(scores))
@@ -271,7 +271,7 @@ LR_Hamilton <- function(parties = NULL,
       data.frame(
         Party = parties,
         Votes = votes,
-        VoteShare = 100 * votes / sum(votes)
+        VoteShare = votes / sum(votes)
       )
 
     output <- dplyr::left_join(output, result, by = "Party")
@@ -284,7 +284,7 @@ LR_Hamilton <- function(parties = NULL,
       data.frame(
         Party = parties,
         Votes = votes,
-        VoteShare = 100 * votes / sum(votes)
+        VoteShare = votes / sum(votes)
       )
 
     output <- dplyr::left_join(result, output, by = "Party")

@@ -288,7 +288,7 @@ simulate_E <-
 
       for (i in seq(1, ne, by = 1)) {
         vote_share[[i]] = data.frame(
-          VoteShareTotalParty = round(sample$Votes_Share_Party[[i]] * 100, 4),
+          VoteShareTotalParty = round(sample$Votes_Share_Party[[i]], 4),
           VotesTotalParty = as.integer(sample$Votes_Total_Party[[i]]),
           elec = paste("e", i, sep = "")
         )
@@ -319,7 +319,7 @@ simulate_E <-
       dplyr::summarise(
         apportionment_sum1,
         seats = sum(Seats),
-        seat_perc = sum(Seats) / TS * 100,
+        seat_perc = sum(Seats) / TS,
         distTS = distTS[1],
         TS = TS[1]
       )
@@ -341,12 +341,12 @@ simulate_E <-
         merged,
         Party = as.factor(Party),
         #        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
-        SE1_i = signif(seats - VoteShareTotalParty / 100 * TS, 4),
-        SE2_i = signif(seat_perc / 100 - VoteShareTotalParty / 100, 4),
+        SE1_i = signif(seats - VoteShareTotalParty * TS, 4),
+        SE2_i = signif(seat_perc - VoteShareTotalParty, 4),
         SE2_i_pp = signif(seat_perc - SeatShareIdeal, 4),
-        SeatShare = signif(seat_perc / 100, 4),
-        VoteShare = signif(VoteShareTotalParty / 100, 4),
-        StandardQuota = (SeatShareIdeal / 100) * TS,
+        SeatShare = signif(seat_perc, 4),
+        VoteShare = signif(VoteShareTotalParty, 4),
+        StandardQuota = (SeatShareIdeal) * TS,
         RSE2_i = signif((seat_perc - SeatShareIdeal) / SeatShareIdeal, 4)
       )
 
@@ -477,8 +477,8 @@ simulate_Disp <-
             TS = i,
             VoteShare = VoteShare,
             # SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
-            SE1_i = Seats - VoteShare / 100 * distTS,
-            SE2_i = SeatShare / 100 - VoteShare / 100
+            SE1_i = Seats - VoteShare * distTS,
+            SE2_i = SeatShare - VoteShare
           )
 
       }
@@ -488,18 +488,18 @@ simulate_Disp <-
       ese <- dplyr::group_by(sb_bw, TS, Party)
       ese <-
         dplyr::summarise(ese,
-                         SB1_i = mean(Seats - VoteShare / 100 * distTS),
+                         SB1_i = mean(Seats - VoteShare * distTS),
                          V = sum(Votes))
 
       ese2 <- dplyr::group_by(sb_bw, TS, Party)
       ese2 <-
         dplyr::summarise(ese2,
-                         SB2_i = mean(SeatShare / 100 - VoteShare / 100),
+                         SB2_i = mean(SeatShare - VoteShare),
                          V = sum(Votes))
       ese_mean <- dplyr::group_by(sb_bw, TS, Party)
       ese_mean <-
         dplyr::summarise(ese_mean,
-                         SB1_i = mean(Seats - VoteShare / 100 * distTS),
+                         SB1_i = mean(Seats - VoteShare * distTS),
                          V = sum(Votes))
       ese_mean <- dplyr::group_by(ese_mean, Party)
       ese_mean <-
@@ -536,7 +536,7 @@ plot_Disp <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
         ggplot2::aes(
           x = Party,
-          y = (SeatShare / 100 * distTS - VoteShare / 100 * distTS),
+          y = (SeatShare * distTS - VoteShare * distTS),
           fill = factor(TS)
         ),
         lwd = 0.25,
@@ -563,7 +563,7 @@ plot_Disp <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
         ggplot2::aes(
           x = Party,
-          y = (Seats - VoteShare / 100 * distTS),
+          y = (Seats - VoteShare * distTS),
           fill = factor(TS)
         ),
         lwd = 0.25,
@@ -590,7 +590,7 @@ plot_Disp <-
       ggplot2::ggplot(data = bias_data$sb_bw) + ggplot2::geom_boxplot(
         ggplot2::aes(
           x = "",
-          y = (SeatShare / 100 - VoteShare / 100),
+          y = (SeatShare - VoteShare),
           fill = factor(TS)
         ),
         lwd = 0.25,
@@ -611,7 +611,7 @@ plot_Disp <-
         #increase the font size
         text = ggplot2::element_text(size =
                                        12)
-      ) + ggplot2::stat_summary( ggplot2::aes( x = "", y = (SeatShare / 100 - VoteShare / 100), fill = factor(TS) ), fun.y = "mean", shape = 3, geom = "point", size = 2, position = ggplot2::position_dodge(width=0.75), color="black" )
+      ) + ggplot2::stat_summary( ggplot2::aes( x = "", y = (SeatShare - VoteShare), fill = factor(TS) ), fun.y = "mean", shape = 3, geom = "point", size = 2, position = ggplot2::position_dodge(width=0.75), color="black" )
 
     ese_plot <-
       ggplot2::ggplot(data = bias_data$ese) + ggplot2::geom_point(
