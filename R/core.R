@@ -312,7 +312,6 @@ simulate_E <-
 
 
     ## Group districts in elections
-
     apportionment_sum1 <-
       dplyr::group_by(apportionment, elec, Party)
     apportionment_sum2 <-
@@ -340,7 +339,6 @@ simulate_E <-
       dplyr::mutate(
         merged,
         Party = as.factor(Party),
-        #        SE1_i _2 = signif(seats - VoteShareTotalParty / 100 * distTS, 2),
         SE1_i = signif(seats - VoteShareTotalParty * TS, 3),
         SE2_i = signif(seat_perc - VoteShareTotalParty, 3),
         SE2_i_pp = signif(seat_perc - SeatShareIdeal, 3),
@@ -449,10 +447,10 @@ simulate_Disp <-
 
     else {
 
-#      set.seed(seed = seed)
+#     set.seed(seed = seed)
 
       for (i in seq(from = minTS, to = maxTS, by = jump)) {
-        sim[[i]] <-
+        sim[[ i + (1-minTS) ]] <-
           simulate_E(
             seed = seed,
             dist = dist,
@@ -470,18 +468,18 @@ simulate_Disp <-
             threshold_country = threshold_country
           )
 
-        sb_bw[[i]] <-
+        sb_bw[[ i + (1-minTS) ]] <-
           dplyr::mutate(
-            sim[[i]][[2]],
+            sim[[ i + (1-minTS) ]][[2]],
             method = formula,
             TS = i,
             VoteShare = VoteShare,
-            # SE1_i = SeatShare / 100 * distTS - VoteShare / 100 * distTS,
             SE1_i = Seats - VoteShare * distTS,
             SE2_i = SeatShare - VoteShare
           )
 
       }
+
       sb_bw <- dplyr::bind_rows(sb_bw) # return data frame
 
 
@@ -512,7 +510,8 @@ simulate_Disp <-
           sb_bw = sb_bw,
           ese = ese,
           ese2 = ese2,
-          ese_mean = ese_mean
+          ese_mean = ese_mean,
+          sim = sim
         )
 
       return(bias_data)
@@ -666,7 +665,7 @@ plot_Disp <-
 
 #' Aggregate-Level Disproportionality Measures
 #'
-#' The function computes aggregate-level measures of disproportionality. It also models relationships between values of aggregate-level disproportionality measures and district sizes.
+#' The function computes aggregate-level measures of disproportionality. It also models relationships between values of aggregate-level disproportionality measures and district sizes (if model == TRUE).
 #' @export
 
 Disp2 <- function(seed = 0,
@@ -679,12 +678,13 @@ Disp2 <- function(seed = 0,
                   sd = 1.2,
                   max = 100000,
                   minTS = 3,
-                  lim = 16,
+                  maxTS = 20,
                   jump = 1,
                   threshold = 0,
                   threshold_country = 0,
                   start_C = 0.2,
                   start_alpha = -0.2,
+                  model = TRUE,
                   ...)
 
 {
@@ -710,8 +710,8 @@ Disp2 <- function(seed = 0,
   out <- list()
 
 
-  for (i in seq(2, lim, by = jump)) {
-    dh_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    dh_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -722,7 +722,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "dh",
         formula_dist = "hh",
         threshold = threshold,
@@ -730,15 +730,15 @@ Disp2 <- function(seed = 0,
       )
 
     ddh[[i]] <-
-      dplyr::mutate(dh_seatbias[[i]][[3]],
+      dplyr::mutate(dh_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "DH",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
 
-  for (i in seq(2, lim, by = jump)) {
-    sl_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    sl_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -749,7 +749,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "sl",
         formula_dist = "hh",
         threshold = threshold,
@@ -757,16 +757,16 @@ Disp2 <- function(seed = 0,
       )
 
     dsl[[i]] <-
-      dplyr::mutate(sl_seatbias[[i]][[3]],
+      dplyr::mutate(sl_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "SL",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
 
 
-  for (i in seq(2, lim, by = jump)) {
-    msl_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    msl_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -777,7 +777,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "msl",
         formula_dist = "hh",
         threshold = threshold,
@@ -785,16 +785,16 @@ Disp2 <- function(seed = 0,
       )
 
     dmsl[[i]] <-
-      dplyr::mutate(msl_seatbias[[i]][[3]],
+      dplyr::mutate(msl_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "MSL",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
 
 
-  for (i in seq(2, lim, by = jump)) {
-    h_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    h_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -805,7 +805,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "hamilton",
         formula_dist = "hh",
         threshold = threshold,
@@ -813,15 +813,15 @@ Disp2 <- function(seed = 0,
       )
 
     dhamilton[[i]] <-
-      dplyr::mutate(h_seatbias[[i]][[3]],
+      dplyr::mutate(h_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "H",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
 
-  for (i in seq(2, lim, by = jump)) {
-    hh_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    hh_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -832,7 +832,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "hh",
         formula_dist = "hh",
         threshold = threshold,
@@ -840,15 +840,15 @@ Disp2 <- function(seed = 0,
       )
 
     dhh[[i]] <-
-      dplyr::mutate(hh_seatbias[[i]][[3]],
+      dplyr::mutate(hh_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "HH",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
 
-  for (i in seq(2, lim, by = jump)) {
-   ad_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    ad_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -859,7 +859,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "ad",
         formula_dist = "hh",
         threshold = threshold,
@@ -867,17 +867,17 @@ Disp2 <- function(seed = 0,
       )
 
     dad[[i]] <-
-      dplyr::mutate(ad_seatbias[[i]][[3]],
+      dplyr::mutate(ad_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "A",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
 
   # ---- Danish and HA Imperiali
 
-  for (i in seq(2, lim, by = jump)) {
-    imp_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    imp_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -888,7 +888,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "imperiali",
         formula_dist = "hh",
         threshold = threshold,
@@ -896,15 +896,15 @@ Disp2 <- function(seed = 0,
       )
 
     dimp[[i]] <-
-      dplyr::mutate(imp_seatbias[[i]][[3]],
+      dplyr::mutate(imp_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "Imperiali",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
 
-  for (i in seq(2, lim, by = jump)) {
-    da_seatbias[[i]] <-
+  for (i in seq(from = minTS, to = maxTS, by = jump)) {
+    da_seatbias[[ i + (1-minTS) ]] <-
       simulate_E(
         seed = seed,
         np = np,
@@ -915,7 +915,7 @@ Disp2 <- function(seed = 0,
         mean = mean,
         sd = sd,
         max = max,
-        TS = minTS + i - 2,
+        TS = i,
         formula = "danish",
         formula_dist = "hh",
         threshold = threshold,
@@ -923,9 +923,9 @@ Disp2 <- function(seed = 0,
       )
 
     dda[[i]] <-
-      dplyr::mutate(da_seatbias[[i]][[3]],
+      dplyr::mutate(da_seatbias[[ i + (1-minTS) ]][[3]],
                     method = "Danish",
-                    DM = minTS + i - 2,
+                    DM = i,
                     NP = np)
 
   }
@@ -946,6 +946,9 @@ Disp2 <- function(seed = 0,
 
   # Models
   ## DH
+
+
+if (model == TRUE) {
 
   #  model_dh <- glm( GHI ~ DM, family = gaussian(link = "log"), data = dplyr::filter(lghi_dh, method == "DH") )
 
@@ -1028,6 +1031,7 @@ Disp2 <- function(seed = 0,
 
   # ----
 
+}
 
 
   #  lghi_all <-
@@ -1035,6 +1039,8 @@ Disp2 <- function(seed = 0,
 
   lghi_all <-
     dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_da, lghi_imp)
+
+if (model == TRUE) {
 
   out <-
     list(
@@ -1054,6 +1060,23 @@ Disp2 <- function(seed = 0,
       I = imp_seatbias,
       D = da_seatbias
     )
+
+} else {
+
+    out <-
+      list(
+        summary = lghi_all,
+        DH = dh_seatbias,
+        SL = sl_seatbias,
+        MSL = msl_seatbias,
+        H = h_seatbias,
+        AD = ad_seatbias,
+        HH = hh_seatbias,
+        I = imp_seatbias,
+        D = da_seatbias
+      )
+
+  }
 
   return(out)
 
@@ -1106,6 +1129,8 @@ plot_Disp2 <- function(data = NULL) {
   #                                                                    12)
   #                                   )
 
+  if ( "GHI_predicted" %in% names(lghi_all) == TRUE ) {
+
   plot_GHI <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
       ggplot2::aes(x = as.factor(DM),
@@ -1132,6 +1157,31 @@ plot_Disp2 <- function(data = NULL) {
                                                                      ) + ggplot2::theme_classic() + ggplot2::theme(
                                                                        panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"), axis.line = ggplot2::element_line(size = 0.35, color = "black"), axis.ticks = ggplot2::element_line(size = 0.35, color = "black"), text = ggplot2::element_text(size = 12))
 
+  } else {
+
+    plot_GHI <-
+      ggplot2::ggplot(data = lghi_all) + ggplot2::geom_boxplot(
+        ggplot2::aes(x = as.factor(DM),
+                     y = GHI),
+        lwd = 0.25,
+        fatten = 0.4,
+        outlier.size = 0.6
+      ) + ggplot2::facet_wrap( ~ method) + viridis::scale_fill_viridis(option = "C",
+                                                                       discrete = TRUE,
+                                                                       begin = 0.4) +  ggplot2::xlab("DM") + ggplot2::ylab("GHI") + ggplot2::labs(fill = "Method") + ggplot2::geom_hline(
+                                                                         yintercept = c(0.1, 0.05),
+                                                                         size = 0.35,
+                                                                         linetype = "longdash",
+                                                                         colour = "blue"
+                                                                       ) + ggplot2::geom_vline(
+                                                                         xintercept = c(3, 7),
+                                                                         size = 0.45,
+                                                                         linetype = "longdash",
+                                                                         colour = "green"
+                                                                       ) + ggplot2::theme_classic() + ggplot2::theme(
+                                                                         panel.grid.major.y = ggplot2::element_line(size = 0.1, color = "red"), axis.line = ggplot2::element_line(size = 0.35, color = "black"), axis.ticks = ggplot2::element_line(size = 0.35, color = "black"), text = ggplot2::element_text(size = 12))
+
+  }
 
   plot_NPP <-
     ggplot2::ggplot(data = lghi_all) + ggplot2::geom_count(ggplot2::aes(x = DM,
