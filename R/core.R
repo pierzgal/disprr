@@ -944,9 +944,9 @@ Disp2 <- function(seed = 0,
 
   # ----
 
+
   # Models
   ## DH
-
 
 if (model == TRUE) {
 
@@ -1004,7 +1004,6 @@ if (model == TRUE) {
 
   # ----
 
-
   ## Danish
 
   model_danish <-
@@ -1034,11 +1033,8 @@ if (model == TRUE) {
 }
 
 
-  #  lghi_all <-
-  #    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hh, lghi_ad, lghi_hamilton)
-
   lghi_all <-
-    dplyr::bind_rows(lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_da, lghi_imp)
+    dplyr::bind_rows( lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_da, lghi_imp, lghi_ad, lghi_hh )
 
 if (model == TRUE) {
 
@@ -1089,9 +1085,11 @@ if (model == TRUE) {
 #' The function plots relationships between values of aggregate-level disproportionality measures and district sizes.
 #' @export
 
-plot_Disp2 <- function(data = NULL) {
+plot_Disp2 <- function(data = NULL, methods = c("DH", "SL", "H", "Imperiali")) {
 
   lghi_all <- data[['summary']]
+
+  lghi_all <- filter( lghi_all, lghi_all$Method %in% methods )
 
   # Plots
 
