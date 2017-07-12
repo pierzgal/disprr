@@ -1030,6 +1030,34 @@ if (model == TRUE) {
 
   # ----
 
+
+  ## Adams
+
+  model_ad <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = start_C, alpha = start_alpha),
+      data = dplyr::filter(lghi_ad, method == "A")
+    )
+
+  lghi_ad = dplyr::mutate(lghi_ad, GHI_predicted = predict(model_ad))
+
+  # ----
+
+
+  ## HH
+
+  model_hh <-
+    nls(
+      GHI ~ C * exp(alpha * DM),
+      start = list(C = start_C, alpha = start_alpha),
+      data = dplyr::filter(lghi_hh, method == "HH")
+    )
+
+  lghi_hh = dplyr::mutate(lghi_hh, GHI_predicted = predict(model_hh))
+
+  # ----
+
 }
 
 
