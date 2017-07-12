@@ -1089,7 +1089,7 @@ plot_Disp2 <- function(data = NULL, methods = c("DH", "SL", "H", "Imperiali")) {
 
   lghi_all <- data[['summary']]
 
-  lghi_all <- filter( lghi_all, lghi_all$Method %in% methods )
+  lghi_all <- filter( lghi_all, lghi_all$method %in% methods )
 
   # Plots
 
