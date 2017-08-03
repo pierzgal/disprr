@@ -1064,6 +1064,8 @@ if (model == TRUE) {
   lghi_all <-
     dplyr::bind_rows( lghi_dh, lghi_sl, lghi_msl, lghi_hamilton, lghi_da, lghi_imp, lghi_ad, lghi_hh )
 
+  lghi_all <- lghi_all[gtools::mixedorder(lghi_all$ElectionID),]
+
 if (model == TRUE) {
 
   out <-
