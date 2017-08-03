@@ -413,7 +413,7 @@ simulate_E <-
 
 #' Per-party Disproportionality Measures for Varying District Sizes and Numbers of Parties
 #'
-#' The function computes per-party disproportionality measures using simulated election data with varying district sizes and numbers of parties. Also, the function plots the relationships betweenon, on the one hand, values of a variaty of disproportionality measures and, on the other hand, district sizes or numbers of parties.
+#' The function computes per-party disproportionality measures using simulated election data.
 #' @export
 
 simulate_Disp <-
@@ -1113,7 +1113,7 @@ if (model == TRUE) {
 #' The function plots relationships between values of aggregate-level disproportionality measures and district sizes.
 #' @export
 
-plot_Disp2 <- function(data = NULL, methods = c("DH", "SL", "H", "Imperiali")) {
+plot_Disp2 <- function(data = NULL, methods = c("DH", "SL", "H", "Imperiali"), ...) {
 
   lghi_all <- data[['summary']]
 
