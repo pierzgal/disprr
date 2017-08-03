@@ -4,9 +4,11 @@
 \alias{Disp2}
 \title{Aggregate-Level Disproportionality Measures}
 \usage{
-Disp2(seed = 1000, np = 3, nd = 1, ne = 100, dist = "lnorm",
-  minTS = 3, lim = 16, threshold = 0, threshold_country = 0, ...)
+Disp2(seed = 0, np = 3, nd = 1, ne = 100, dist = "lnorm",
+  rate = 1/25000, mean = 10, sd = 1.2, max = 1e+05, minTS = 3,
+  maxTS = 20, jump = 1, threshold = 0, threshold_country = 0,
+  start_C = 0.2, start_alpha = -0.2, model = TRUE, ...)
 }
 \description{
-The function computes aggregate-level measures of disproportionality. It also models and plots relationships between values of aggregate-level disproportionality measures and district sizes.
+The function computes aggregate-level measures of disproportionality. It also models relationships between values of aggregate-level disproportionality measures and district sizes (if model == TRUE).
 }

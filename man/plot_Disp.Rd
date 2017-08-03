@@ -7,5 +7,5 @@
 plot_Disp(bias_data, tse = c(0, 5/12, -1/12, -4/12), ...)
 }
 \description{
-The function plots the relationships betweenon, on the one hand, values of a variaty of disproportionality measures and, on the other hand, district sizes or numbers of parties.
+The function plots the relationships between, on the one hand, values of a variaty of disproportionality measures and, on the other hand, district sizes or numbers of parties.
 }

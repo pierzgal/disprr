@@ -5,14 +5,14 @@
 \title{Simulate Elections under Proportional Representation}
 \usage{
 simulate_E(seed, dist = "lnorm", np, nd, ne, mean, sd, rate, max, TS, formula,
-  formula_dist, threshold, threshold_country)
+  formula_dist, threshold, threshold_country, ...)
 }
 \value{
 A list containg the following data objects:
-seat_excess,
-apportionment,
-disp,
-summary.
+Seat_Excess,
+Apportionment,
+Disproportionality_per_elec,
+Summary.
 }
 \description{
 The function simulates election results and computes a variaty of disproportionality measures.

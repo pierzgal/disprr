@@ -4,11 +4,11 @@
 \alias{simulate_Disp}
 \title{Per-party Disproportionality Measures for Varying District Sizes and Numbers of Parties}
 \usage{
-simulate_Disp(seed = 1000, dist = "uniform", np, nd = 1, ne,
-  mean = 12.5, sd = 1.5, rate = 1e-05, max = 5e+05, formula,
-  formula_dist = "hh", threshold = 0, threshold_country = 0, minTS = 6,
-  steps = 20, ...)
+simulate_Disp(seed = 0, dist = "lnorm", np, nd = 1, ne, rate = 1/25000,
+  mean = 10, sd = 1.2, max = 1e+05, formula, formula_dist = "hh",
+  threshold = 0, threshold_country = 0, minTS = 3, maxTS = 20,
+  jump = 2, ...)
 }
 \description{
-The function computes per-party disproportionality measures using simulated election data with varying district sizes and numbers of parties. Also, the function plots the relationships betweenon, on the one hand, values of a variaty of disproportionality measures and, on the other hand, district sizes or numbers of parties.
+The function computes per-party disproportionality measures using simulated election data.
 }

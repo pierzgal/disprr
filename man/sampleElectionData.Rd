@@ -4,7 +4,7 @@
 \alias{sampleElectionData}
 \title{Sample Election Data}
 \usage{
-sampleElectionData(seed, dist = "uniform", np, nd, ne, mean = NULL,
+sampleElectionData(seed = 0, dist = "uniform", np, nd, ne, mean = NULL,
   sd = NULL, rate = NULL, max, TS, formula_dist, ...)
 }
 \arguments{
