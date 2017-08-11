@@ -7,4 +7,4 @@ Election results simulator (built as an R package) that uses uniform, exponentia
 
 ## Recent/release notes
 
-The package is still under development (ver. 0.0.2 - pre-alpha) and may contain bugs. Currently, it is just a set of functions. The package also lacks a complete documentation.
+The package is still under development (ver. 0.0.3 - pre-alpha) and may contain bugs. Currently, it is just a set of functions. The package also lacks a complete documentation.
