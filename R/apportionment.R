@@ -47,7 +47,7 @@ divisorMethods <-
     .votes <- ifelse(.ratio < threshold, 0, votes)
 
     if (sum(.votes) == 0)
-      stop("Allocation cannot be done - all parties vote totals below electoral threshold.")
+      stop("Allocation cannot be done - all parties vote shares below the electoral threshold.")
 
     if (length(parties) != length(votes))
       stop("Allocation error.")
