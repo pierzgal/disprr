@@ -1,6 +1,6 @@
 Package: disprr
 Type: Package
-Title: Simulate Election Results and Compute Disproportionality Measures
+Title: Simulate Proportional Representation Election Results and Compute Disproportionality Measures
 Version: 0.0.4
 Author: pierzgal
 Maintainer: The package maintainer <pierzgal@gmail.com>
