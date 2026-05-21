@@ -4,3 +4,5 @@
 ^README\.Rmd$
 ^\.github$
 ^CLAUDE\.md$
+^_config\.yml$
+^index\.md$
