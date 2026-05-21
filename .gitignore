@@ -1,0 +1,23 @@
+# R package build artifacts
+*.Rcheck/
+*.tar.gz
+*.Rproj.user
+
+# R session files
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Documentation build
+docs/
+inst/doc/*.html
+inst/doc/*.R

@@ -1,0 +1,25 @@
+Package: disprr
+Type: Package
+Title: Simulate Proportional Representation Election Results and Compute
+    Disproportionality Measures
+Version: 0.1.0
+Authors@R: person("Michal", "Pierzgalski", email = "pierzgal@gmail.com",
+    role = c("aut", "cre"))
+Description: Simulate election results using various proportional
+    representation algorithms (D'Hondt, Sainte-Lague, Huntington-Hill,
+    Adams, Hamilton-Hare, and others) to apportion seats. Compute and plot
+    per-party and aggregate disproportionality measures including the
+    Gallagher index, Loosemore-Hanby index, and Sainte-Lague index.
+Depends: R (>= 4.1.0)
+License: GPL (>= 3)
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+Imports:
+    ggplot2 (>= 3.4.0),
+    gtools (>= 3.5.0),
+    psych (>= 2.0.0),
+    truncdist (>= 1.0-2),
+    viridis (>= 0.6.0)
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
