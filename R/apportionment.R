@@ -42,6 +42,15 @@
 #' @param order_name Logical. If \code{TRUE} (default), output rows are sorted
 #'   alphabetically by party name; if \code{FALSE}, by original input order.
 #'
+#' @details
+#' When two or more quotients are exactly equal (a tie for the last seat),
+#' the seat is awarded to the party with the larger vote total. This matters
+#' chiefly for Huntington-Hill (\code{"hh"}) and Adams (\code{"ad"}), whose
+#' first divisor is 0: every party with positive votes then has an infinite
+#' first quotient, and the vote-based tie-break ensures that, when seats are
+#' scarcer than parties, they go to the largest parties rather than to
+#' whichever party happened to appear first in the input.
+#'
 #' @return A \code{data.frame} with columns:
 #'   \code{Party}, \code{Seats}, \code{SeatShare}, \code{Votes}, \code{VoteShare}.
 #'
@@ -60,8 +69,7 @@ divisorMethods <- function(parties = NULL,
                            method = c("dh", "sl", "msl", "danish", "hsl",
                                       "hh", "imperiali", "wb", "jef", "ad", "hb"),
                            threshold = 0,
-                           order_name = TRUE,
-                           ...) {
+                           order_name = TRUE) {
   method <- match.arg(method)
 
   ## --- Input validation ---
@@ -91,14 +99,18 @@ divisorMethods <- function(parties = NULL,
 
   ## --- Build divisor vector ---
   divisor_vec <- .build_divisors(method, seats)
-  method_name <- .method_label(method)
 
   ## --- Compute quotients and allocate ---
   quotient_mat <- outer(working_votes, divisor_vec, "/")
   party_idx <- rep(seq_along(parties), times = seats)
   all_quotients <- as.vector(quotient_mat)
 
-  winners <- party_idx[order(all_quotients, decreasing = TRUE)][seq_len(seats)]
+  ## Rank quotients; ties (notably the infinite first quotients of "hh"/"ad")
+  ## are broken in favour of the party with more votes.
+  tie_break <- working_votes[party_idx]
+  winners <- party_idx[
+    order(all_quotients, tie_break, decreasing = TRUE)
+  ][seq_len(seats)]
   seat_counts <- tabulate(winners, nbins = length(parties))
 
   ## --- Assemble output ---
@@ -142,8 +154,7 @@ LR_Hamilton <- function(parties = NULL,
                         votes = NULL,
                         seats = NULL,
                         threshold = 0,
-                        order_name = TRUE,
-                        ...) {
+                        order_name = TRUE) {
   ## --- Input validation ---
   if (is.null(votes) || length(votes) == 0L)
     stop("'votes' must be a non-empty numeric vector.")
@@ -172,7 +183,7 @@ LR_Hamilton <- function(parties = NULL,
 
   ## --- Hamilton allocation ---
   quotas <- working_votes / total_working * seats
-  integer_parts <- floor(quotas)
+  integer_parts <- as.integer(floor(quotas))
   remainders <- quotas - integer_parts
   seats_remaining <- seats - sum(integer_parts)
 
@@ -240,24 +251,4 @@ LR_Hamilton <- function(parties = NULL,
       c(0, seq(from = 1, by = 1, length.out = seats - 1L))
     }
   )
-}
-
-
-#' Human-readable label for each method
-#' @keywords internal
-.method_label <- function(method) {
-  labels <- c(
-    dh    = "d'Hondt",
-    sl    = "Sainte-Laguë",
-    msl   = "Modified Sainte-Laguë",
-    danish = "Danish Sainte-Laguë",
-    hsl   = "Hungarian Sainte-Laguë",
-    imperiali = "Imperiali",
-    hh    = "Huntington-Hill",
-    wb    = "Webster",
-    jef   = "Jefferson",
-    ad    = "Adams",
-    hb    = "Hagenbach-Bischoff"
-  )
-  labels[[method]]
 }

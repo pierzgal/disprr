@@ -15,8 +15,7 @@ sampleElectionData(
   rate = NULL,
   max,
   TS,
-  formula_dist,
-  ...
+  formula_dist
 )
 }
 \arguments{

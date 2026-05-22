@@ -4,7 +4,7 @@
 \alias{plot_Disp}
 \title{Plot Per-party Disproportionality Measures}
 \usage{
-plot_Disp(bias_data, tse = c(0, 5/12, -1/12, -4/12), ...)
+plot_Disp(bias_data, tse = c(0, 5/12, -1/12, -4/12))
 }
 \arguments{
 \item{bias_data}{A list returned by \code{simulate_Disp}.}

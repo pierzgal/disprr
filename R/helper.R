@@ -23,8 +23,10 @@ if.parties.null <- function(x) {
 
 #' Apply Electoral Threshold at Country Level
 #'
-#' Zeroes out votes for parties whose nationwide vote share falls at or below
-#' the country-level threshold, before district-level apportionment.
+#' Zeroes out votes for parties whose nationwide vote share falls strictly
+#' below the country-level threshold, before district-level apportionment.
+#' A party whose share equals the threshold is retained, matching the
+#' threshold convention used by \code{divisorMethods} and \code{LR_Hamilton}.
 #'
 #' @param np Integer: number of parties.
 #' @param ne Integer: number of elections.
@@ -45,7 +47,7 @@ if.parties.null <- function(x) {
     vote_shares <- row_sums / total
 
     for (i in seq_len(np)) {
-      if (vote_shares[i] <= threshold_country) {
+      if (vote_shares[i] < threshold_country) {
         sample[[1]][i, , j] <- 0
       }
     }
@@ -78,8 +80,8 @@ if.parties.null <- function(x) {
 
     result_list[[i]] <- data.frame(
       elec = paste0("e", i),
-      SeatTotalIdeal = signif(ideal_totals, 3),
-      SeatShareIdeal = signif(ideal_shares, 3),
+      SeatTotalIdeal = ideal_totals,
+      SeatShareIdeal = ideal_shares,
       Party = as.character(if.parties.null(np)),
       stringsAsFactors = FALSE
     )
@@ -109,8 +111,7 @@ if.parties.null <- function(x) {
 .ProportionalRepresentation <- function(sample,
                                         formula,
                                         threshold = 0,
-                                        threshold_country = 0,
-                                        ...) {
+                                        threshold_country = 0) {
   ne <- sample$Params[1]
   nd <- sample$Params[2]
   np <- sample$Params[3]

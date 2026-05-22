@@ -7,8 +7,7 @@
 plot_Disp2(
   data = NULL,
   methods = c("DH", "SL", "H", "Imperiali"),
-  vlines = NULL,
-  ...
+  vlines = NULL
 )
 }
 \arguments{

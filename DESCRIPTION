@@ -2,7 +2,7 @@ Package: disprr
 Type: Package
 Title: Simulate Proportional Representation Election Results and Compute
     Disproportionality Measures
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Michal", "Pierzgalski", email = "pierzgal@gmail.com",
     role = c("aut", "cre"))
 Description: Simulate election results using various proportional
@@ -13,7 +13,6 @@ Description: Simulate election results using various proportional
 Depends: R (>= 4.1.0)
 License: GPL (>= 3)
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 Imports:
     ggplot2 (>= 3.4.0),
     gtools (>= 3.5.0),
@@ -21,5 +20,9 @@ Imports:
     truncdist (>= 1.0-2),
     viridis (>= 0.6.0)
 Suggests:
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

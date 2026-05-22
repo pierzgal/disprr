@@ -41,8 +41,7 @@ sampleElectionData <- function(seed = 0,
                                rate = NULL,
                                max,
                                TS,
-                               formula_dist,
-                               ...) {
+                               formula_dist) {
   set.seed(seed)
   dist <- match.arg(dist, c("uniform", "lnorm", "exp"))
 
@@ -151,8 +150,7 @@ simulate_E <- function(seed,
                        formula,
                        formula_dist,
                        threshold,
-                       threshold_country,
-                       ...) {
+                       threshold_country) {
   set.seed(seed)
 
   sample <- sampleElectionData(
@@ -193,13 +191,6 @@ simulate_E <- function(seed,
   )
   names(agg)[3] <- "seats"
   agg$seat_perc <- agg$seats / TS
-
-  distTS_first <- stats::aggregate(
-    distTS ~ elec + Party,
-    data = apportionment,
-    FUN = \(x) x[1]
-  )
-  agg <- merge(agg, distTS_first, by = c("elec", "Party"), all.x = TRUE)
   agg$TS <- TS
   agg <- merge(agg, vote_share, by = c("Party", "elec"), all.x = TRUE)
 
@@ -215,26 +206,37 @@ simulate_E <- function(seed,
     SeatShare  = signif(merged$seat_perc, 3),
     Votes      = merged$VotesTotalParty,
     VoteShare  = signif(merged$VoteShareTotalParty, 3),
-    SQ         = merged$SeatShareIdeal * TS,
+    SQ         = signif(merged$SeatShareIdeal * TS, 3),
     SE1_i      = signif(merged$seats - merged$VoteShareTotalParty * TS, 3),
     SE2_i      = signif(merged$seat_perc - merged$VoteShareTotalParty, 3),
     SE2_i_pp   = signif(merged$seat_perc - merged$SeatShareIdeal, 3),
     RSE2_i     = signif(
-      (merged$seat_perc - merged$SeatShareIdeal) / merged$SeatShareIdeal, 3
+      ifelse(merged$SeatShareIdeal > 0,
+             (merged$seat_perc - merged$SeatShareIdeal) / merged$SeatShareIdeal,
+             NA_real_),
+      3
     ),
     stringsAsFactors = FALSE
   )
 
-  ## Aggregate disproportionality indexes per election
-  disp_metrics <- lapply(split(seat_excess, seat_excess$ElectionID), \(df) {
+  ## Aggregate disproportionality indexes per election.
+  ## Computed from full-precision shares (seat_perc, VoteShareTotalParty,
+  ## SeatShareIdeal) rather than the display-rounded columns of seat_excess,
+  ## so rounding error is not propagated into the indexes.
+  disp_metrics <- lapply(split(merged, merged$elec), \(df) {
+    s  <- df$seat_perc
+    v  <- df$VoteShareTotalParty
+    si <- df$SeatShareIdeal
+    rse2 <- ifelse(si > 0, (s - si) / si, NA_real_)
+    sl_terms <- ifelse(v > 0, (s - v)^2 / v, 0)
     data.frame(
-      ElectionID = df$ElectionID[1],
-      meanRSE2 = signif(sum(abs(df$RSE2_i)) / np, 3),
-      LHI  = signif(0.5 * sum(abs(df$SeatShare - df$VoteShare)), 4),
-      GHI  = signif(sqrt(0.5 * sum((df$SeatShare - df$VoteShare)^2)), 3),
-      SLI  = signif(sum((df$SeatShare - df$VoteShare)^2 / df$VoteShare), 4),
-      ENPP = signif(1 / sum(df$SeatShare^2), 3),
-      NPP  = sum(df$SeatShare > 0),
+      ElectionID = df$elec[1],
+      meanRSE2 = signif(sum(abs(rse2), na.rm = TRUE) / np, 3),
+      LHI  = signif(0.5 * sum(abs(s - v)), 4),
+      GHI  = signif(sqrt(0.5 * sum((s - v)^2)), 3),
+      SLI  = signif(sum(sl_terms), 4),
+      ENPP = signif(1 / sum(s^2), 3),
+      NPP  = sum(s > 0),
       stringsAsFactors = FALSE
     )
   })
@@ -297,8 +299,7 @@ simulate_Disp <- function(seed = 0,
                           threshold_country = 0,
                           minTS = 3,
                           maxTS = 20,
-                          jump = 2,
-                          ...) {
+                          jump = 2) {
   if (nd >= minTS)
     stop("'nd' must be less than 'minTS'.")
 
@@ -339,6 +340,10 @@ simulate_Disp <- function(seed = 0,
   )
   sb_bw_agg$SeatShareTotal <- sb_bw_agg$SeatTotal / sb_bw_agg$TS
   sb_bw_agg$SE2T_i <- sb_bw_agg$SeatShareTotal - sb_bw_agg$VoteShareTotalParty
+
+  ## Drop VoteShareTotalParty before the merge: sb_bw already carries it, and
+  ## keeping it on both sides would yield .x / .y suffixed duplicate columns.
+  sb_bw_agg$VoteShareTotalParty <- NULL
 
   sb_bw <- merge(sb_bw, sb_bw_agg, by = c("Party", "elec", "TS"), all.x = TRUE)
 
@@ -401,8 +406,7 @@ simulate_Disp <- function(seed = 0,
 #'
 #' @export
 plot_Disp <- function(bias_data,
-                      tse = c(0, 5/12, -1/12, -4/12),
-                      ...) {
+                      tse = c(0, 5/12, -1/12, -4/12)) {
   sb <- bias_data$sb_bw
 
   base_theme <- ggplot2::theme_classic() +
@@ -419,21 +423,8 @@ plot_Disp <- function(bias_data,
 
   box_params <- list(lwd = 0.25, fatten = 0.4, outlier.size = 0.3)
 
-  ## Plot 1: SE1_i by SeatShare at district level
+  ## Plot 1: SE1_i by raw Seats
   p1 <- ggplot2::ggplot(sb) +
-    ggplot2::geom_boxplot(
-      ggplot2::aes(x = Party, y = SeatShare * distTS - VoteShare * distTS,
-                   fill = factor(TS)),
-      lwd = box_params$lwd, fatten = box_params$fatten,
-      outlier.size = box_params$outlier.size
-    ) +
-    ggplot2::ylab("SE1_i(DM)") +
-    viridis_fill +
-    ggplot2::geom_hline(yintercept = tse) +
-    base_theme
-
-  ## Plot 2: SE1_i by raw Seats
-  p2 <- ggplot2::ggplot(sb) +
     ggplot2::geom_boxplot(
       ggplot2::aes(x = Party, y = Seats - VoteShare * distTS,
                    fill = factor(TS)),
@@ -445,12 +436,12 @@ plot_Disp <- function(bias_data,
     ggplot2::geom_hline(yintercept = tse) +
     base_theme
 
-  ## Plot 3: SE2_i faceted by party
+  ## Plot 2: SE2_i faceted by party
   viridis_fill2 <- viridis::scale_fill_viridis(
     discrete = TRUE, name = "DM", option = "D", begin = 0.6
   )
 
-  p3 <- ggplot2::ggplot(sb) +
+  p2 <- ggplot2::ggplot(sb) +
     ggplot2::geom_boxplot(
       ggplot2::aes(x = "", y = SeatShare - VoteShare, fill = factor(TS)),
       lwd = box_params$lwd, fatten = box_params$fatten,
@@ -467,8 +458,8 @@ plot_Disp <- function(bias_data,
       position = ggplot2::position_dodge(width = 0.75), color = "black"
     )
 
-  ## Plot 4: SB1_i bias
-  p4 <- ggplot2::ggplot(bias_data$ese) +
+  ## Plot 3: SB1_i bias
+  p3 <- ggplot2::ggplot(bias_data$ese) +
     ggplot2::geom_point(
       ggplot2::aes(x = Party, y = SB1_i, colour = factor(TS)),
       size = 4, alpha = 0.5
@@ -479,8 +470,8 @@ plot_Disp <- function(bias_data,
     ggplot2::theme_classic() +
     ggplot2::geom_hline(yintercept = tse)
 
-  ## Plot 5: SB2_i bias
-  p5 <- ggplot2::ggplot(bias_data$ese2) +
+  ## Plot 4: SB2_i bias
+  p4 <- ggplot2::ggplot(bias_data$ese2) +
     ggplot2::geom_point(
       ggplot2::aes(x = Party, y = SB2_i, colour = factor(TS)),
       size = 4, alpha = 0.5
@@ -491,8 +482,8 @@ plot_Disp <- function(bias_data,
     ggplot2::theme_classic() +
     ggplot2::geom_hline(yintercept = 0)
 
-  ## Plot 6: ESB1 grand mean
-  p6 <- ggplot2::ggplot(bias_data$ese_mean) +
+  ## Plot 5: ESB1 grand mean
+  p5 <- ggplot2::ggplot(bias_data$ese_mean) +
     ggplot2::geom_point(
       ggplot2::aes(x = Party, y = ESB1, colour = factor(TV)),
       size = 4, alpha = 0.5
@@ -502,7 +493,7 @@ plot_Disp <- function(bias_data,
     ggplot2::geom_hline(yintercept = tse) +
     viridis::scale_color_viridis(name = "TV", discrete = TRUE)
 
-  list(p2, p3, p4, p5, p6)
+  list(p1, p2, p3, p4, p5)
 }
 
 
@@ -523,6 +514,10 @@ plot_Disp <- function(bias_data,
 #' @param model Logical: if \code{TRUE}, fit exponential decay models.
 #' @param methods Character vector: method codes to simulate. Defaults to
 #'   \code{c("dh", "sl", "msl", "hamilton", "hh", "ad", "imperiali", "danish")}.
+#'   Any divisor-method code accepted by \code{divisorMethods} (\code{"dh"},
+#'   \code{"sl"}, \code{"msl"}, \code{"danish"}, \code{"hsl"}, \code{"imperiali"},
+#'   \code{"hh"}, \code{"wb"}, \code{"jef"}, \code{"ad"}, \code{"hb"}) or
+#'   \code{"hamilton"} may be supplied; an unknown code raises an error.
 #' @param formula_dist Character: method for inter-district seat allocation.
 #'
 #' @return A list with \code{summary} (combined disproportionality data),
@@ -549,13 +544,18 @@ Disp2 <- function(seed = 0,
                   model = TRUE,
                   methods = c("dh", "sl", "msl", "hamilton",
                               "hh", "ad", "imperiali", "danish"),
-                  formula_dist = "hh",
-                  ...) {
+                  formula_dist = "hh") {
 
   method_labels <- c(
-    dh = "DH", sl = "SL", msl = "MSL", hamilton = "H",
-    hh = "HH", ad = "A", imperiali = "Imperiali", danish = "Danish"
+    dh = "DH", sl = "SL", msl = "MSL", danish = "Danish", hsl = "HSL",
+    imperiali = "Imperiali", hh = "HH", wb = "WB", jef = "Jef",
+    ad = "A", hb = "HB", hamilton = "H"
   )
+
+  unknown <- setdiff(methods, names(method_labels))
+  if (length(unknown) > 0L)
+    stop("Unknown method(s): ", paste(unknown, collapse = ", "),
+         ". Valid codes: ", paste(names(method_labels), collapse = ", "), ".")
 
   ts_seq <- seq(from = minTS, to = maxTS, by = jump)
 
@@ -604,6 +604,10 @@ Disp2 <- function(seed = 0,
       if (!is.null(nls_fit)) {
         lghi$GHI_predicted <- stats::predict(nls_fit)
         all_models[[paste0("Model_", label)]] <- nls_fit
+      } else {
+        ## Keep the column present (filled with NA) so the per-method data
+        ## frames stay rbind-compatible when some fits fail and others succeed.
+        lghi$GHI_predicted <- NA_real_
       }
     }
 
@@ -642,8 +646,7 @@ Disp2 <- function(seed = 0,
 #' @export
 plot_Disp2 <- function(data = NULL,
                        methods = c("DH", "SL", "H", "Imperiali"),
-                       vlines = NULL,
-                       ...) {
+                       vlines = NULL) {
   lghi_all <- data[["summary"]]
   lghi_all <- lghi_all[lghi_all$method %in% methods, ]
 

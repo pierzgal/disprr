@@ -138,9 +138,23 @@ test_that("Huntington-Hill guarantees at least 1 seat per party with votes", {
 })
 
 test_that("Huntington-Hill with fewer seats than parties still works", {
-  # Only 3 seats but 5 parties; top 3 Inf quotients go to 3 largest
+  # Only 3 seats but 5 parties; the 3 infinite first quotients with the most
+  # votes win, so the 3 largest parties take the seats.
   res <- divisorMethods(parties_5, votes_5, seats = 3, method = "hh")
   expect_equal(sum(res$Seats), 3)
+  expect_equal(res$Seats[order(res$Party)], c(1, 1, 1, 0, 0))
+})
+
+test_that("Huntington-Hill breaks infinite-quotient ties by votes", {
+  # First divisor is 0, so every positive-vote party has an infinite first
+  # quotient. With fewer seats than parties, seats must go to the largest
+  # parties regardless of their position in the input vector.
+  parties <- c("Small", "Big", "Mid")
+  votes   <- c(5000, 90000, 40000)   # deliberately unsorted
+  res <- divisorMethods(parties, votes, seats = 2, method = "hh")
+  expect_equal(res$Seats[res$Party == "Big"], 1)
+  expect_equal(res$Seats[res$Party == "Mid"], 1)
+  expect_equal(res$Seats[res$Party == "Small"], 0)
 })
 
 
@@ -151,6 +165,17 @@ test_that("Adams guarantees at least 1 seat per party with votes", {
   res <- divisorMethods(parties_5, votes_5, seats = 8, method = "ad")
   expect_equal(sum(res$Seats), 8)
   expect_true(all(res$Seats[res$Votes > 0] >= 1))
+})
+
+test_that("Adams breaks infinite-quotient ties by votes", {
+  # As with Huntington-Hill, the first divisor is 0; scarce seats must go to
+  # the largest parties, not to whichever party comes first in the input.
+  parties <- c("Small", "Big", "Mid")
+  votes   <- c(5000, 90000, 40000)   # deliberately unsorted
+  res <- divisorMethods(parties, votes, seats = 2, method = "ad")
+  expect_equal(res$Seats[res$Party == "Big"], 1)
+  expect_equal(res$Seats[res$Party == "Mid"], 1)
+  expect_equal(res$Seats[res$Party == "Small"], 0)
 })
 
 

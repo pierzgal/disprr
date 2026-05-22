@@ -18,8 +18,7 @@ simulate_E(
   formula,
   formula_dist,
   threshold,
-  threshold_country,
-  ...
+  threshold_country
 )
 }
 \arguments{

@@ -21,7 +21,9 @@
 The modified sample with sub-threshold party votes set to 0.
 }
 \description{
-Zeroes out votes for parties whose nationwide vote share falls at or below
-the country-level threshold, before district-level apportionment.
+Zeroes out votes for parties whose nationwide vote share falls strictly
+below the country-level threshold, before district-level apportionment.
+A party whose share equals the threshold is retained, matching the
+threshold convention used by \code{divisorMethods} and \code{LR_Hamilton}.
 }
 \keyword{internal}

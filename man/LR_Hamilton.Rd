@@ -9,8 +9,7 @@ LR_Hamilton(
   votes = NULL,
   seats = NULL,
   threshold = 0,
-  order_name = TRUE,
-  ...
+  order_name = TRUE
 )
 }
 \arguments{

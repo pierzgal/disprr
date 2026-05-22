@@ -1,0 +1,288 @@
+---
+title: "Getting started with disprr"
+author: "Michal Pierzgalski"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with disprr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5,
+  fig.align = "center",
+  dpi = 96
+)
+```
+
+## What `disprr` does
+
+`disprr` is a toolkit for studying how **proportional representation (PR)
+electoral systems** translate votes into seats. It has three layers:
+
+1. **Apportionment** -- given a vector of votes, allocate a fixed number of
+   seats to parties using one of eleven divisor methods or the Hamilton-Hare
+   largest-remainder method.
+2. **Simulation** -- generate many synthetic elections from a probability
+   distribution and run them through an apportionment method.
+3. **Disproportionality analysis** -- summarise how far the seat distribution
+   departs from the vote distribution, both per party and with aggregate
+   indexes, and plot the result against district magnitude.
+
+This guide walks through all three layers.
+
+> **A note on the numbers in this guide.** Every vote count shown below is
+> *illustrative and synthetic* -- it is invented for teaching purposes and
+> does not describe any real election. Likewise, the simulation sections
+> draw pseudo-random data; the figures they produce are generated when this
+> vignette is built, not copied from any data source.
+
+```{r library}
+library(disprr)
+```
+
+## 1. Apportioning seats
+
+The two entry points are `divisorMethods()` and `LR_Hamilton()`. Both take a
+vector of party labels, a vector of votes, and a seat total, and both return
+a data frame with one row per party.
+
+```{r apportion-basic}
+parties <- c("Liberals", "Centre", "Greens", "Nationals", "Others")
+votes   <- c(100000, 80000, 30000, 20000, 10000)
+
+divisorMethods(parties = parties, votes = votes, seats = 10, method = "dh")
+```
+
+The output columns are:
+
+- `Party`, `Votes`, `VoteShare` -- the inputs and each party's share of all
+  votes cast.
+- `Seats`, `SeatShare` -- the allocation and each party's share of seats.
+
+### Choosing a method
+
+The `method` argument selects the divisor sequence. The same votes apportioned
+by Sainte-Laguë give a more proportional result than D'Hondt:
+
+```{r apportion-sl}
+divisorMethods(parties = parties, votes = votes, seats = 10, method = "sl")
+```
+
+The full set of divisor methods is:
+
+| Code          | Method                  | Divisor sequence            |
+|:--------------|:------------------------|:----------------------------|
+| `"dh"`        | D'Hondt                 | 1, 2, 3, 4, ...             |
+| `"sl"`        | Sainte-Laguë | 1, 3, 5, 7, ...             |
+| `"msl"`       | Modified Sainte-Laguë | 1.4, 3, 5, 7, ...           |
+| `"danish"`    | Danish                  | 1, 4, 7, 10, ...            |
+| `"hsl"`       | Hungarian Sainte-Laguë | 1.5, 3, 5, 7, ...           |
+| `"imperiali"` | Imperiali (divisor)     | 1, 1.5, 2, 2.5, ...         |
+| `"hh"`        | Huntington-Hill         | 0, $\sqrt{2}$, $\sqrt{6}$, ... |
+| `"wb"`        | Webster                 | 0.5, 1.5, 2.5, ...          |
+| `"jef"`       | Jefferson               | 1, 2, 3, 4, ...             |
+| `"ad"`        | Adams                   | 0, 1, 2, 3, ...             |
+| `"hb"`        | Hagenbach-Bischoff      | 1, 2, 3, 4, ...             |
+
+Several of these are mathematically identical -- they assign the same seats
+for any input -- because their divisor sequences differ only by a constant
+factor, which does not change the ranking of quotients:
+
+```{r equivalences}
+seats_dh  <- divisorMethods(parties, votes, seats = 10, method = "dh")$Seats
+seats_jef <- divisorMethods(parties, votes, seats = 10, method = "jef")$Seats
+seats_hb  <- divisorMethods(parties, votes, seats = 10, method = "hb")$Seats
+identical(seats_dh, seats_jef) && identical(seats_dh, seats_hb)
+
+seats_sl <- divisorMethods(parties, votes, seats = 10, method = "sl")$Seats
+seats_wb <- divisorMethods(parties, votes, seats = 10, method = "wb")$Seats
+identical(seats_sl, seats_wb)
+```
+
+So D'Hondt = Jefferson = Hagenbach-Bischoff, and Sainte-Laguë = Webster.
+
+Two methods -- Huntington-Hill and Adams -- have a first divisor of `0`. Every
+party with positive votes therefore has an infinite first quotient, which
+guarantees it at least one seat whenever there are at least as many seats as
+parties. Huntington-Hill (the "method of equal proportions") is the method
+used to apportion seats in the U.S. House of Representatives, adopted in the
+1941 Apportionment Act.
+
+### The Hamilton-Hare largest-remainder method
+
+`LR_Hamilton()` is the quota-based alternative. It gives each party the whole
+number of quotas it earns, then hands the leftover seats to the parties with
+the largest fractional remainders:
+
+```{r hamilton}
+LR_Hamilton(parties = parties, votes = votes, seats = 10)
+```
+
+### Electoral thresholds
+
+Both functions accept a `threshold`: a vote-share cut-off in `[0, 1]`. Parties
+*strictly below* the threshold are excluded before seats are allocated; a
+party whose share exactly equals the threshold is kept.
+
+With these illustrative votes, "Others" holds `r round(10000 / 240000 * 100, 1)`%
+of the vote, so a 5% threshold removes it:
+
+```{r threshold}
+divisorMethods(parties, votes, seats = 10, method = "dh", threshold = 0.05)
+```
+
+## 2. Simulating elections
+
+Real elections give one observation at a time. To study the *behaviour* of an
+apportionment rule we simulate many elections and look at the distribution of
+outcomes.
+
+`sampleElectionData()` draws synthetic votes; `simulate_E()` wraps it together
+with apportionment and disproportionality scoring. A single call to
+`simulate_E()` runs `ne` independent elections with the same settings:
+
+```{r simulate-e}
+sim <- simulate_E(
+  seed = 1, dist = "lnorm",
+  np = 5, nd = 1, ne = 50,
+  mean = 10, sd = 1.2, rate = 1 / 25000, max = 100000,
+  TS = 11, formula = "dh", formula_dist = "hh",
+  threshold = 0, threshold_country = 0
+)
+names(sim)
+```
+
+The `Disproportionality_per_elec` element holds one row of aggregate indexes
+per simulated election:
+
+```{r simulate-e-disp}
+head(sim$Disproportionality_per_elec)
+```
+
+and `Summary` gives descriptive statistics of those indexes across all `ne`
+elections:
+
+```{r simulate-e-summary}
+sim$Summary
+```
+
+Key arguments:
+
+- `dist` -- the vote-generating distribution: `"uniform"`, `"lnorm"`
+  (log-normal), or `"exp"` (exponential).
+- `np`, `nd`, `ne` -- number of parties, districts, and elections.
+- `TS` -- total seats; `formula` -- the apportionment method;
+  `formula_dist` -- the method used to share `TS` seats among districts.
+- `threshold`, `threshold_country` -- district- and country-level
+  vote-share thresholds.
+
+## 3. Disproportionality across district magnitude
+
+District magnitude (the number of seats per district) is the single strongest
+driver of disproportionality. `simulate_Disp()` sweeps a range of seat totals
+and records per-party seat excess at each one.
+
+```{r simulate-disp}
+bias <- simulate_Disp(
+  seed = 1, dist = "lnorm",
+  np = 5, nd = 1, ne = 30,
+  formula = "dh",
+  minTS = 3, maxTS = 15, jump = 2
+)
+```
+
+`plot_Disp()` turns the result into a list of diagnostic `ggplot` objects.
+The second plot shows each party's seat-share-minus-vote-share (`SE2_i`),
+faceted by party, with one box per district magnitude:
+
+```{r plot-disp, fig.height = 5}
+disp_plots <- plot_Disp(bias)
+disp_plots[[2]]
+```
+
+As district magnitude rises (lighter boxes), the boxes move toward zero: more
+seats per district means a fairer translation of votes into seats.
+
+## 4. Comparing apportionment methods
+
+`Disp2()` runs the same sweep for several methods at once and collects the
+aggregate indexes. It optionally fits an exponential decay model
+$\mathrm{GHI} = C \cdot e^{\alpha \cdot DM}$ to the Gallagher index.
+
+```{r disp2}
+comparison <- Disp2(
+  seed = 1, np = 5, ne = 40,
+  minTS = 3, maxTS = 15, jump = 2,
+  methods = c("dh", "sl", "hamilton", "hh")
+)
+```
+
+`plot_Disp2()` plots the indexes against district magnitude, one facet per
+method. Its `methods` argument expects the short *labels* (`"DH"`, `"SL"`,
+`"H"`, `"HH"`, ...), not the lower-case codes:
+
+```{r plot-disp2, fig.height = 5}
+gg <- plot_Disp2(comparison, methods = c("DH", "SL", "H", "HH"))
+gg$plot_GHI
+```
+
+The Gallagher index falls steeply as district magnitude grows, and the four
+methods converge: at large magnitudes the choice of formula barely matters.
+
+## 5. The disproportionality indexes
+
+For party $i$ with vote share $v_i$ and seat share $s_i$, `disprr` reports
+four aggregate indexes per election.
+
+The **Gallagher index** (least-squares index) takes the root of the mean
+squared deviation, so a few large deviations weigh more heavily than many
+small ones:
+
+$$
+\mathrm{GHI} = \sqrt{\tfrac{1}{2} \sum_i (s_i - v_i)^2}
+$$
+
+The **Loosemore-Hanby index** is the total over-representation (equivalently,
+total under-representation):
+
+$$
+\mathrm{LHI} = \tfrac{1}{2} \sum_i |s_i - v_i|
+$$
+
+The **Sainte-Laguë index** weights each squared deviation by the party's
+vote share, making it sensitive to small parties:
+
+$$
+\mathrm{SLI} = \sum_i \frac{(s_i - v_i)^2}{v_i}
+$$
+
+The **effective number of parliamentary parties** summarises seat
+concentration:
+
+$$
+\mathrm{ENPP} = \frac{1}{\sum_i s_i^2}
+$$
+
+All four are computed from full-precision vote and seat shares. They are on a
+0--1 (proportion) scale, not a 0--100 (percentage) scale: a Gallagher index of
+`0.05` corresponds to the value often reported as "5".
+
+## Where to go next
+
+- `?divisorMethods`, `?LR_Hamilton` -- apportionment, with worked examples.
+- `?simulate_E`, `?simulate_Disp`, `?Disp2` -- the simulation engine.
+- `?plot_Disp`, `?plot_Disp2` -- the diagnostic plots.
+
+## References
+
+Balinski, M. L., & Young, H. P. (2001). *Fair Representation: Meeting the
+Ideal of One Man, One Vote* (2nd ed.). Brookings Institution Press.
+
+Gallagher, M. (1991). Proportionality, disproportionality and electoral
+systems. *Electoral Studies*, 10(1), 33--51.
+<https://doi.org/10.1016/0261-3794(91)90004-C>

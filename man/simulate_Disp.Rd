@@ -20,8 +20,7 @@ simulate_Disp(
   threshold_country = 0,
   minTS = 3,
   maxTS = 20,
-  jump = 2,
-  ...
+  jump = 2
 )
 }
 \arguments{

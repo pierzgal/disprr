@@ -11,8 +11,7 @@ divisorMethods(
   method = c("dh", "sl", "msl", "danish", "hsl", "hh", "imperiali", "wb", "jef", "ad",
     "hb"),
   threshold = 0,
-  order_name = TRUE,
-  ...
+  order_name = TRUE
 )
 }
 \arguments{
@@ -67,6 +66,15 @@ A \code{data.frame} with columns:
 }
 \description{
 Allocate seats to parties using a variety of divisor methods.
+}
+\details{
+When two or more quotients are exactly equal (a tie for the last seat),
+the seat is awarded to the party with the larger vote total. This matters
+chiefly for Huntington-Hill (\code{"hh"}) and Adams (\code{"ad"}), whose
+first divisor is 0: every party with positive votes then has an infinite
+first quotient, and the vote-based tie-break ensures that, when seats are
+scarcer than parties, they go to the largest parties rather than to
+whichever party happened to appear first in the input.
 }
 \examples{
 divisorMethods(

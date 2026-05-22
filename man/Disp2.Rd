@@ -23,8 +23,7 @@ Disp2(
   start_alpha = -0.2,
   model = TRUE,
   methods = c("dh", "sl", "msl", "hamilton", "hh", "ad", "imperiali", "danish"),
-  formula_dist = "hh",
-  ...
+  formula_dist = "hh"
 )
 }
 \arguments{
@@ -40,7 +39,11 @@ Disp2(
 \item{model}{Logical: if \code{TRUE}, fit exponential decay models.}
 
 \item{methods}{Character vector: method codes to simulate. Defaults to
-\code{c("dh", "sl", "msl", "hamilton", "hh", "ad", "imperiali", "danish")}.}
+\code{c("dh", "sl", "msl", "hamilton", "hh", "ad", "imperiali", "danish")}.
+Any divisor-method code accepted by \code{divisorMethods} (\code{"dh"},
+\code{"sl"}, \code{"msl"}, \code{"danish"}, \code{"hsl"}, \code{"imperiali"},
+\code{"hh"}, \code{"wb"}, \code{"jef"}, \code{"ad"}, \code{"hb"}) or
+\code{"hamilton"} may be supplied; an unknown code raises an error.}
 
 \item{formula_dist}{Character: method for inter-district seat allocation.}
 }

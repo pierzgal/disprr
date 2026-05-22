@@ -8,8 +8,7 @@
   sample,
   formula,
   threshold = 0,
-  threshold_country = 0,
-  ...
+  threshold_country = 0
 )
 }
 \arguments{
