@@ -25,6 +25,15 @@
 * No new dependencies (`gtools::rdirichlet`, used by the Dirichlet path, was
   already imported via `gtools`).
 
+## Cosmetic
+
+* `simulate_E()` now returns `Seat_Excess` and `Disproportionality_per_elec`
+  rows in natural election order (`e1, e2, ..., e50`) instead of the
+  lexicographic order (`e1, e10, ..., e5, e50, e6, ..., e9`) inherited from
+  base R's `aggregate` / `merge` / `split` on string keys. Numerical
+  values are unaffected. Brings `simulate_E()` in line with `Disp2()$summary`,
+  which already applied the same fix.
+
 ## Testing
 
 * Added a regression test (`tests/testthat/test-shutout.R`) confirming that

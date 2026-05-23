@@ -334,6 +334,17 @@ simulate_E <- function(seed,
     skew = FALSE
   )
 
+  ## Restore natural election order (e1, e2, ..., e10, ..., e50). aggregate /
+  ## merge / split sort by string keys and produce a lex order
+  ## (e1, e10, ..., e5, e50, e6, ..., e9), which is confusing when the user
+  ## prints or iterates over these tables. Cosmetic only; the per-election
+  ## index values themselves are unchanged. Matches Disp2()$summary, which
+  ## already applies the same fix.
+  disp        <- disp[gtools::mixedorder(disp$ElectionID), ]
+  seat_excess <- seat_excess[gtools::mixedorder(seat_excess$ElectionID), ]
+  rownames(disp) <- NULL
+  rownames(seat_excess) <- NULL
+
   list(
     Seat_Excess              = seat_excess,
     Apportionment            = apportionment,
