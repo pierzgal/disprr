@@ -25,6 +25,17 @@
 * No new dependencies (`gtools::rdirichlet`, used by the Dirichlet path, was
   already imported via `gtools`).
 
+## Testing
+
+* Added a regression test (`tests/testthat/test-shutout.R`) confirming that
+  the aggregate disproportionality indexes (LHI, GHI, SLI) sum over **all**
+  parties, including those that win zero seats in every district. This
+  protects against the under-count pattern observed in the `disprr` shiny
+  app's v0.10.5 — a `table()`-based seat tally that dropped shut-out
+  parties. The package uses `tabulate(winners, nbins = length(parties))`
+  in `divisorMethods()` and is unaffected; the test guards against future
+  regressions.
+
 ## References
 
 * Cohen, D. & Hanretty, C. (2024). Simulating Party Shares. *Political
