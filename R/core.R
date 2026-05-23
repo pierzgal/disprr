@@ -4,20 +4,56 @@
 #' distribution.
 #'
 #' @param seed Integer: random seed for reproducibility.
-#' @param dist Character: probability distribution for vote sampling.
-#'   One of \code{"uniform"} (default), \code{"lnorm"}, or \code{"exp"}.
+#' @param dist Character: probability distribution for vote sampling. One of
+#'   \code{"uniform"} (default), \code{"lnorm"}, \code{"exp"},
+#'   \code{"dirichlet"}, or \code{"uniform_simplex"}. See Details.
 #' @param np Integer: number of parties.
 #' @param nd Integer: number of electoral districts.
 #' @param ne Integer: number of elections.
-#' @param mean Numeric: location parameter for log-normal distribution.
-#' @param sd Numeric: scale parameter for log-normal distribution.
-#' @param rate Numeric: rate parameter for exponential distribution.
-#' @param max Numeric: upper bound for truncated distributions or for
-#'   \code{runif}.
+#' @param mean Numeric: location parameter (\code{meanlog}) for the log-normal
+#'   distribution.
+#' @param sd Numeric: scale parameter (\code{sdlog}) for the log-normal
+#'   distribution.
+#' @param rate Numeric: rate parameter for the exponential distribution.
+#' @param max Numeric: upper bound for the count-based distributions
+#'   (\code{"uniform"}, \code{"lnorm"}, \code{"exp"}). Ignored for the
+#'   simplex-based distributions.
+#' @param phi Numeric: Dirichlet precision (concentration sum) for
+#'   \code{dist = "dirichlet"}. Higher values yield less election-to-election
+#'   variability around the Taagepera-Allik mean shares. Default 20.
+#' @param votes_per_district Numeric: total electorate per district. Used to
+#'   convert Dirichlet vote shares into integer vote counts. Required for
+#'   \code{dist = "dirichlet"} or \code{"uniform_simplex"}; ignored otherwise.
 #' @param TS Integer: total number of seats to apportion among districts.
 #' @param formula_dist Character: method used to divide \code{TS} seats among
 #'   districts. One of \code{"hamilton"}, \code{"ad"}, \code{"dh"}, or
 #'   \code{"hh"}.
+#'
+#' @details
+#' The five distributions fall into two families.
+#'
+#' \strong{Independent count distributions} (\code{"uniform"}, \code{"lnorm"},
+#' \code{"exp"}): each party's vote count is drawn independently and then
+#' sorted ascending within the district, so party index corresponds to rank.
+#'
+#' \strong{Compositional (Dirichlet) distributions:}
+#' \describe{
+#'   \item{\code{"uniform_simplex"}}{Symmetric Dirichlet with all concentration
+#'     parameters equal to 1 -- every vector of vote shares on the simplex is
+#'     equally likely. This is the standard benchmark in the analytical
+#'     apportionment literature (Schuster, Pukelsheim, Drton & Draper, 2003).}
+#'   \item{\code{"dirichlet"}}{Asymmetric Dirichlet with concentration
+#'     \eqn{\alpha = \phi\,\mu}, where \eqn{\mu} is the Taagepera-Allik
+#'     expected-share vector (see \code{\link{taagepera_allik}}) and \eqn{\phi}
+#'     is a precision parameter. This produces realistic party-system
+#'     structures and follows the calibration approach of
+#'     Cohen & Hanretty (2024).}
+#' }
+#'
+#' For both Dirichlet variants, integer counts are obtained by multiplying the
+#' simulated shares by \code{votes_per_district} and applying \code{floor()};
+#' the result is sorted ascending within each district to match the rank-based
+#' convention used by the rest of the package.
 #'
 #' @return A list with components:
 #'   \describe{
@@ -30,6 +66,17 @@
 #'     \item{Params}{Vector: \code{c(ne, nd, np, TS)}.}
 #'   }
 #'
+#' @references
+#' Cohen, D. & Hanretty, C. (2024). Simulating Party Shares.
+#' \emph{Political Analysis}, 32(1), 140--147.
+#'
+#' Schuster, K., Pukelsheim, F., Drton, M. & Draper, N. R. (2003).
+#' Seat biases of apportionment methods for proportional representation.
+#' \emph{Electoral Studies}, 22(4), 651--676.
+#'
+#' Taagepera, R. & Allik, M. (2006). Seat Share Distribution of Parties:
+#' Models and Empirical Patterns. \emph{Electoral Studies}, 25(4), 696--713.
+#'
 #' @export
 sampleElectionData <- function(seed = 0,
                                dist = "uniform",
@@ -39,24 +86,52 @@ sampleElectionData <- function(seed = 0,
                                mean = NULL,
                                sd = NULL,
                                rate = NULL,
-                               max,
+                               max = NULL,
+                               phi = 20,
+                               votes_per_district = 1e5,
                                TS,
                                formula_dist) {
   set.seed(seed)
-  dist <- match.arg(dist, c("uniform", "lnorm", "exp"))
+  dist <- match.arg(dist, c("uniform", "lnorm", "exp",
+                            "dirichlet", "uniform_simplex"))
+
+  ## --- Distribution-specific input validation ---
+  if (dist %in% c("uniform", "lnorm", "exp")) {
+    if (is.null(max))
+      stop("'max' must be supplied for dist = '", dist, "'.")
+  }
+  if (dist %in% c("dirichlet", "uniform_simplex")) {
+    if (is.null(votes_per_district) || votes_per_district <= 0)
+      stop("'votes_per_district' must be a positive number for dist = '",
+           dist, "'.")
+  }
+  if (dist == "dirichlet" && (is.null(phi) || phi <= 0))
+    stop("'phi' must be a positive number for dist = 'dirichlet'.")
 
   x <- array(dim = c(np, nd, ne))
 
-  for (j in seq_len(ne)) {
-    for (i in seq_len(nd)) {
-      x[, i, j] <- sort(floor(switch(
-        dist,
-        uniform = runif(np, min = 0, max = max),
-        lnorm   = truncdist::rtrunc(np, spec = "lnorm", a = 0, b = max,
-                                     meanlog = mean, sdlog = sd),
-        exp     = truncdist::rtrunc(np, spec = "exp", a = 0, b = max,
-                                     rate = rate)
-      )))
+  if (dist %in% c("dirichlet", "uniform_simplex")) {
+    ## Compositional path: draw shares on the simplex, scale to counts.
+    alpha <- if (dist == "dirichlet") phi * taagepera_allik(np) else rep(1, np)
+    for (j in seq_len(ne)) {
+      shares <- gtools::rdirichlet(nd, alpha)   # nd x np matrix
+      for (i in seq_len(nd)) {
+        x[, i, j] <- sort(floor(shares[i, ] * votes_per_district))
+      }
+    }
+  } else {
+    ## Independent-count path (legacy distributions).
+    for (j in seq_len(ne)) {
+      for (i in seq_len(nd)) {
+        x[, i, j] <- sort(floor(switch(
+          dist,
+          uniform = runif(np, min = 0, max = max),
+          lnorm   = truncdist::rtrunc(np, spec = "lnorm", a = 0, b = max,
+                                       meanlog = mean, sdlog = sd),
+          exp     = truncdist::rtrunc(np, spec = "exp", a = 0, b = max,
+                                       rate = rate)
+        )))
+      }
     }
   }
 
@@ -120,12 +195,18 @@ sampleElectionData <- function(seed = 0,
 #' disproportionality measures.
 #'
 #' @param seed Integer: random seed.
-#' @param dist Character: probability distribution (\code{"uniform"},
-#'   \code{"lnorm"}, or \code{"exp"}).
+#' @param dist Character: probability distribution. One of \code{"uniform"},
+#'   \code{"lnorm"}, \code{"exp"}, \code{"dirichlet"}, or
+#'   \code{"uniform_simplex"}; see \code{\link{sampleElectionData}}.
 #' @param np,nd,ne Integer: number of parties, districts, elections.
 #' @param mean,sd Numeric: log-normal parameters.
 #' @param rate Numeric: exponential rate parameter.
-#' @param max Numeric: upper bound for truncated distribution.
+#' @param max Numeric: upper bound for the count-based distributions.
+#' @param phi Numeric: Dirichlet precision (concentration) for
+#'   \code{dist = "dirichlet"}. Default 20.
+#' @param votes_per_district Numeric: total electorate per district, used to
+#'   convert Dirichlet shares to integer vote counts. Required for
+#'   \code{dist = "dirichlet"} or \code{"uniform_simplex"}.
 #' @param TS Integer: total seats.
 #' @param formula Character: apportionment method (e.g., \code{"dh"}, \code{"sl"},
 #'   \code{"hamilton"}).
@@ -146,6 +227,8 @@ simulate_E <- function(seed,
                        dist = "lnorm",
                        np, nd, ne,
                        mean, sd, rate, max,
+                       phi = 20,
+                       votes_per_district = 1e5,
                        TS,
                        formula,
                        formula_dist,
@@ -156,6 +239,7 @@ simulate_E <- function(seed,
   sample <- sampleElectionData(
     seed = seed, dist = dist, np = np, nd = nd, ne = ne,
     mean = mean, sd = sd, rate = rate, max = max,
+    phi = phi, votes_per_district = votes_per_district,
     TS = TS, formula_dist = formula_dist
   )
 
@@ -267,8 +351,8 @@ simulate_E <- function(seed,
 #' Computes per-party disproportionality measures using simulated election data
 #' across a range of total seat counts.
 #'
-#' @param seed,dist,np,nd,ne,rate,mean,sd,max Parameters passed to
-#'   \code{simulate_E}.
+#' @param seed,dist,np,nd,ne,rate,mean,sd,max,phi,votes_per_district
+#'   Parameters passed to \code{simulate_E}.
 #' @param formula Character: apportionment method.
 #' @param formula_dist Character: method for inter-district seat allocation.
 #' @param threshold,threshold_country Numeric: electoral thresholds.
@@ -293,6 +377,8 @@ simulate_Disp <- function(seed = 0,
                           mean = 10,
                           sd = 1.2,
                           max = 100000,
+                          phi = 20,
+                          votes_per_district = 1e5,
                           formula,
                           formula_dist = "hh",
                           threshold = 0,
@@ -312,6 +398,7 @@ simulate_Disp <- function(seed = 0,
     sim_list[[k]] <- simulate_E(
       seed = seed, dist = dist, np = np, nd = nd, ne = ne,
       mean = mean, sd = sd, rate = rate, max = max,
+      phi = phi, votes_per_district = votes_per_district,
       TS = i, formula = formula, formula_dist = formula_dist,
       threshold = threshold, threshold_country = threshold_country
     )
@@ -506,8 +593,8 @@ plot_Disp <- function(bias_data,
 #' computing aggregate disproportionality indexes (GHI, LHI, SLI, ENPP, NPP).
 #' Optionally fits \eqn{GHI \sim C \cdot e^{\alpha \cdot DM}} models.
 #'
-#' @param seed,np,nd,ne,dist,rate,mean,sd,max Parameters passed to
-#'   \code{simulate_E}.
+#' @param seed,np,nd,ne,dist,rate,mean,sd,max,phi,votes_per_district
+#'   Parameters passed to \code{simulate_E}.
 #' @param minTS,maxTS,jump Integer: range and step for total seats.
 #' @param threshold,threshold_country Numeric: electoral thresholds.
 #' @param start_C,start_alpha Numeric: NLS starting values.
@@ -534,6 +621,8 @@ Disp2 <- function(seed = 0,
                   mean = 10,
                   sd = 1.2,
                   max = 100000,
+                  phi = 20,
+                  votes_per_district = 1e5,
                   minTS = 3,
                   maxTS = 20,
                   jump = 1,
@@ -575,6 +664,7 @@ Disp2 <- function(seed = 0,
       raw_list[[k]] <- simulate_E(
         seed = seed, np = np, nd = nd, ne = ne,
         dist = dist, rate = rate, mean = mean, sd = sd, max = max,
+        phi = phi, votes_per_district = votes_per_district,
         TS = i, formula = meth, formula_dist = formula_dist,
         threshold = threshold, threshold_country = threshold_country
       )

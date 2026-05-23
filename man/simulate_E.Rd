@@ -14,6 +14,8 @@ simulate_E(
   sd,
   rate,
   max,
+  phi = 20,
+  votes_per_district = 1e+05,
   TS,
   formula,
   formula_dist,
@@ -24,8 +26,9 @@ simulate_E(
 \arguments{
 \item{seed}{Integer: random seed.}
 
-\item{dist}{Character: probability distribution (\code{"uniform"},
-\code{"lnorm"}, or \code{"exp"}).}
+\item{dist}{Character: probability distribution. One of \code{"uniform"},
+\code{"lnorm"}, \code{"exp"}, \code{"dirichlet"}, or
+\code{"uniform_simplex"}; see \code{\link{sampleElectionData}}.}
 
 \item{np, nd, ne}{Integer: number of parties, districts, elections.}
 
@@ -33,7 +36,14 @@ simulate_E(
 
 \item{rate}{Numeric: exponential rate parameter.}
 
-\item{max}{Numeric: upper bound for truncated distribution.}
+\item{max}{Numeric: upper bound for the count-based distributions.}
+
+\item{phi}{Numeric: Dirichlet precision (concentration) for
+\code{dist = "dirichlet"}. Default 20.}
+
+\item{votes_per_district}{Numeric: total electorate per district, used to
+convert Dirichlet shares to integer vote counts. Required for
+\code{dist = "dirichlet"} or \code{"uniform_simplex"}.}
 
 \item{TS}{Integer: total seats.}
 

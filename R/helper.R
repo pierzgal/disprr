@@ -21,6 +21,54 @@ if.parties.null <- function(x) {
 }
 
 
+#' Expected Vote Shares via the Taagepera-Allik Rule
+#'
+#' Compute the expected vote-share vector for a party system of size \code{l}
+#' using the recursive Taagepera-Allik rule. The largest party's expected share
+#' is \eqn{1/\sqrt{l}}; each subsequent rank takes the same fractional bite of
+#' whatever mass remains:
+#'
+#' \deqn{\mu_1 = 1/\sqrt{l}, \qquad
+#'       \mu_i = (1 - \sum_{j<i}\mu_j) / \sqrt{l - i + 1}, \quad i = 2,\dots,l.}
+#'
+#' The resulting vector is in descending order (largest party first) and is
+#' normalised to sum to exactly 1. It is used by
+#' \code{\link{sampleElectionData}} as the mean vector for the calibrated
+#' Dirichlet distribution (\code{dist = "dirichlet"}).
+#'
+#' @param l Integer, the number of parties (\eqn{l \ge 2}).
+#'
+#' @return A numeric vector of length \code{l}, summing to 1, in descending
+#'   order.
+#'
+#' @references
+#' Taagepera, R. & Allik, M. (2006). Seat Share Distribution of Parties:
+#' Models and Empirical Patterns. \emph{Electoral Studies}, 25(4), 696--713.
+#'
+#' Cohen, D. & Hanretty, C. (2024). Simulating Party Shares.
+#' \emph{Political Analysis}, 32(1), 140--147.
+#'
+#' @examples
+#' taagepera_allik(5)
+#' taagepera_allik(3)
+#'
+#' @export
+taagepera_allik <- function(l) {
+  if (length(l) != 1L || !is.numeric(l) || l < 2)
+    stop("'l' must be a single integer >= 2.")
+  l <- as.integer(l)
+  mu <- numeric(l)
+  mu[1] <- 1 / sqrt(l)
+  remaining <- 1 - mu[1]
+  for (i in seq.int(2L, l)) {
+    mu[i] <- remaining / sqrt(l - i + 1)
+    remaining <- remaining - mu[i]
+  }
+  ## Guard against floating-point drift: normalise to sum = 1
+  mu / sum(mu)
+}
+
+
 #' Apply Electoral Threshold at Country Level
 #'
 #' Zeroes out votes for parties whose nationwide vote share falls strictly

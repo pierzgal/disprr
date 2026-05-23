@@ -13,7 +13,9 @@ sampleElectionData(
   mean = NULL,
   sd = NULL,
   rate = NULL,
-  max,
+  max = NULL,
+  phi = 20,
+  votes_per_district = 1e+05,
   TS,
   formula_dist
 )
@@ -21,8 +23,9 @@ sampleElectionData(
 \arguments{
 \item{seed}{Integer: random seed for reproducibility.}
 
-\item{dist}{Character: probability distribution for vote sampling.
-One of \code{"uniform"} (default), \code{"lnorm"}, or \code{"exp"}.}
+\item{dist}{Character: probability distribution for vote sampling. One of
+\code{"uniform"} (default), \code{"lnorm"}, \code{"exp"},
+\code{"dirichlet"}, or \code{"uniform_simplex"}. See Details.}
 
 \item{np}{Integer: number of parties.}
 
@@ -30,14 +33,25 @@ One of \code{"uniform"} (default), \code{"lnorm"}, or \code{"exp"}.}
 
 \item{ne}{Integer: number of elections.}
 
-\item{mean}{Numeric: location parameter for log-normal distribution.}
+\item{mean}{Numeric: location parameter (\code{meanlog}) for the log-normal
+distribution.}
 
-\item{sd}{Numeric: scale parameter for log-normal distribution.}
+\item{sd}{Numeric: scale parameter (\code{sdlog}) for the log-normal
+distribution.}
 
-\item{rate}{Numeric: rate parameter for exponential distribution.}
+\item{rate}{Numeric: rate parameter for the exponential distribution.}
 
-\item{max}{Numeric: upper bound for truncated distributions or for
-\code{runif}.}
+\item{max}{Numeric: upper bound for the count-based distributions
+(\code{"uniform"}, \code{"lnorm"}, \code{"exp"}). Ignored for the
+simplex-based distributions.}
+
+\item{phi}{Numeric: Dirichlet precision (concentration sum) for
+\code{dist = "dirichlet"}. Higher values yield less election-to-election
+variability around the Taagepera-Allik mean shares. Default 20.}
+
+\item{votes_per_district}{Numeric: total electorate per district. Used to
+convert Dirichlet vote shares into integer vote counts. Required for
+\code{dist = "dirichlet"} or \code{"uniform_simplex"}; ignored otherwise.}
 
 \item{TS}{Integer: total number of seats to apportion among districts.}
 
@@ -60,4 +74,41 @@ A list with components:
 \description{
 Generate pseudo-random election results from a specified probability
 distribution.
+}
+\details{
+The five distributions fall into two families.
+
+\strong{Independent count distributions} (\code{"uniform"}, \code{"lnorm"},
+\code{"exp"}): each party's vote count is drawn independently and then
+sorted ascending within the district, so party index corresponds to rank.
+
+\strong{Compositional (Dirichlet) distributions:}
+\describe{
+  \item{\code{"uniform_simplex"}}{Symmetric Dirichlet with all concentration
+    parameters equal to 1 -- every vector of vote shares on the simplex is
+    equally likely. This is the standard benchmark in the analytical
+    apportionment literature (Schuster, Pukelsheim, Drton & Draper, 2003).}
+  \item{\code{"dirichlet"}}{Asymmetric Dirichlet with concentration
+    \eqn{\alpha = \phi\,\mu}, where \eqn{\mu} is the Taagepera-Allik
+    expected-share vector (see \code{\link{taagepera_allik}}) and \eqn{\phi}
+    is a precision parameter. This produces realistic party-system
+    structures and follows the calibration approach of
+    Cohen & Hanretty (2024).}
+}
+
+For both Dirichlet variants, integer counts are obtained by multiplying the
+simulated shares by \code{votes_per_district} and applying \code{floor()};
+the result is sorted ascending within each district to match the rank-based
+convention used by the rest of the package.
+}
+\references{
+Cohen, D. & Hanretty, C. (2024). Simulating Party Shares.
+\emph{Political Analysis}, 32(1), 140--147.
+
+Schuster, K., Pukelsheim, F., Drton, M. & Draper, N. R. (2003).
+Seat biases of apportionment methods for proportional representation.
+\emph{Electoral Studies}, 22(4), 651--676.
+
+Taagepera, R. & Allik, M. (2006). Seat Share Distribution of Parties:
+Models and Empirical Patterns. \emph{Electoral Studies}, 25(4), 696--713.
 }

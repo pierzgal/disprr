@@ -14,6 +14,8 @@ Disp2(
   mean = 10,
   sd = 1.2,
   max = 1e+05,
+  phi = 20,
+  votes_per_district = 1e+05,
   minTS = 3,
   maxTS = 20,
   jump = 1,
@@ -27,8 +29,7 @@ Disp2(
 )
 }
 \arguments{
-\item{seed, np, nd, ne, dist, rate, mean, sd, max}{Parameters passed to
-\code{simulate_E}.}
+\item{seed, np, nd, ne, dist, rate, mean, sd, max, phi, votes_per_district}{Parameters passed to \code{simulate_E}.}
 
 \item{minTS, maxTS, jump}{Integer: range and step for total seats.}
 

@@ -14,6 +14,8 @@ simulate_Disp(
   mean = 10,
   sd = 1.2,
   max = 1e+05,
+  phi = 20,
+  votes_per_district = 1e+05,
   formula,
   formula_dist = "hh",
   threshold = 0,
@@ -24,8 +26,7 @@ simulate_Disp(
 )
 }
 \arguments{
-\item{seed, dist, np, nd, ne, rate, mean, sd, max}{Parameters passed to
-\code{simulate_E}.}
+\item{seed, dist, np, nd, ne, rate, mean, sd, max, phi, votes_per_district}{Parameters passed to \code{simulate_E}.}
 
 \item{formula}{Character: apportionment method.}
 

@@ -1,3 +1,41 @@
+# disprr 0.3.0
+
+## New features
+
+* Two new vote-distribution options are available in `sampleElectionData()`,
+  `simulate_E()`, `simulate_Disp()`, and `Disp2()`:
+
+    * `dist = "dirichlet"` -- asymmetric Dirichlet with concentration
+      \eqn{\alpha = \phi \mu}, where \eqn{\mu} is the Taagepera-Allik
+      expected-share vector. Produces realistic party-system structures
+      following the calibration approach of Cohen & Hanretty (2024).
+    * `dist = "uniform_simplex"` -- symmetric Dirichlet (all concentration
+      parameters equal to 1), the Pukelsheim benchmark from the analytical
+      apportionment literature.
+
+  Two new arguments accompany them: `phi` (precision for the calibrated
+  Dirichlet, default 20) and `votes_per_district` (total electorate used to
+  convert simulated vote shares into integer counts, default 1e5).
+
+* New exported function `taagepera_allik(l)` returning the
+  Taagepera-Allik expected vote-share vector for `l` parties.
+
+## Dependencies
+
+* No new dependencies (`gtools::rdirichlet`, used by the Dirichlet path, was
+  already imported via `gtools`).
+
+## References
+
+* Cohen, D. & Hanretty, C. (2024). Simulating Party Shares. *Political
+  Analysis*, 32(1), 140--147.
+* Schuster, K., Pukelsheim, F., Drton, M. & Draper, N. R. (2003).
+  Seat biases of apportionment methods for proportional representation.
+  *Electoral Studies*, 22(4), 651--676.
+* Taagepera, R. & Allik, M. (2006). Seat Share Distribution of Parties:
+  Models and Empirical Patterns. *Electoral Studies*, 25(4), 696--713.
+
+
 # disprr 0.2.0
 
 ## New features

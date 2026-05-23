@@ -173,13 +173,44 @@ sim$Summary
 
 Key arguments:
 
-- `dist` -- the vote-generating distribution: `"uniform"`, `"lnorm"`
-  (log-normal), or `"exp"` (exponential).
+- `dist` -- the vote-generating distribution. Five options are available, in
+  two families. **Independent count distributions** (`"uniform"`,
+  `"lnorm"` (log-normal), `"exp"` (exponential)) draw each party's vote
+  count independently. **Compositional distributions** draw a vector of
+  vote shares on the simplex and scale it by `votes_per_district`:
+  `"dirichlet"` is an asymmetric Dirichlet calibrated via the
+  Taagepera-Allik rule -- a realistic party-system prior, following
+  Cohen & Hanretty (2024); `"uniform_simplex"` is the symmetric
+  Dirichlet(1, ..., 1), the Pukelsheim benchmark in which every vector
+  of vote shares is equally likely.
 - `np`, `nd`, `ne` -- number of parties, districts, and elections.
 - `TS` -- total seats; `formula` -- the apportionment method;
   `formula_dist` -- the method used to share `TS` seats among districts.
+- `phi`, `votes_per_district` -- precision and total electorate for the
+  Dirichlet distributions.
 - `threshold`, `threshold_country` -- district- and country-level
   vote-share thresholds.
+
+A quick look at the Taagepera-Allik mean vector for a 5-party system:
+
+```{r taagepera-example}
+taagepera_allik(5)
+```
+
+A Dirichlet draw with that mean and precision `phi = 30` is then a noisy
+realisation of the same structure:
+
+```{r dirichlet-example}
+disp_dir <- simulate_E(
+  seed = 1, dist = "dirichlet",
+  np = 5, nd = 1, ne = 50,
+  mean = 10, sd = 1.2, rate = 1/25000, max = 100000,
+  phi = 30, votes_per_district = 100000,
+  TS = 11, formula = "dh", formula_dist = "hh",
+  threshold = 0, threshold_country = 0
+)
+head(disp_dir$Disproportionality_per_elec)
+```
 
 ## 3. Disproportionality across district magnitude
 
@@ -283,6 +314,16 @@ All four are computed from full-precision vote and seat shares. They are on a
 Balinski, M. L., & Young, H. P. (2001). *Fair Representation: Meeting the
 Ideal of One Man, One Vote* (2nd ed.). Brookings Institution Press.
 
+Cohen, D., & Hanretty, C. (2024). Simulating Party Shares. *Political
+Analysis*, 32(1), 140--147.
+
 Gallagher, M. (1991). Proportionality, disproportionality and electoral
 systems. *Electoral Studies*, 10(1), 33--51.
 <https://doi.org/10.1016/0261-3794(91)90004-C>
+
+Schuster, K., Pukelsheim, F., Drton, M., & Draper, N. R. (2003). Seat biases
+of apportionment methods for proportional representation. *Electoral
+Studies*, 22(4), 651--676.
+
+Taagepera, R., & Allik, M. (2006). Seat Share Distribution of Parties:
+Models and Empirical Patterns. *Electoral Studies*, 25(4), 696--713.
