@@ -125,7 +125,7 @@ sampleElectionData <- function(seed = 0,
       for (i in seq_len(nd)) {
         x[, i, j] <- sort(floor(switch(
           dist,
-          uniform = runif(np, min = 0, max = max),
+          uniform = stats::runif(np, min = 0, max = max),
           lnorm   = truncdist::rtrunc(np, spec = "lnorm", a = 0, b = max,
                                        meanlog = mean, sdlog = sd),
           exp     = truncdist::rtrunc(np, spec = "exp", a = 0, b = max,
@@ -226,14 +226,14 @@ sampleElectionData <- function(seed = 0,
 simulate_E <- function(seed,
                        dist = "lnorm",
                        np, nd, ne,
-                       mean, sd, rate, max,
+                       mean = NULL, sd = NULL, rate = NULL, max = NULL,
                        phi = 20,
                        votes_per_district = 1e5,
                        TS,
                        formula,
-                       formula_dist,
-                       threshold,
-                       threshold_country) {
+                       formula_dist = "hh",
+                       threshold = 0,
+                       threshold_country = 0) {
   set.seed(seed)
 
   sample <- sampleElectionData(
@@ -249,11 +249,13 @@ simulate_E <- function(seed,
   )
   apportionment$Party <- as.character(apportionment$Party)
 
-  ## Vote shares at country level
+  ## Vote shares at country level. Kept at full precision: this column feeds
+  ## the disproportionality indexes below, so rounding here would propagate
+  ## into LHI / GHI / SLI. Display columns are rounded in seat_excess instead.
   vote_share_list <- vector("list", ne)
   for (i in seq_len(ne)) {
     vote_share_list[[i]] <- data.frame(
-      VoteShareTotalParty = round(sample$Votes_Share_Party[[i]], 4),
+      VoteShareTotalParty = sample$Votes_Share_Party[[i]],
       VotesTotalParty = as.integer(sample$Votes_Total_Party[[i]]),
       elec = paste0("e", i),
       Party = if.parties.null(np),

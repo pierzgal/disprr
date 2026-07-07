@@ -10,8 +10,11 @@ disproportionality measures.
 - **Seat apportionment** using 11 divisor methods (D'Hondt, Sainte-Lague,
   Webster, Huntington-Hill, Adams, and others) plus the Hamilton-Hare largest
   remainder method.
-- **Election simulation** with configurable distributions (uniform, log-normal,
-  exponential), multi-district scenarios, and electoral thresholds.
+- **Election simulation** with configurable vote distributions -- independent
+  counts (uniform, log-normal, exponential) or compositional Dirichlet models:
+  calibrated via the Taagepera-Allik rule (realistic party systems) or uniform
+  on the simplex (the Pukelsheim benchmark) -- plus multi-district scenarios
+  and electoral thresholds.
 - **Disproportionality analysis** including per-party seat excess measures and
   aggregate indexes (Gallagher, Loosemore-Hanby, Sainte-Lague, ENPP).
 - **Visualization** of disproportionality across district magnitudes and
@@ -22,15 +25,16 @@ disproportionality measures.
 Install the development version from GitHub:
 
 ```r
-# install.packages("devtools")
-devtools::install_github("pierzgal/disprr")
+# install.packages("pak")
+pak::pak("pierzgal/disprr")
 ```
 
-Or install from a local source:
+To include the user-guide vignette, use `remotes` instead:
 
 ```r
-# From the parent directory containing the disprr folder:
-devtools::install("disprr")
+# install.packages("remotes")
+remotes::install_github("pierzgal/disprr", build_vignettes = TRUE)
+vignette("disprr")   # open the user guide
 ```
 
 ## Quick start
@@ -99,6 +103,27 @@ plots <- plot_Disp2(data = result)
 plots$plot_GHI
 ```
 
+### Vote-distribution models
+
+```r
+# Expected vote shares for a 5-party system (Taagepera-Allik rule)
+taagepera_allik(5)
+
+# Simulate with a realistic (calibrated Dirichlet) party system
+result_dir <- Disp2(
+  seed = 42, np = 5, ne = 100,
+  dist = "dirichlet", phi = 20, votes_per_district = 100000,
+  methods = c("dh", "sl", "hamilton", "hh")
+)
+
+# Or with the uniform-on-simplex benchmark
+result_us <- Disp2(
+  seed = 42, np = 5, ne = 100,
+  dist = "uniform_simplex", votes_per_district = 100000,
+  methods = c("dh", "sl", "hamilton", "hh")
+)
+```
+
 ## Testing
 
 Run the test suite:
@@ -120,9 +145,9 @@ devtools::test()
 If you use this package in research, please cite:
 
 ```
-Pierzgalski, M. (2018). disprr: Simulate Proportional Representation
+Pierzgalski, M. (2026). disprr: Simulate Proportional Representation
 Election Results and Compute Disproportionality Measures. R package
-version 0.1.0.
+version 0.3.1. https://github.com/pierzgal/disprr
 ```
 
 ## License

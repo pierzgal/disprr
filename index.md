@@ -30,11 +30,20 @@ methods and provides a full simulation-to-analysis pipeline.
 - **ENPP** -- Effective number of parliamentary parties
 - Per-party seat excess and bias measures
 
+### Vote-distribution models
+
+- **Independent log-normal** (also uniform, exponential) -- legacy count draws
+- **Dirichlet, calibrated** -- Taagepera-Allik mean shares (realistic party systems)
+- **Uniform on simplex** -- symmetric Dirichlet (Pukelsheim benchmark)
+
 ## Installation
 
 ```r
-# install.packages("devtools")
-devtools::install_github("pierzgal/disprr")
+# install.packages("pak")
+pak::pak("pierzgal/disprr")
+
+# with the user-guide vignette:
+remotes::install_github("pierzgal/disprr", build_vignettes = TRUE)
 ```
 
 ## Quick start

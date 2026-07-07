@@ -204,13 +204,14 @@ realisation of the same structure:
 disp_dir <- simulate_E(
   seed = 1, dist = "dirichlet",
   np = 5, nd = 1, ne = 50,
-  mean = 10, sd = 1.2, rate = 1/25000, max = 100000,
   phi = 30, votes_per_district = 100000,
-  TS = 11, formula = "dh", formula_dist = "hh",
-  threshold = 0, threshold_country = 0
+  TS = 11, formula = "dh"
 )
 head(disp_dir$Disproportionality_per_elec)
 ```
+
+Note that the log-normal parameters (`mean`, `sd`, `max`) are not needed
+here -- the Dirichlet models only require `phi` and `votes_per_district`.
 
 ## 3. Disproportionality across district magnitude
 

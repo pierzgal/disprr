@@ -10,17 +10,17 @@ simulate_E(
   np,
   nd,
   ne,
-  mean,
-  sd,
-  rate,
-  max,
+  mean = NULL,
+  sd = NULL,
+  rate = NULL,
+  max = NULL,
   phi = 20,
   votes_per_district = 1e+05,
   TS,
   formula,
-  formula_dist,
-  threshold,
-  threshold_country
+  formula_dist = "hh",
+  threshold = 0,
+  threshold_country = 0
 )
 }
 \arguments{

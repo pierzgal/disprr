@@ -1,3 +1,49 @@
+# disprr 0.3.1
+
+## Minor improvements
+
+* Country-level vote shares are now carried at full precision throughout
+  `simulate_E()` (previously rounded to 4 decimals at source, which could
+  perturb the 4th significant digit of LHI / GHI / SLI). Display columns in
+  `Seat_Excess` are still rounded to 3 significant figures.
+* `simulate_E()` gains sensible defaults: `threshold = 0`,
+  `threshold_country = 0`, `formula_dist = "hh"`, and `NULL` defaults for the
+  distribution parameters `mean`, `sd`, `rate`, `max` -- so Dirichlet
+  simulations no longer require dummy log-normal arguments.
+* `simulate_E()` now returns `Seat_Excess` and `Disproportionality_per_elec`
+  rows in natural election order (`e1, e2, ..., e50`) instead of the
+  lexicographic order (`e1, e10, ..., e5, e50, e6, ..., e9`) inherited from
+  base R's `aggregate` / `merge` / `split` on string keys. Numerical
+  values are unaffected. Brings `simulate_E()` in line with `Disp2()$summary`,
+  which already applied the same fix.
+* Resolved both remaining `R CMD check` NOTES: removed a stray MIT-template
+  `LICENSE` file (the package is GPL (>= 3); `LICENSE.md` is retained) and
+  declared ggplot2 aesthetic variables via `utils::globalVariables()`
+  (plus `stats::runif`). `R CMD check` is now fully clean
+  (0 errors, 0 warnings, 0 notes).
+* Refreshed `README.md` and the GitHub Pages `index.md`: documented the new
+  distribution models, switched installation advice to `pak` /
+  `remotes::install_github(..., build_vignettes = TRUE)`, updated the
+  citation.
+
+## Testing
+
+* Added regression tests (`tests/testthat/test-shutout.R`) protecting the
+  shut-out-party retention property: every election carries exactly one
+  `Seat_Excess` row per party; a party with votes but zero seats appears
+  with `SeatShare = 0` and `RSE2_i = -1`; and LHI matches a direct
+  recomputation over **all** parties from the raw `Seats` / `Votes`
+  columns. This protects against the under-count pattern observed in the
+  `disprr` shiny app's v0.10.5 — a `table()`-based seat tally that dropped
+  shut-out parties (mean LHI under-counted by up to ~38% in simulated
+  high-district-count configurations). The package uses
+  `tabulate(winners, nbins = length(parties))` in `divisorMethods()` and is
+  unaffected; the tests make any refactor away from that pattern fail
+  loudly.
+* Added a regression test (`tests/testthat/test-roworder.R`) for the
+  natural election row order of `simulate_E()` outputs.
+
+
 # disprr 0.3.0
 
 ## New features
@@ -24,26 +70,6 @@
 
 * No new dependencies (`gtools::rdirichlet`, used by the Dirichlet path, was
   already imported via `gtools`).
-
-## Cosmetic
-
-* `simulate_E()` now returns `Seat_Excess` and `Disproportionality_per_elec`
-  rows in natural election order (`e1, e2, ..., e50`) instead of the
-  lexicographic order (`e1, e10, ..., e5, e50, e6, ..., e9`) inherited from
-  base R's `aggregate` / `merge` / `split` on string keys. Numerical
-  values are unaffected. Brings `simulate_E()` in line with `Disp2()$summary`,
-  which already applied the same fix.
-
-## Testing
-
-* Added a regression test (`tests/testthat/test-shutout.R`) confirming that
-  the aggregate disproportionality indexes (LHI, GHI, SLI) sum over **all**
-  parties, including those that win zero seats in every district. This
-  protects against the under-count pattern observed in the `disprr` shiny
-  app's v0.10.5 — a `table()`-based seat tally that dropped shut-out
-  parties. The package uses `tabulate(winners, nbins = length(parties))`
-  in `divisorMethods()` and is unaffected; the test guards against future
-  regressions.
 
 ## References
 
